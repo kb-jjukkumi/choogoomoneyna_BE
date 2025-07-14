@@ -24,3 +24,6 @@ spring:
             token-uri: ${kakao.token-uri}
             user-info-uri: ${kakao.user-info-uri}
             user-name-attribute: id
+
+file:
+  upload-dir: C:/upload/avatar
