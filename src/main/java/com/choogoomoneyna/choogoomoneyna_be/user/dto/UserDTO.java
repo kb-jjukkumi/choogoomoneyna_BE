@@ -19,5 +19,6 @@ public class UserDTO {
     private Date regDate;  // 등록일
     private Date updateDate;  // 수정일
     private MultipartFile profileImage;
+    private String profileImageUrl;
     private ChoogooMi choogooMi;  // 추구미 유형
 }
