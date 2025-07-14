@@ -9,11 +9,11 @@
     <insert id="insertUser" parameterType="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO">
         INSERT INTO users (
             email, password, nickname, profile_image_url,
-            reg_date, update_date, choogoomi_type
+            reg_date, update_date, choogoomi_type, login_type
         )
         VALUES (
                    #{email}, #{password}, #{nickname}, #{profileImageUrl},
-                   NOW(), NOW(), #{choogooMi}
+                   NOW(), NOW(), #{choogooMi}, #{loginType}}
                )
     </insert>
 
@@ -41,6 +41,7 @@
         SET nickname = #{nickname},
             profile_image_url = #{profileImageUrl},
             choogoomi_type = #{choogooMi},
+            login_type = #{loginType}
             update_date = NOW()
         WHERE email = #{email}
     </update>
