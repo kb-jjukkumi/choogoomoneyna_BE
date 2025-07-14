@@ -1,5 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.user.service;
 
+import com.choogoomoneyna.choogoomoneyna_be.user.dto.ChoogooMi;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.LoginType;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserJoinRequestDTO;
 
@@ -22,6 +23,7 @@ public interface UserService {
     public boolean isUserLoginIdDuplicated(String userLoginId);
 
 
+
     /**
      * Checks if a user exists with the given email and login type.
      *
@@ -30,4 +32,13 @@ public interface UserService {
      * @return true if a user with the given email and login type exists, false otherwise
      */
     public boolean findByEmailAndLoginType(String email, LoginType loginType);
+
+    /**
+     * Updates the ChoogooMi (preferred type) of a user identified by their email address.
+     *
+     * @param email the email address of the user for whom the ChoogooMi should be updated
+     * @param choogooMi the new ChoogooMi value to be set for the user
+     */
+    public void updateChoogooMiByEmail(String email, ChoogooMi choogooMi);
+
 }
