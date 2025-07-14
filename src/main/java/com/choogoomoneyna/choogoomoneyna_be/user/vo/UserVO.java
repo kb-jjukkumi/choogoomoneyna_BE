@@ -20,10 +20,5 @@ public class UserVO {
     private Date regDate;
     private Date updateDate;
     private String choogooMi;        // Enum → String
-    private Integer score1;
-    private Integer score2;
-    private Integer score3;
-    private Integer score4;
-    private Integer score5;
 }
 
