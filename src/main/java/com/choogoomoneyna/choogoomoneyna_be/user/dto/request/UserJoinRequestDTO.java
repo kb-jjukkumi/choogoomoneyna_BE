@@ -1,5 +1,6 @@
-package com.choogoomoneyna.choogoomoneyna_be.user.dto;
+package com.choogoomoneyna.choogoomoneyna_be.user.dto.request;
 
+import com.choogoomoneyna.choogoomoneyna_be.user.dto.ChoogooMi;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserJoinDTO {
+public class UserJoinRequestDTO {
     private String email;
     private String password;
     private String nickname;
