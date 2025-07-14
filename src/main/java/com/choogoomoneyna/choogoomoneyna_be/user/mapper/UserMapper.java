@@ -1,17 +1,18 @@
 package com.choogoomoneyna.choogoomoneyna_be.user.mapper;
 
-import com.choogoomoneyna.choogoomoneyna_be.user.dto.UserDTO;
+
+import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 
 public interface UserMapper {
-    void insertUser(UserDTO user);
+    void insertUser(UserVO user);
 
-    UserDTO findByEmail(String email);
+    UserVO findByEmail(String email);
 
-    UserDTO findByNickname(String nickname);
+    UserVO findByNickname(String nickname);
 
-    UserDTO findById(Long id);
+    UserVO findById(Long id);
 
-    void updateUser(UserDTO user);
+    void updateUser(UserVO user);
 
     void deleteByEmail(String email);
 }

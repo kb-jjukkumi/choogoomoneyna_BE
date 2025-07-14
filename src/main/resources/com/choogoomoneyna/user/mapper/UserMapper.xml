@@ -5,49 +5,55 @@
 
 <mapper namespace="com.choogoomoneyna.choogoomoneyna_be.user.mapper.UserMapper">
 
-    <insert id="insertUser">
-        INSERT INTO users(
-                          email, password, nickname, profile_image_url,
-                          reg_date, update_date, choogoomi_type,
-                          score1, score2, score3, score4, score5,
-                          )
+    <!-- INSERT -->
+    <insert id="insertUser" parameterType="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO">
+        INSERT INTO users (
+            email, password, nickname, profile_image_url,
+            reg_date, update_date, choogoomi_type,
+            score1, score2, score3, score4, score5
+        )
         VALUES (
-                   #{email}, #{password},#{nickname},#{profileImageUrl},
+                   #{email}, #{password}, #{nickname}, #{profileImageUrl},
                    NOW(), NOW(), #{choogooMi},
-                   #{scores[0]}, #{scores[1]}, #{scores[2]},#{scores[3]}, #{scores[4]}
+                   #{score1}, #{score2}, #{score3}, #{score4}, #{score5}
                )
     </insert>
 
-    <!-- email로 조회 -->
-    <select id="findByEmail" resultType="com.choogoomoneyna.choogoomoneyna_be.user.dto.UserDTO">
+    <!-- 이메일로 조회 -->
+    <select id="findByEmail" parameterType="String"
+            resultType="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO">
         SELECT * FROM users WHERE email = #{email}
     </select>
 
     <!-- 닉네임으로 조회 -->
-    <select id="findByNickname" resultType="com.choogoomoneyna.choogoomoneyna_be.user.dto.UserDTO">
+    <select id="findByNickname" parameterType="String"
+            resultType="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO">
         SELECT * FROM users WHERE nickname = #{nickname}
     </select>
-    <select id="findById" resultType="com.choogoomoneyna.choogoomoneyna_be.user.dto.UserDTO">
+
+    <!-- ID로 조회 -->
+    <select id="findById" parameterType="Long"
+            resultType="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO">
         SELECT * FROM users WHERE id = #{id}
     </select>
 
     <!-- 사용자 정보 수정 -->
-    <update id="updateUser">
+    <update id="updateUser" parameterType="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO">
         UPDATE users
         SET nickname = #{nickname},
             profile_image_url = #{profileImageUrl},
             choogoomi_type = #{choogooMi},
-            score1 = #{choogooMiScores[0]},
-            score2 = #{choogooMiScores[1]},
-            score3 = #{choogooMiScores[2]},
-            score4 = #{choogooMiScores[3]},
-            score5 = #{choogooMiScores[4]},
+            score1 = #{score1},
+            score2 = #{score2},
+            score3 = #{score3},
+            score4 = #{score4},
+            score5 = #{score5},
             update_date = NOW()
         WHERE email = #{email}
     </update>
 
-    <!-- 닉네임으로 삭제-->
-    <delete id="deleteByEmail">
+    <!-- 이메일로 삭제 -->
+    <delete id="deleteByEmail" parameterType="String">
         DELETE FROM users WHERE email = #{email}
     </delete>
 
