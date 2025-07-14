@@ -20,5 +20,4 @@ public class UserDTO {
     private Date updateDate;  // 수정일
     private MultipartFile profileImage;
     private ChoogooMi choogooMi;  // 추구미 유형
-    private Integer[] choogooMiScores;  // 각 추구미 점수 -> 5개
 }
