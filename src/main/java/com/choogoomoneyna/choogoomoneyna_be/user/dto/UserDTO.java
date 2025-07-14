@@ -21,4 +21,5 @@ public class UserDTO {
     private MultipartFile profileImage;
     private String profileImageUrl;
     private ChoogooMi choogooMi;  // 추구미 유형
+    private LoginType loginType;
 }

@@ -1,6 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.user.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.ChoogooMi;
+import com.choogoomoneyna.choogoomoneyna_be.user.dto.LoginType;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.UserDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 
@@ -19,6 +20,7 @@ public class UserConverter {
                 .regDate(dto.getRegDate())
                 .updateDate(dto.getUpdateDate())
                 .choogooMi(dto.getChoogooMi().name())
+                .loginType(dto.getLoginType().name())
                 .build();
     }
 
@@ -27,16 +29,16 @@ public class UserConverter {
         if (vo == null)
             return null;
 
-        UserDTO dto = new UserDTO();
-        dto.setEmail(vo.getEmail());
-        dto.setPassword(vo.getPassword());
-        dto.setNickname(vo.getNickname());
-        dto.setRegDate(vo.getRegDate());
-        dto.setUpdateDate(vo.getUpdateDate());
-        dto.setProfileImageUrl(vo.getProfileImageUrl());
-        dto.setProfileImage(null);
-        dto.setChoogooMi(ChoogooMi.valueOf(vo.getChoogooMi()));
-
-        return dto;
+        return UserDTO.builder()
+                .email(vo.getEmail())
+                .password(vo.getPassword())
+                .nickname(vo.getNickname())
+                .regDate(vo.getRegDate())
+                .updateDate(vo.getUpdateDate())
+                .profileImageUrl(vo.getProfileImageUrl())
+                .profileImage(null)
+                .choogooMi(ChoogooMi.valueOf(vo.getChoogooMi()))
+                .loginType(LoginType.valueOf(vo.getLoginType()))
+                .build();
     }
 }

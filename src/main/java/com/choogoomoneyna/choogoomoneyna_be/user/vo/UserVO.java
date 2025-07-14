@@ -20,5 +20,6 @@ public class UserVO {
     private Date regDate;
     private Date updateDate;
     private String choogooMi;        // Enum → String
+    private String loginType;        // Enum -> Strring
 }
 
