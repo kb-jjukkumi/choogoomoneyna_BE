@@ -15,14 +15,12 @@ public interface UserService {
     void registerUser(UserJoinRequestDTO dto);
 
     /**
-     * 주어진 사용자 로그인 ID가 시스템에 이미 중복되어 있는지 확인합니다.
+     * 주어진 사용자 닉네임이 시스템에 이미 중복되어 있는지 확인합니다.
      *
-     * @param userLoginId 중복 확인할 사용자의 로그인 ID
-     * @return 로그인 ID가 중복되면 true, 그렇지 않으면 false
+     * @param nickname 중복 확인할 사용자의 닉네임
+     * @return nickname이 중복되면 true, 그렇지 않으면 false
      */
-    public boolean isUserLoginIdDuplicated(String userLoginId);
-
-
+    public boolean isUserLoginIdDuplicated(String nickname);
 
     /**
      * 주어진 이메일과 로그인 타입으로 사용자가 존재하는지 확인합니다.
