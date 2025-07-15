@@ -3,6 +3,7 @@ package com.choogoomoneyna.choogoomoneyna_be.user.service;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.ChoogooMi;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.LoginType;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.UserDTO;
+import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserJoinRequestDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 
 public class UserConverter {
@@ -39,6 +40,21 @@ public class UserConverter {
                 .profileImage(null)
                 .choogooMi(ChoogooMi.valueOf(vo.getChoogooMi()))
                 .loginType(LoginType.valueOf(vo.getLoginType()))
+                .build();
+    }
+
+    // joinRequestDTO -> VO
+    public static UserVO joinRequestDtoToVo(UserJoinRequestDTO dto, LoginType loginType, String encryptedPassword) {
+        if (dto == null)
+            return null;
+
+        return UserVO.builder()
+                .email(dto.getEmail())
+                .password(encryptedPassword)
+                .nickname(dto.getNickname())
+                .profileImageUrl(dto.getProfileImage() != null ? dto.getProfileImage().getOriginalFilename() : null)
+                .choogooMi(dto.getChoogooMi().name())
+                .loginType(loginType.name())
                 .build();
     }
 }
