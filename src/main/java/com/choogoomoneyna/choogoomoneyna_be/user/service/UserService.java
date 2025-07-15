@@ -20,7 +20,7 @@ public interface UserService {
      * @param nickname 중복 확인할 사용자의 닉네임
      * @return nickname이 중복되면 true, 그렇지 않으면 false
      */
-    public boolean isUserLoginIdDuplicated(String nickname);
+    boolean isUserLoginIdDuplicated(String nickname);
 
     /**
      * 주어진 이메일과 로그인 타입으로 사용자가 존재하는지 확인합니다.
@@ -29,7 +29,7 @@ public interface UserService {
      * @param loginType 사용자의 로그인 타입 (예: LOCAL, OAUTH2)
      * @return 해당 이메일과 로그인 타입을 가진 사용자가 존재하면 true, 그렇지 않으면 false
      */
-    public boolean findByEmailAndLoginType(String email, LoginType loginType);
+    boolean findByEmailAndLoginType(String email, LoginType loginType);
 
     /**
      * userId 로 식별된 사용자의 ChoogooMi(선호 타입)를 업데이트합니다.
@@ -37,7 +37,7 @@ public interface UserService {
      * @param userId ChoogooMi를 업데이트할 사용자의 id
      * @param choogooMi 사용자에게 설정할 새로운 ChoogooMi 값
      */
-    public void updateChoogooMiByUserId(Long userId, ChoogooMi choogooMi);
+    void updateChoogooMiByUserId(Long userId, ChoogooMi choogooMi);
 
     /**
      * userId로 식별된 사용자의 닉네임을 업데이트합니다.
@@ -45,7 +45,7 @@ public interface UserService {
      * @param userId nickname을 업데이트할 사용자의 id
      * @param nickname 사용자에게 설정할 새로운 nickname
      */
-    public void updateUserNicknameByUserId(Long userId, String nickname);
+    void updateUserNicknameByUserId(Long userId, String nickname);
 
     /**
      * userId로 식별된 사용자의 프로필 사진을 업데이트합니다.
@@ -53,7 +53,7 @@ public interface UserService {
      * @param userId 프로필 사진을 업데이트할 사용자의 id
      * @param profileImage 사용자에게 설정할 새로운 프로필 사진
      */
-    public void updateProfileImageByUserId(Long userId, String profileImage);
+    void updateProfileImageByUserId(Long userId, String profileImage);
 
 
 
