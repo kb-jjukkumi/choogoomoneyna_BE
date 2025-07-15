@@ -32,11 +32,29 @@ public interface UserService {
     public boolean findByEmailAndLoginType(String email, LoginType loginType);
 
     /**
-     * 이메일 주소로 식별된 사용자의 ChoogooMi(선호 타입)를 업데이트합니다.
+     * userId 로 식별된 사용자의 ChoogooMi(선호 타입)를 업데이트합니다.
      *
-     * @param email ChoogooMi를 업데이트할 사용자의 이메일 주소
+     * @param userId ChoogooMi를 업데이트할 사용자의 id
      * @param choogooMi 사용자에게 설정할 새로운 ChoogooMi 값
      */
-    public void updateChoogooMiByEmail(String email, ChoogooMi choogooMi);
+    public void updateChoogooMiByUserId(Long userId, ChoogooMi choogooMi);
+
+    /**
+     * userId로 식별된 사용자의 닉네임을 업데이트합니다.
+     *
+     * @param userId nickname을 업데이트할 사용자의 id
+     * @param nickname 사용자에게 설정할 새로운 nickname
+     */
+    public void updateUserNicknameByUserId(Long userId, String nickname);
+
+    /**
+     * userId로 식별된 사용자의 프로필 사진을 업데이트합니다.
+     *
+     * @param userId 프로필 사진을 업데이트할 사용자의 id
+     * @param profileImage 사용자에게 설정할 새로운 프로필 사진
+     */
+    public void updateProfileImageByUserId(Long userId, String profileImage);
+
+
 
 }
