@@ -51,9 +51,9 @@ public interface UserService {
      * userId로 식별된 사용자의 프로필 사진을 업데이트합니다.
      *
      * @param userId 프로필 사진을 업데이트할 사용자의 id
-     * @param profileImage 사용자에게 설정할 새로운 프로필 사진
+     * @param profileImageUrl 사용자에게 설정할 새로운 프로필 사진
      */
-    void updateProfileImageByUserId(Long userId, String profileImage);
+    void updateProfileImageUrlByUserId(Long userId, String profileImageUrl);
 
 
     /**
