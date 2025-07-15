@@ -2,7 +2,9 @@ package com.choogoomoneyna.choogoomoneyna_be.user.mapper;
 
 
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
+import org.apache.ibatis.annotations.Mapper;
 
+@Mapper
 public interface UserMapper {
     void insertUser(UserVO user);
 
