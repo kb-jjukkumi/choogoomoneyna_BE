@@ -7,37 +7,37 @@ import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserJoinRequestDTO;
 public interface UserService {
 
     /**
-     * Registers a new user in the system.
+     * 시스템에 새로운 사용자를 등록합니다.
      *
-     * @param dto the user registration request containing the user's email, password,
-     *            nickname, profile image, and preferred type (choogooMi).
+     * @param dto 사용자의 이메일, 비밀번호, 닉네임, 프로필 이미지,
+     *            선호 타입(choogooMi)을 포함한 사용자 등록 요청
      */
     void registerUser(UserJoinRequestDTO dto);
 
     /**
-     * Checks whether the given user login ID is already duplicated in the system.
+     * 주어진 사용자 로그인 ID가 시스템에 이미 중복되어 있는지 확인합니다.
      *
-     * @param userLoginId the login ID of the user to check for duplication
-     * @return true if the login ID is duplicated, false otherwise
+     * @param userLoginId 중복 확인할 사용자의 로그인 ID
+     * @return 로그인 ID가 중복되면 true, 그렇지 않으면 false
      */
     public boolean isUserLoginIdDuplicated(String userLoginId);
 
 
 
     /**
-     * Checks if a user exists with the given email and login type.
+     * 주어진 이메일과 로그인 타입으로 사용자가 존재하는지 확인합니다.
      *
-     * @param email the email address of the user to be searched
-     * @param loginType the type of login for the user (e.g., LOCAL, OAUTH2)
-     * @return true if a user with the given email and login type exists, false otherwise
+     * @param email 검색할 사용자의 이메일 주소
+     * @param loginType 사용자의 로그인 타입 (예: LOCAL, OAUTH2)
+     * @return 해당 이메일과 로그인 타입을 가진 사용자가 존재하면 true, 그렇지 않으면 false
      */
     public boolean findByEmailAndLoginType(String email, LoginType loginType);
 
     /**
-     * Updates the ChoogooMi (preferred type) of a user identified by their email address.
+     * 이메일 주소로 식별된 사용자의 ChoogooMi(선호 타입)를 업데이트합니다.
      *
-     * @param email the email address of the user for whom the ChoogooMi should be updated
-     * @param choogooMi the new ChoogooMi value to be set for the user
+     * @param email ChoogooMi를 업데이트할 사용자의 이메일 주소
+     * @param choogooMi 사용자에게 설정할 새로운 ChoogooMi 값
      */
     public void updateChoogooMiByEmail(String email, ChoogooMi choogooMi);
 
