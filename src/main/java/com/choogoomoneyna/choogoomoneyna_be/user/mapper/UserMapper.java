@@ -21,4 +21,6 @@ public interface UserMapper {
     void updateUser(UserVO user);
 
     void deleteByEmail(String email);
+
+    int countAllUsers();
 }
