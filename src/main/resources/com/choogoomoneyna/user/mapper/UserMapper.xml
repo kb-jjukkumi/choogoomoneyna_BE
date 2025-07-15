@@ -35,6 +35,16 @@
         SELECT * FROM users WHERE id = #{id}
     </select>
 
+    <!-- nickname으로 존재 여부 확인 -->
+    <select id="existsByNickname" resultType="java.lang.Boolean">
+        SELECT 1 FROM users WHERE nickname = #{nickname}
+    </select>
+
+    <!-- email과 loginType으로 존재 여부 확인 -->
+    <select id="existsByEmail" resultType="java.lang.Boolean">
+        SELECT 1 FROM users WHERE email = #{email} AND login_type = #{loginType}
+    </select>
+
     <!-- 사용자 정보 수정 -->
     <update id="updateUser" parameterType="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO">
         UPDATE users
