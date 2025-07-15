@@ -56,5 +56,11 @@ public interface UserService {
     void updateProfileImageByUserId(Long userId, String profileImage);
 
 
+    /**
+     * 시스템에 등록된 모든 사용자의 수를 반환합니다.
+     *
+     * @return 시스템에 등록된 총 사용자 수
+     */
+    int countAllUsers();
 
 }
