@@ -61,4 +61,11 @@
         DELETE FROM users WHERE email = #{email}
     </delete>
 
+    <!-- 전체 user 수 반환하기 -->
+    <select id="countAllUsers" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM users;
+    </select>
+
+
+
 </mapper>

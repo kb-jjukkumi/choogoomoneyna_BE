@@ -39,9 +39,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateChoogooMiByEmail(String email, ChoogooMi choogooMi) {
-        // db에서 email 을 이용하여 user 찾기
-        UserVO user = userMapper.findByEmail(email);
+    public void updateChoogooMiByUserId(Long userId, ChoogooMi choogooMi) {
+        // db에서 userId를 이용하여 user 찾기
+        UserVO user = userMapper.findById(userId);
         
         // 추구미 수정
         user.setChoogooMi(choogooMi.name());
@@ -49,5 +49,36 @@ public class UserServiceImpl implements UserService {
         // db에 다시 업데이트
         userMapper.updateUser(user);
         log.info("User's choogooMi updated: {}", user);
+    }
+
+    @Override
+    public void updateUserNicknameByUserId(Long userId, String nickname) {
+        // db 에서 userId를 이용하여 user 찾기
+        UserVO user = userMapper.findById(userId);
+
+        // nickname 수정
+        user.setNickname(nickname);
+
+        // db에 다시 업데이트
+        userMapper.updateUser(user);
+        log.info("User's nickname updated: {}", user);
+    }
+
+    @Override
+    public void updateProfileImageUrlByUserId(Long userId, String profileImageUrl) {
+        // db 에서 userId를 이용하여 user 찾기
+        UserVO user = userMapper.findById(userId);
+
+        // profileImageUrl 수정
+        user.setProfileImageUrl(profileImageUrl);
+
+        // db에 다시 업데이트
+        userMapper.updateUser(user);
+        log.info("User's profileImageUrl updated: {}", user);
+    }
+
+    @Override
+    public int countAllUsers() {
+        return userMapper.countAllUsers();
     }
 }
