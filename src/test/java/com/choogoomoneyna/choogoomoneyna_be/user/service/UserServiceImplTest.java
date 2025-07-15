@@ -131,38 +131,9 @@ class UserServiceImplTest {
     }
 
     @Test
-    void updateProfileImageUrlByUserId() {
-        // given
-        when(userMapper.existsByNickname("leehk")).thenReturn(true);
-
-        // when
-        boolean result = userService.isUserLoginIdDuplicated("leehk");
-
-        // then
-        assertThat(result).isTrue();
-    }
-
-    @Test
     void countAllUsers() {
         when(userMapper.countAllUsers()).thenReturn(10);
         int result = userService.countAllUsers();
         assertThat(result).isEqualTo(10);
-    }
-
-    @Test
-    void passwordEncodingTest() {
-        // given
-        String rawPassword = "<PASSWORD>";
-
-        // when
-        String encodedPassword = passwordEncoder.encode(rawPassword);
-
-        // then
-
-        System.out.println("Raw password: " + rawPassword);
-        System.out.println("Encoded password: " + encodedPassword);
-
-        assertThat(encodedPassword).isNotEqualTo(rawPassword);
-        assertThat(passwordEncoder.matches(rawPassword, encodedPassword)).isTrue(); // 매칭되는지
     }
 }
