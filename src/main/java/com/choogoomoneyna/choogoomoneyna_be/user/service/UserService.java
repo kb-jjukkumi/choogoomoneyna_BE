@@ -3,6 +3,9 @@ package com.choogoomoneyna.choogoomoneyna_be.user.service;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.ChoogooMi;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.LoginType;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserJoinRequestDTO;
+import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
+
+import javax.validation.constraints.NotBlank;
 
 public interface UserService {
 
@@ -30,6 +33,15 @@ public interface UserService {
      * @return 해당 이메일과 로그인 타입을 가진 사용자가 존재하면 true, 그렇지 않으면 false
      */
     boolean existsByEmailAndLoginType(String email, LoginType loginType);
+
+    /**
+     * 주어진 이메일과 로그인 타입으로 사용자를 찾아 반환
+     *
+     * @param email 검색할 사용자의 이메일 주소
+     * @param loginType 사용자의 로그인 타입 (예: LOCAL, OAUTH2)
+     * @return 해당 이메일과 로그인 타입을 가진 사용자가 존재하면 반환, 그렇지 않으면 null
+     */
+    UserVO findByEmailAndLoginType(@NotBlank(message = "이메일은 필수 입니다.") String email, LoginType loginType);
 
     /**
      * userId 로 식별된 사용자의 ChoogooMi(선호 타입)를 업데이트합니다.

@@ -14,6 +14,8 @@ public interface UserMapper {
 
     UserVO findByEmail(String email);
 
+    UserVO findByEmailAndLoginType(String email, String loginType);
+
     UserVO findByNickname(String nickname);
 
     UserVO findById(Long id);
