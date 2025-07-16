@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean findByEmailAndLoginType(String email, LoginType loginType) {
+    public boolean existsByEmailAndLoginType(String email, LoginType loginType) {
         return userMapper.existsByEmail(email, loginType.name());
     }
 
