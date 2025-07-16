@@ -1,29 +1,23 @@
 package com.choogoomoneyna.choogoomoneyna_be.jwt;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-// import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Value;
 import lombok.Getter;
+import lombok.Setter;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
-
 @Component
+@PropertySource("classpath:application-secret-jwt.properties")
 @Getter
+@Setter
 public class JwtProperties {
 
-//    @Value("${jwt.secret-key}")
-//    private String secretKey;
-//
-//    @Value("${jwt.expiration-time}")
-//    private long accessTokenExpirationTime;
+    @Value("${jwt.secret}")
+    private String secretKey;
 
-//    @Value("${jwt.refresh.expiration}")
-//    private refreshTokenExpirationTime;
-    
-    // TODO: application-secret-jwt.properties 와 연결하여 다시 작성할 것
-    private String secretKey = "very_very_important_secret_key";
-    private long accessTokenExpirationTime = (long)6e10;  // 10분
-    private long refreshTokenExpirationTime = (long) 6e12;
+    @Value("${jwt.access.expiration}")
+    private long accessTokenExpirationTime;
+
+    @Value("${jwt.refresh.expiration}")
+    private long refreshTokenExpirationTime;
 }
