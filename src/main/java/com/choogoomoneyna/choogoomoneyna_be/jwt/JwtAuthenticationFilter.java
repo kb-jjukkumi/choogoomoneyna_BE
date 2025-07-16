@@ -33,14 +33,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * Authorization 헤더의 JWT 토큰을 사용하여 HTTP 요청을 인증 처리합니다.
      *
      * @param request     처리할 HTTP 요청
-     * @param reponse     HTTP 응답
+     * @param response     HTTP 응답
      * @param filterChain 실행할 필터 체인
      * @throws ServletException 서블릿 처리 중 오류 발생시
      * @throws IOException      입출력 처리 중 오류 발생시
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse reponse,
+                                    HttpServletResponse response,
                                     FilterChain filterChain)
     throws ServletException, IOException {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
@@ -55,7 +55,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
-        filterChain.doFilter(request, reponse);
+        filterChain.doFilter(request, response);
     }
 
     /**

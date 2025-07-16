@@ -77,9 +77,7 @@ public class SecurityConfig {
      * 보안 필터 체인 설정
      */
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
-
+    public SecurityFilterChain filterChain(HttpSecurity http, Filter encodingFilter) throws Exception {
         http
                 .csrf().disable()
                 .exceptionHandling()
@@ -109,7 +107,7 @@ public class SecurityConfig {
 
                 .and()
 
-                .addFilterBefore(characterEncodingFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(encodingFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
