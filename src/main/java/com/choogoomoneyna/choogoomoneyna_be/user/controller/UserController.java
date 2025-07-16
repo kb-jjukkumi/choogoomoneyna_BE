@@ -35,6 +35,7 @@ public class UserController {
     @PostMapping("/login")
     public JwtTokenResponseDTO login(@Valid @RequestBody UserLoginRequestDTO dto) throws IllegalAccessException {
         UserVO user = userService.findByEmailAndLoginType(dto.getEmail(), LoginType.LOCAL);
+        System.out.println("??????????user = " + user);
 
         if (user == null) {
             throw new UsernameNotFoundException("존재하지 않은 이메일입니다.");

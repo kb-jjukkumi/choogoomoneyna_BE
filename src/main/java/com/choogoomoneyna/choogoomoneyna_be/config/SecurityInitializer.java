@@ -1,5 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.config;
 
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 
 /**
