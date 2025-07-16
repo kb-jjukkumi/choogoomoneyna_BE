@@ -39,6 +39,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserVO findByEmailAndLoginType(String email, LoginType loginType) {
+        return userMapper.findByEmailAndLoginType(email, loginType.name());
+    }
+
+    @Override
     public void updateChoogooMiByUserId(Long userId, ChoogooMi choogooMi) {
         // db에서 userId를 이용하여 user 찾기
         UserVO user = userMapper.findById(userId);

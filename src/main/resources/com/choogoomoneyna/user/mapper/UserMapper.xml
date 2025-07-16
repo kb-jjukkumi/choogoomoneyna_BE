@@ -23,6 +23,11 @@
         SELECT * FROM users WHERE email = #{email}
     </select>
 
+    <select id="findByEmailAndLoginType" resultType="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO">
+        SELECT * FROM users WHERE email = #{email} AND login_type = #{loginType}
+    </select>
+
+
     <!-- 닉네임으로 조회 -->
     <select id="findByNickname" parameterType="String"
             resultType="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO">
@@ -65,7 +70,6 @@
     <select id="countAllUsers" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM users;
     </select>
-
 
 
 </mapper>
