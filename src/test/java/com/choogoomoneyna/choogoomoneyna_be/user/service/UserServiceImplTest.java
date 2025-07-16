@@ -14,7 +14,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -81,7 +80,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void findByEmailAndLoginType() {
+    void existsByEmailAndLoginType() {
         // given
         String email = "leehk@example.com";
         LoginType loginType = LoginType.LOCAL;
@@ -89,7 +88,7 @@ class UserServiceImplTest {
         when(userMapper.existsByEmail(email, loginType.name())).thenReturn(true);
 
         // when
-        boolean result = userService.findByEmailAndLoginType(email, loginType);
+        boolean result = userService.existsByEmailAndLoginType(email, loginType);
 
         // then
         assertThat(result).isTrue();

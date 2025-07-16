@@ -29,7 +29,7 @@ public interface UserService {
      * @param loginType 사용자의 로그인 타입 (예: LOCAL, OAUTH2)
      * @return 해당 이메일과 로그인 타입을 가진 사용자가 존재하면 true, 그렇지 않으면 false
      */
-    boolean findByEmailAndLoginType(String email, LoginType loginType);
+    boolean existsByEmailAndLoginType(String email, LoginType loginType);
 
     /**
      * userId 로 식별된 사용자의 ChoogooMi(선호 타입)를 업데이트합니다.
