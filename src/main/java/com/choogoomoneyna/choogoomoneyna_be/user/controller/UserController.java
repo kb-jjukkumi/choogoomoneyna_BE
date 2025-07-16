@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -28,16 +29,17 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody UserJoinRequestDTO dto) {
-
+    public ResponseEntity<?> signup(@ModelAttribute UserJoinRequestDTO dto) {
         System.out.println("email = " + dto.getEmail());
         System.out.println("nickname = " + dto.getNickname());
         System.out.println("password = " + dto.getPassword());
         System.out.println("choogooMi = " + dto.getChoogooMi());
-        System.out.println("signup dto = " + dto);
+        System.out.println("파일 이름 = " + (dto.getProfileImage() != null ? dto.getProfileImage().getOriginalFilename() : "없음"));
+
         userService.registerUser(dto);
         return ResponseEntity.ok("회원가입 성공!");
     }
+
 
     @PostMapping("/login")
     public JwtTokenResponseDTO login(@Valid @RequestBody UserLoginRequestDTO dto) throws IllegalAccessException {
