@@ -3,6 +3,7 @@ package com.choogoomoneyna.choogoomoneyna_be.user.mapper;
 
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface UserMapper {
@@ -14,7 +15,7 @@ public interface UserMapper {
 
     UserVO findByEmail(String email);
 
-    UserVO findByEmailAndLoginType(String email, String loginType);
+    UserVO findByEmailAndLoginType(@Param("email") String email, @Param("loginType") String loginType);
 
     UserVO findByNickname(String nickname);
 

@@ -5,6 +5,19 @@
 
 <mapper namespace="com.choogoomoneyna.choogoomoneyna_be.user.mapper.UserMapper">
 
+    <resultMap id="UserResultMap" type="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO">
+        <id property="id" column="id"/>
+        <result property="email" column="email"/>
+        <result property="password" column="password"/>
+        <result property="nickname" column="nickname"/>
+        <result property="profileImageUrl" column="profile_image_url"/>
+        <result property="regDate" column="reg_date"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="choogooMi" column="choogoomi_type"/>
+        <result property="loginType" column="login_type"/>
+    </resultMap>
+
+
     <!-- INSERT -->
     <insert id="insertUser" parameterType="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO">
         INSERT INTO users (
@@ -13,17 +26,17 @@
         )
         VALUES (
                    #{email}, #{password}, #{nickname}, #{profileImageUrl},
-                   NOW(), NOW(), #{choogooMi}, #{loginType}}
+                   NOW(), NOW(), #{choogooMi}, #{loginType}
                )
     </insert>
 
     <!-- 이메일로 조회 -->
     <select id="findByEmail" parameterType="String"
-            resultType="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO">
+            resultMap="UserResultMap">
         SELECT * FROM users WHERE email = #{email}
     </select>
 
-    <select id="findByEmailAndLoginType" resultType="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO">
+    <select id="findByEmailAndLoginType" resultMap="UserResultMap">
         SELECT * FROM users WHERE email = #{email} AND login_type = #{loginType}
     </select>
 
@@ -56,7 +69,7 @@
         SET nickname = #{nickname},
             profile_image_url = #{profileImageUrl},
             choogoomi_type = #{choogooMi},
-            login_type = #{loginType}
+            login_type = #{loginType},
             update_date = NOW()
         WHERE email = #{email}
     </update>

@@ -29,6 +29,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                          HttpServletResponse response,
                          AuthenticationException authException)
         throws IOException {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: JWT authentication required.");
+        System.out.println(">>> JwtAuthenticationEntryPoint 발동됨");
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: JWT authentication required.");
         }
 }

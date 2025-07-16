@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,7 +28,13 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @ModelAttribute UserJoinRequestDTO dto) {
+    public ResponseEntity<?> registerUser(@RequestBody UserJoinRequestDTO dto) {
+
+        System.out.println("email = " + dto.getEmail());
+        System.out.println("nickname = " + dto.getNickname());
+        System.out.println("password = " + dto.getPassword());
+        System.out.println("choogooMi = " + dto.getChoogooMi());
+        System.out.println("signup dto = " + dto);
         userService.registerUser(dto);
         return ResponseEntity.ok("회원가입 성공!");
     }
@@ -35,19 +42,23 @@ public class UserController {
     @PostMapping("/login")
     public JwtTokenResponseDTO login(@Valid @RequestBody UserLoginRequestDTO dto) throws IllegalAccessException {
         UserVO user = userService.findByEmailAndLoginType(dto.getEmail(), LoginType.LOCAL);
-        System.out.println("??????????user = " + user);
+        System.out.println("user = " + user);
 
         if (user == null) {
             throw new UsernameNotFoundException("존재하지 않은 이메일입니다.");
         }
 
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+            System.out.println("password diff");
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }
 
         String accessToken = jwtTokenProvider.generateAccessToken(user.getId(), user.getNickname());
         String refreshToken = jwtTokenProvider.generateRefreshToken(user.getId(), user.getNickname());
 
+        System.out.println("accessToken = " + accessToken);
+        System.out.println("refreshToken = " + refreshToken);
+        
         return new JwtTokenResponseDTO(accessToken, refreshToken);
     }
 }
