@@ -5,8 +5,15 @@ import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.Filter;
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.ServletRegistration;
 
 public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitializer {
+
+    private static final String LOCATION = "/testtest";
+    private static final long MAX_FILE_SIZE = 20971520; // 20MB
+    private static final long MAX_REQUEST_SIZE = 41943040; // 40MB
+    private static final int FILE_SIZE_THRESHOLD = 0;
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
@@ -22,6 +29,14 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
     protected String[] getServletMappings() {
         return new String[]{"/"};
     }
+
+    @Override
+    protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+        MultipartConfigElement multipartConfigElement =
+                new MultipartConfigElement("", MAX_FILE_SIZE, MAX_REQUEST_SIZE, FILE_SIZE_THRESHOLD);
+        registration.setMultipartConfig(multipartConfigElement);
+    }
+
 
     protected Filter[] getServletFilters() {
         CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
