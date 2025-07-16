@@ -1,6 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.jwt;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +23,7 @@ import java.util.Map;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
@@ -43,6 +45,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
     throws ServletException, IOException {
+        String path = request.getRequestURI();
+        System.out.println(">>> JwtAuthenticationFilter path: " + path);
+        if (path.contains("/login") || path.contains("/signup")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
 
         if (bearerToken != null && bearerToken.startsWith(BEARER_PREFIX)) {

@@ -9,9 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class UserJoinRequestDTO {
 
     @NotBlank(message = "이메일은 필수 입니다.")
@@ -23,7 +21,7 @@ public class UserJoinRequestDTO {
     @NotBlank(message = "닉네임은 필수로 설정해야 합니다")
     private String nickname;
 
-    private MultipartFile profileImage;
+//    private MultipartFile profileImage;
 
     @NotNull(message = "추구미는 필수로 설정해야 합니다")
     private ChoogooMi choogooMi;

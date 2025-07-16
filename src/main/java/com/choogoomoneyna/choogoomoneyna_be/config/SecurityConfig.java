@@ -64,29 +64,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint)
-
+                    .exceptionHandling()
+                    .authenticationEntryPoint(authenticationEntryPoint) // 인증 실패 처리
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/users/login", "/api/users/signup", "/resources/**").permitAll()
-                .anyRequest().authenticated()
-
+                    .antMatchers("/**").permitAll()
+                    .antMatchers("/api/users/login", "/api/users/signup").permitAll() // 로그인, 회원가입은 인증 없이 허용
+                    .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**").permitAll() // 정적 리소스 접근 허용
+                .anyRequest().authenticated() // 나머지는 인증 필요
                 .and()
                 .formLogin()
-                .loginPage("/login")
-                .defaultSuccessUrl("/home", true)
-                .permitAll()
-
-                .and()
+                    .disable() // 우리는 폼 로그인을 사용하지 않음 (JWT 방식이기 때문에)
                 .logout()
-                .logoutUrl("/user/logout")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-                .permitAll();
+                    .logoutUrl("/user/logout")
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID")
+                    .permitAll();
 
+        // JWT 인증 필터를 UsernamePasswordAuthenticationFilter 앞에 추가
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
+
+
 
     /**
      * 인증 매니저를 Bean 으로 등록
