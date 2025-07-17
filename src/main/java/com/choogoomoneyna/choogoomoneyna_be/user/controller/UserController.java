@@ -39,6 +39,17 @@ public class UserController {
         return ResponseEntity.ok("회원가입 성공!");
     }
 
+    @GetMapping("/check-nickname")
+    public ResponseEntity<?> checkNickname(@RequestParam String nickname) {
+        try {
+            boolean isNicknameDuplicated = userService.isUserLoginIdDuplicated(nickname);
+            System.out.println(isNicknameDuplicated ? "yes" : "no");
+            return ResponseEntity.ok(isNicknameDuplicated);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("서버 오류: " + e.getMessage());
+        }
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody UserLoginRequestDTO dto) throws IllegalAccessException {
