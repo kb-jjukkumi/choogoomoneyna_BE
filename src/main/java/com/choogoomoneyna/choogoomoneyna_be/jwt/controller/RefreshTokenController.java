@@ -1,6 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.jwt.controller;
 
-import com.choogoomoneyna.choogoomoneyna_be.jwt.service.RefreshTokenServiceImpl;
+import com.choogoomoneyna.choogoomoneyna_be.jwt.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ import java.util.Map;
 @RequestMapping("/api/token")
 public class RefreshTokenController {
 
-    private final RefreshTokenServiceImpl refreshTokenService;
+    private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/reissue")
     @ResponseBody
