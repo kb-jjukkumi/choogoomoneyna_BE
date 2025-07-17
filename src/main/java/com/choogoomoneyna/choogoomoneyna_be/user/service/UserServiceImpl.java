@@ -35,14 +35,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isUserLoginIdDuplicated(String nickname) {
-        System.out.println(nickname);
-        System.out.println(userMapper.existsByNickname(nickname));
         return userMapper.existsByNickname(nickname.trim());
     }
 
     @Override
     public boolean existsByEmailAndLoginType(String email, LoginType loginType) {
-        System.out.println(userMapper.existsByEmail(email, loginType.name()));
         return userMapper.existsByEmail(email, loginType.name());
     }
 
