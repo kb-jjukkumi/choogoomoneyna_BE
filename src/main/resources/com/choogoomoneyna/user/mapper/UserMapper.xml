@@ -55,7 +55,7 @@
 
     <!-- nickname으로 존재 여부 확인 -->
     <select id="existsByNickname" resultType="java.lang.Boolean">
-        SELECT 1 FROM users WHERE nickname = #{nickname}
+        SELECT COUNT(*) > 0 FROM users WHERE nickname = #{nickname}
     </select>
 
     <!-- email과 loginType으로 존재 여부 확인 -->
