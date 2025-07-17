@@ -26,6 +26,13 @@ public class GlobalExceptionHandler {
                 .body(sb.toString());
     }
 
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<String> handleEmailAlreadyExistsException(EmailAlreadyExistsException ex) {
+        return ResponseEntity.badRequest()
+                .header("Content-Type", "text/plain;charset=UTF-8")
+                .body(ex.getMessage());
+    }
+
     @ExceptionHandler(BindException.class)
     @ResponseBody
     public ResponseEntity<?> handleBindException(BindException ex) {
