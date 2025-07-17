@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.choogoomoneyna.choogoomoneyna_be.jwt.mapper.RefreshTokenMapper">
+
+    <resultMap id="refreshTokenResultMap" type="com.choogoomoneyna.choogoomoneyna_be.jwt.vo.RefreshTokenVO">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="refreshToken" column="refresh_token"/>
+        <result property="issuedAt" column="issued_at"/>
+        <result property="expiresAt" column="expires_at"/>
+    </resultMap>
+
+    <insert id="insertRefreshToken" parameterType="com.choogoomoneyna.choogoomoneyna_be.jwt.vo.RefreshTokenVO">
+        INSERT INTO refresh_tokens (user_id, refresh_token, issued_at, expires_at)
+        VALUES (#{userId}, #{refreshToken}, #{issuedAt}, #{expiresAt})
+    </insert>
+
+    <delete id="deleteByUserId">
+        DELETE FROM refresh_tokens WHERE user_id = #{userId}
+    </delete>
+
+    <delete id="deleteByRefreshToken">
+        DELETE FROM refresh_tokens WHERE refresh_token = #{refreshToken}
+    </delete>
+
+    <select id="findByRefreshToken" resultMap="refreshTokenResultMap">
+        SELECT * FROM refresh_tokens WHERE refresh_token = #{refreshToken}
+    </select>
+</mapper>

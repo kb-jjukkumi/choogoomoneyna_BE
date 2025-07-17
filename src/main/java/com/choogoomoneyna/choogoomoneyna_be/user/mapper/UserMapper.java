@@ -11,7 +11,7 @@ public interface UserMapper {
 
     boolean existsByNickname(String nickname);
 
-    boolean existsByEmail(String email, String loginType);
+    boolean existsByEmail(@Param("email") String email, @Param("loginType") String loginType);
 
     UserVO findByEmail(String email);
 

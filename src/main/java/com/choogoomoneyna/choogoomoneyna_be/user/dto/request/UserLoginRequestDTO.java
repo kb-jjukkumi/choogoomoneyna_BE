@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @Getter
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotBlank;
 @Builder
 public class UserLoginRequestDTO {
     @NotBlank(message = "이메일은 필수 입니다.")
+    @Email(message = "올바른 이메일 형식이어야 합니다.")
     private String email;
 
     @NotBlank(message = "비밀번호는 필수 입니다.")

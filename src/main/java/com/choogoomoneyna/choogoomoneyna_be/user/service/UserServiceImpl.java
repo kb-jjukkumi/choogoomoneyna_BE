@@ -1,5 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.user.service;
 
+import com.choogoomoneyna.choogoomoneyna_be.exception.EmailAlreadyExistsException;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.ChoogooMi;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.LoginType;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserJoinRequestDTO;
@@ -20,6 +21,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerUser(UserJoinRequestDTO dto) {
+        // email 중복 체크
+        if (existsByEmailAndLoginType(dto.getEmail(), LoginType.LOCAL)) {
+            throw new EmailAlreadyExistsException("이미 존재하는 이메일입니다.");
+        }
         String encryptedPassword = passwordEncoder.encode(dto.getPassword());
 
         UserVO userVO = UserConverter.joinRequestDtoToVo(dto, LoginType.LOCAL, encryptedPassword);
@@ -35,6 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean existsByEmailAndLoginType(String email, LoginType loginType) {
+        System.out.println(userMapper.existsByEmail(email, loginType.name()));
         return userMapper.existsByEmail(email, loginType.name());
     }
 
