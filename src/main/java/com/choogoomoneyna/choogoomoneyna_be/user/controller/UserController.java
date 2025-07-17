@@ -29,7 +29,7 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@ModelAttribute UserJoinRequestDTO dto) {
+    public ResponseEntity<?> signup(@Valid @ModelAttribute UserJoinRequestDTO dto) {
         System.out.println("email = " + dto.getEmail());
         System.out.println("nickname = " + dto.getNickname());
         System.out.println("password = " + dto.getPassword());
