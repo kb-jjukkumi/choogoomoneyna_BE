@@ -5,28 +5,53 @@
 
 <mapper namespace="com.choogoomoneyna.choogoomoneyna_be.user.mapper.UserMapper">
 
+<!--    <resultMap id="UserResultMap" type="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO">-->
+<!--        <id property="id" column="id"/>-->
+<!--        <result property="email" column="email"/>-->
+<!--        <result property="password" column="password"/>-->
+<!--        <result property="nickname" column="nickname"/>-->
+<!--        <result property="profileImageUrl" column="profile_image_url"/>-->
+<!--        <result property="regDate" column="reg_date"/>-->
+<!--        <result property="updateDate" column="update_date"/>-->
+<!--        <result property="choogooMi" column="choogoomi_type"/>-->
+<!--        <result property="loginType" column="login_type"/>-->
+<!--    </resultMap>-->
     <resultMap id="UserResultMap" type="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO">
-        <id property="id" column="id"/>
+        <id property="id" column="user_id"/>
         <result property="email" column="email"/>
         <result property="password" column="password"/>
         <result property="nickname" column="nickname"/>
-        <result property="profileImageUrl" column="profile_image_url"/>
+        <result property="profileImageUrl" column="profile_imageurl"/>
         <result property="regDate" column="reg_date"/>
         <result property="updateDate" column="update_date"/>
-        <result property="choogooMi" column="choogoomi_type"/>
-        <result property="loginType" column="login_type"/>
+        <result property="choogooMi" column="choogoomi_name"/>
+        <result property="loginType" column="user_login_type"/>
+        <result property="connectedId" column="connected_id"/>
+        <result property="userLevel" column="user_level"/>
     </resultMap>
 
 
     <!-- INSERT -->
+<!--    <insert id="insertUser" parameterType="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO">-->
+<!--        INSERT INTO users (-->
+<!--            email, password, nickname, profile_image_url,-->
+<!--            reg_date, update_date, choogoomi_type, login_type-->
+<!--        )-->
+<!--        VALUES (-->
+<!--                   #{email}, #{password}, #{nickname}, #{profileImageUrl},-->
+<!--                   NOW(), NOW(), #{choogooMi}, #{loginType}-->
+<!--               )-->
+<!--    </insert>-->
     <insert id="insertUser" parameterType="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO">
         INSERT INTO users (
-            email, password, nickname, profile_image_url,
-            reg_date, update_date, choogoomi_type, login_type
+            email, password, nickname, profile_imageurl,
+            reg_date, update_date, choogoomi_name, user_login_type,
+            connected_id, user_level
         )
         VALUES (
                    #{email}, #{password}, #{nickname}, #{profileImageUrl},
-                   NOW(), NOW(), #{choogooMi}, #{loginType}
+                   NOW(), NOW(), #{choogooMi}, #{loginType},
+                   #{connectedId}, #{userLevel}
                )
     </insert>
 
@@ -37,7 +62,7 @@
     </select>
 
     <select id="findByEmailAndLoginType" resultMap="UserResultMap">
-        SELECT * FROM users WHERE email = #{email} AND login_type = #{loginType}
+        SELECT * FROM users WHERE email = #{email} AND user_login_type = #{loginType}
     </select>
 
 
@@ -50,7 +75,7 @@
     <!-- ID로 조회 -->
     <select id="findById" parameterType="Long"
             resultType="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO">
-        SELECT * FROM users WHERE id = #{id}
+        SELECT * FROM users WHERE user_id = #{id}
     </select>
 
     <!-- nickname으로 존재 여부 확인 -->
@@ -60,16 +85,18 @@
 
     <!-- email과 loginType으로 존재 여부 확인 -->
     <select id="existsByEmail" resultType="java.lang.Boolean">
-        SELECT COUNT(*) > 0 FROM users WHERE email = #{email} AND login_type = #{loginType}
+        SELECT COUNT(*) > 0 FROM users WHERE email = #{email} AND user_login_type = #{loginType}
     </select>
 
     <!-- 사용자 정보 수정 -->
     <update id="updateUser" parameterType="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO">
         UPDATE users
         SET nickname = #{nickname},
-            profile_image_url = #{profileImageUrl},
-            choogoomi_type = #{choogooMi},
-            login_type = #{loginType},
+            profile_imageurl = #{profileImageUrl},
+            choogoomi_name = #{choogooMi},
+            user_login_type = #{loginType},
+            connected_id = #{connectedId},
+            user_level = #{userLevel},
             update_date = NOW()
         WHERE email = #{email}
     </update>
