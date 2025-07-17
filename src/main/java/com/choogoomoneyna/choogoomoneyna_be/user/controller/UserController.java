@@ -1,6 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.user.controller;
 
 import com.choogoomoneyna.choogoomoneyna_be.jwt.JwtTokenProvider;
+import com.choogoomoneyna.choogoomoneyna_be.jwt.service.RefreshTokenServiceImpl;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.LoginType;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.JwtTokenResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserJoinRequestDTO;
@@ -11,12 +12,14 @@ import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -27,6 +30,7 @@ public class UserController {
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
+    private final RefreshTokenServiceImpl refreshTokenService;
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@Valid @ModelAttribute UserJoinRequestDTO dto) {
@@ -55,12 +59,28 @@ public class UserController {
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }
 
+        // 중복 로그인 방지 위해 기존 토큰 삭제
+        refreshTokenService.deleteAllTokensByUserId(user.getId());
+
         String accessToken = jwtTokenProvider.generateAccessToken(user.getId(), user.getNickname());
-        String refreshToken = jwtTokenProvider.generateRefreshToken(user.getId(), user.getNickname());
+        String refreshToken = refreshTokenService.generateRefreshTokenAndSave(user.getId(), user.getNickname());
 
         System.out.println("accessToken = " + accessToken);
         System.out.println("refreshToken = " + refreshToken);
         
         return new JwtTokenResponseDTO(accessToken, refreshToken);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        String refreshToken = request.getHeader("refreshToken");
+        if (refreshToken != null) {
+            refreshTokenService.deleteTokenByRefreshToken(refreshToken);
+        }
+
+        SecurityContextHolder.clearContext();
+        request.getSession().invalidate();
+
+        return ResponseEntity.ok("로그아웃 성공");
     }
 }
