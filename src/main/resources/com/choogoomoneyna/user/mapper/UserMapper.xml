@@ -60,7 +60,7 @@
 
     <!-- email과 loginType으로 존재 여부 확인 -->
     <select id="existsByEmail" resultType="java.lang.Boolean">
-        SELECT 1 FROM users WHERE email = #{email} AND login_type = #{loginType}
+        SELECT COUNT(*) > 0 FROM users WHERE email = #{email} AND login_type = #{loginType}
     </select>
 
     <!-- 사용자 정보 수정 -->
