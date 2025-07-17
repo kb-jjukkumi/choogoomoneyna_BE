@@ -13,7 +13,8 @@ import javax.sql.DataSource;
 
 @Configuration
 @MapperScan(basePackages = {
-        "com.choogoomoneyna.choogoomoneyna_be.user.mapper"
+        "com.choogoomoneyna.choogoomoneyna_be.user.mapper",
+        "com.choogoomoneyna.choogoomoneyna_be.jwt.mapper",
 })
 public class MyBatisConfig {
     @Bean
@@ -32,7 +33,7 @@ public class MyBatisConfig {
         sessionFactory.setDataSource(dataSource);
         sessionFactory.setMapperLocations(
                 new PathMatchingResourcePatternResolver()
-                        .getResources("classpath:com/choogoomoneyna/user/mapper/*.xml")
+                        .getResources("classpath:com/choogoomoneyna/**/mapper/*.xml")
         );
         return sessionFactory.getObject();
     }
