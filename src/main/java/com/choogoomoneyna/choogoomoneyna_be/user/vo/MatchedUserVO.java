@@ -12,4 +12,5 @@ public class MatchedUserVO {
     private Long id;
     private String nickname;
     private String profileImageUrl;
+    private int userScore;
 }
