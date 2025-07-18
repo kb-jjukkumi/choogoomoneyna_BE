@@ -110,6 +110,9 @@
     <select id="countAllUsers" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM users;
     </select>
+    <select id="findAllUsers" resultType="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO">
+        SELECT * FROM USERS;
+    </select>
 
 
 </mapper>
