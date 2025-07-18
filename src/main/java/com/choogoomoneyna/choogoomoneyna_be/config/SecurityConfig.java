@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 @ComponentScan(basePackages = {
-        "com.choogoomoneyna.choogoomoneyna_be.jwt",
+        "com.choogoomoneyna.choogoomoneyna_be.auth.jwt",
         "com.choogoomoneyna.choogoomoneyna_be.user.service"
 })
 public class SecurityConfig extends WebSecurityConfigurerAdapter {

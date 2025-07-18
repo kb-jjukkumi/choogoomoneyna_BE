@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 @PropertySource("classpath:application-secret-database.properties")
 @MapperScan(basePackages = {
         "com.choogoomoneyna.choogoomoneyna_be.user.mapper",
-        "com.choogoomoneyna.choogoomoneyna_be.jwt.mapper",
+        "com.choogoomoneyna.choogoomoneyna_be.auth.jwt.mapper",
 })
 public class MyBatisConfig {
 
