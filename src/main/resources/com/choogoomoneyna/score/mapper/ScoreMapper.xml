@@ -3,6 +3,47 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.choogoomoneyna.choogoomoneyna_be.jwt.mapper.RefreshTokenMapper">
+<mapper namespace="com.choogoomoneyna.choogoomoneyna_be.score.mapper.ScoreMapper">
 
+    <!-- resultMap 정의 -->
+    <resultMap id="userScoreResultMap" type="com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO">
+        <id property="userId" column="user_id"/>
+        <result property="score" column="score_value"/>
+    </resultMap>
+
+    <!-- 1. 점수 삽입 -->
+    <insert id="insertScore" parameterType="com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO">
+        INSERT INTO scores (user_id, score_value)
+        VALUES (#{userId}, #{score})
+    </insert>
+
+    <!-- 2. 점수 조회 -->
+    <select id="getScore" parameterType="long" resultType="int">
+        SELECT score_value FROM scores WHERE user_id = #{userId}
+    </select>
+
+    <!-- 3. 점수 수정 -->
+    <update id="updateScore" parameterType="com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO">
+        UPDATE scores
+        SET score_value = #{score}
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 4. 모든 점수 목록 -->
+    <select id="findAllScores" resultType="com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO">
+        SELECT user_id AS userId, score_value FROM scores
+    </select>
+
+    <!-- 5. 점수 상위 N명 조회 -->
+    <select id="findTopNScores" parameterType="int" resultType="com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO">
+        SELECT user_id AS userId, score_value
+        FROM scores
+        ORDER BY score_value DESC
+            LIMIT #{limit}
+    </select>
+
+    <!-- 6. 유저 점수 삭제 -->
+    <delete id="deleteByUserId" parameterType="long">
+        DELETE FROM scores WHERE user_id = #{userId}
+    </delete>
 </mapper>
