@@ -26,7 +26,7 @@ public class EmailAuthServiceImpl implements EmailAuthService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
         message.setSubject("이메일 인증 코드");
-        message.setText("인증 코드는 다음과 같습니다.\n\n" + code);
+        message.setText("인증 코드는 다음과 같습니다.\n\n" + code + "\n\n5분 내로 입력해주세요.");
 
         mailSender.send(message);
     }
