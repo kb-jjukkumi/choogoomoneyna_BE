@@ -117,6 +117,9 @@ dependencies {
   // controller valid
   implementation 'javax.validation:validation-api:2.0.1.Final'
   implementation 'org.hibernate.validator:hibernate-validator:6.0.13.Final'
+
+  // email
+  implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 
