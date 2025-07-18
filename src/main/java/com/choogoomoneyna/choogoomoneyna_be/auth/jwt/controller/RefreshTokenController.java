@@ -1,6 +1,6 @@
-package com.choogoomoneyna.choogoomoneyna_be.jwt.controller;
+package com.choogoomoneyna.choogoomoneyna_be.auth.jwt.controller;
 
-import com.choogoomoneyna.choogoomoneyna_be.jwt.service.RefreshTokenService;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

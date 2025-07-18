@@ -1,4 +1,4 @@
-package com.choogoomoneyna.choogoomoneyna_be.jwt;
+package com.choogoomoneyna.choogoomoneyna_be.auth.jwt;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;

@@ -1,10 +1,8 @@
-package com.choogoomoneyna.choogoomoneyna_be.jwt;
+package com.choogoomoneyna.choogoomoneyna_be.auth.jwt;
 
 import com.choogoomoneyna.choogoomoneyna_be.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
