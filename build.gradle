@@ -118,8 +118,11 @@ dependencies {
   implementation 'javax.validation:validation-api:2.0.1.Final'
   implementation 'org.hibernate.validator:hibernate-validator:6.0.13.Final'
 
-  // email
-  implementation 'org.springframework.boot:spring-boot-starter-mail'
+  // Spring Mail 기능 (JavaMailSenderImpl 포함)
+  implementation("org.springframework:spring-context-support:${springVersion}")
+
+  // JavaMail (SMTP 전송)
+  implementation 'com.sun.mail:javax.mail:1.6.2'
 }
 
 
