@@ -1,6 +1,8 @@
 package com.choogoomoneyna.choogoomoneyna_be.account.codef.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.AccountRequestDto;
+import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.AccountResponseDto;
+import com.choogoomoneyna.choogoomoneyna_be.account.codef.mapper.AccountMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -17,6 +19,8 @@ import java.net.URLDecoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +32,7 @@ public class CodefApiRequester {
 
     private final CodefTokenManager codefTokenManager;
     private final SqlSessionTemplate sqlSessionTemplate;
+    private final AccountMapper accountMapper;
 
     //커넥티드 아이디 계정 등록
     public String registerConnectedId(AccountRequestDto accountRequestDto) throws Exception {
@@ -71,7 +76,7 @@ public class CodefApiRequester {
         return connectedId;
     }
 
-    private String extractErrorMessage(String response) throws Exception {
+    protected String extractErrorMessage(String response) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonResponse = mapper.readTree(response);
 
@@ -95,7 +100,7 @@ public class CodefApiRequester {
     }
 
     // ConnectedId를 API 요청으로부터 추출하는 메서드
-    private String extractConnectedIdFromResponse(String response) throws IOException {
+    protected String extractConnectedIdFromResponse(String response) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode rootNode = (ObjectNode) mapper.readTree(response);
 
@@ -108,7 +113,7 @@ public class CodefApiRequester {
     }
 
     // 요청 바디 생성
-    private String buildRequestBody(AccountRequestDto accountRequestDto) {
+    protected String buildRequestBody(AccountRequestDto accountRequestDto) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode accountInfo = buildAccountInfo(accountRequestDto);
 
@@ -122,7 +127,7 @@ public class CodefApiRequester {
     }
 
     // 요청 바디 생성(Overload, connectedid있는 경우)
-    private String buildRequestBody(AccountRequestDto accountRequestDto, String connectedId) {
+    protected String buildRequestBody(AccountRequestDto accountRequestDto, String connectedId) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode accountInfo = buildAccountInfo(accountRequestDto);
 
@@ -137,7 +142,7 @@ public class CodefApiRequester {
     }
 
     // accountInfo 객체 생성
-    private ObjectNode buildAccountInfo(AccountRequestDto accountRequestDto) {
+    protected ObjectNode buildAccountInfo(AccountRequestDto accountRequestDto) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode accountInfo = mapper.createObjectNode();
 
@@ -155,8 +160,8 @@ public class CodefApiRequester {
         return accountInfo;
     }
 
-    // 커넥티드 아이디 등록,추가 api 요청 전송
-    private String sendPostRequest(String requestUrl, String accessToken, String requestBody) throws IOException, InterruptedException {
+    // 모든 api 요청 전송 메서드
+    protected String sendPostRequest(String requestUrl, String accessToken, String requestBody) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -175,6 +180,43 @@ public class CodefApiRequester {
         } else {
             throw new IOException("HTTP error code: " + response.statusCode());
         }
+    }
+
+    // 보유 계좌 조회 메서드
+    public List<AccountResponseDto> getAccountList(AccountRequestDto accountRequestDto, String connectedId) throws Exception {
+        String requestUrl = "https://development.codef.io/v1/kr/bank/p/account/account-list";
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode requestBody = mapper.createObjectNode();
+        requestBody.put("organization", accountRequestDto.getBankId());
+        requestBody.put("connectedId", connectedId);
+
+        String response = sendPostRequest(requestUrl, codefTokenManager.getAccessToken(), requestBody.toString());
+
+        List<AccountResponseDto> accountList = new ArrayList<>();
+        JsonNode jsonResponse = mapper.readTree(response);
+
+        // 응답에서 따로 메시지를 추출
+        String message = jsonResponse.path("result").path("message").asText();
+
+        JsonNode depositTrustList = jsonResponse.path("data").path("resDepositTrust");
+        if (depositTrustList.isArray() && depositTrustList.size() > 0) {
+            for (JsonNode accountInfo : depositTrustList) {
+                AccountResponseDto accountResponseDto = new AccountResponseDto();
+                String resAccount = (accountInfo.get("resAccount").asText());
+                if(accountMapper.findAccountByAccountNum(resAccount)!=null){
+                    continue;
+                } else{
+                    accountResponseDto.setAccountNum(resAccount);
+                }
+                accountResponseDto.setAccountBalance(accountInfo.get("resAccountBalance").asText());
+                accountResponseDto.setAccountName(accountInfo.get("resAccountName").asText());
+                accountResponseDto.setBankId(accountRequestDto.getBankId());
+
+                accountList.add(accountResponseDto);
+            }
+        }
+        return accountList;
     }
 
 

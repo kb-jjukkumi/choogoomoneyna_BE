@@ -6,6 +6,6 @@ import lombok.Data;
 public class AccountResponseDto {
     private String accountNum;
     private String accountName;
-    private String bankName;
-    private int accountBalance;
+    private String bankId;
+    private String accountBalance;
 }
