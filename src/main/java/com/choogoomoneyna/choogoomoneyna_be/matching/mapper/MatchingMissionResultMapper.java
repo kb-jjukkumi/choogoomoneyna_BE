@@ -8,5 +8,7 @@ public interface MatchingMissionResultMapper {
 
     void insertAll(List<MatchingMissionResultVO> matchingMissionResultVOList);
 
+    void insertOne(MatchingMissionResultVO matchingMissionResultVO);
+
     List<MatchingMissionResultVO> findMatchingMissionByUserId(Long UserId);
 }
