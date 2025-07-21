@@ -18,6 +18,8 @@ public interface MatchingMapper {
 
     List<MatchingVO> getAllMatchingsByUserId(Long userId);
 
+    MatchingVO getMatchingByMatchingId(Long matchingId);
+
     String getMatchingStatus(Long matchingId);
 
     void updateMatchingStatus(Long matchingId, String matchingStatus);

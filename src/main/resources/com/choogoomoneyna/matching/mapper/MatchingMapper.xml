@@ -31,7 +31,7 @@
 
     <!-- 매칭 상태가 "진행 중" 조회 -->
     <select id="getAllProgressMatchings" resultMap="MatchingResultMap">
-        SELECT *
+        SELECT matching_id, user1_id, user2_id, matching_status, matching_start, matching_finish
         FROM matchings
         WHERE matching_status = 'PROGRESS'
         ORDER BY matching_start DESC
@@ -54,6 +54,13 @@
     <!-- 매칭 ID로 상태 조회 -->
     <select id="getMatchingStatus" parameterType="long" resultType="string">
         SELECT matching_status
+        FROM matchings
+        WHERE matching_id = #{matchingId}
+    </select>
+
+    <!-- 매칭 ID로 매칭 조회 -->
+    <select id="getMatchingByMatchingId" parameterType="long" resultMap="MatchingResultMap">
+        SELECT matching_id, user1_id, user2_id, matching_status, matching_start, matching_finish
         FROM matchings
         WHERE matching_id = #{matchingId}
     </select>
