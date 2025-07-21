@@ -10,8 +10,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class MatchingMissionResultVO {
-    private Integer id;
-    private Integer matchingId;
+    private Long id;
+    private Long matchingId;
     private Integer missionId;
     private Long userId;
     private Integer resultScore;

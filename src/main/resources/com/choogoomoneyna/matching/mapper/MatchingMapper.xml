@@ -38,7 +38,7 @@
     </insert>
 
     <!-- 매칭 ID로 상태 조회 -->
-    <select id="getMatchingStatus" parameterType="int" resultType="string">
+    <select id="getMatchingStatus" parameterType="long" resultType="string">
         SELECT matching_status
         FROM matchings
         WHERE matching_id = #{matchingId}

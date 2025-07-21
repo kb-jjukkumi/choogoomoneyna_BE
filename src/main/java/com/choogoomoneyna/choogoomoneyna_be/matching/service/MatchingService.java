@@ -30,7 +30,7 @@ public interface MatchingService {
      * @param matchingId     업데이트할 매칭의 ID
      * @param matchingStatus 설정할 매칭 상태
      */
-    public void updateMatchingStatus(Integer matchingId, String matchingStatus);
+    public void updateMatchingStatus(Long matchingId, String matchingStatus);
 
     /**
      * 매칭 상태를 조회합니다
@@ -38,7 +38,7 @@ public interface MatchingService {
      * @param matchingId 조회할 매칭의 ID
      * @return 매칭 상태
      */
-    public String getMatchingStatus(Integer matchingId);
+    public String getMatchingStatus(Long matchingId);
 
     /**
      * 특정 사용자의 최근 매칭 기록을 조회합니다

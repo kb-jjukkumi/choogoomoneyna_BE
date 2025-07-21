@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class MatchingVO {
-    private Integer id;
+    private Long id;
     private Long user1Id;
     private Long user2Id;
     private String matchingStatus;
