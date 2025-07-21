@@ -8,16 +8,19 @@ import java.util.List;
 public interface MatchingService {
 
     /**
-     * 사용자를 둘 씩 매칭합니다
-     *
-     * @return 매칭된 사용자 쌍들의 리스트. 각 내부 리스트는 매칭된 두 사용자의 정보를 포함합니다.
-     */
-    public List<List<MatchedUserVO>> getUserPairs();
-
-    /**
      * 모든 사용자의 매칭을 시작합니다
+     * 모든 사용자들을 둘씩 매칭 시킨 후 db 에 저장합니다
      */
     public void startAllMatching();
+
+    /**
+     * 특정 사용자의 매칭을 시작합니다
+     * dummy data 와 매칭 시켜줍니다
+     * 이후 db 에 저장됩니다
+     * 
+     * @param userId 매칭될 사용자의 ID
+     */
+    public void startMatching(Long userId);
 
     /**
      * 모든 사용자의 매칭을 종료합니다
