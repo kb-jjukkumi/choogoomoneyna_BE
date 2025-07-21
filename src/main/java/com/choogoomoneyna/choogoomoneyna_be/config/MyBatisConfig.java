@@ -18,7 +18,8 @@ import javax.sql.DataSource;
 @MapperScan(basePackages = {
         "com.choogoomoneyna.choogoomoneyna_be.user.mapper",
         "com.choogoomoneyna.choogoomoneyna_be.jwt.mapper",
-        "com.choogoomoneyna.choogoomoneyna_be.score.mapper"
+        "com.choogoomoneyna.choogoomoneyna_be.score.mapper",
+        "com.choogoomoneyna.choogoomoneyna_be.matching.mapper",
 })
 public class MyBatisConfig {
 
