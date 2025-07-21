@@ -23,7 +23,21 @@
             LIMIT #{limit}
     </select>
 
-    <!-- 전체 매칭 조회 -->
+    <!-- 매칭 상태가 "진행 중" 조회 -->
+    <select id="findAllProgressMatchings" resultMap="MatchingResultMap">
+        SELECT *
+        FROM matchings
+        WHERE matching_status = 'PROGRESS'
+        ORDER BY matching_start DESC
+    </select>
+
+    <update id="updateAllProgressMatchings">
+        UPDATE matchings
+        SET matching_status = 'COMPLETED'
+        WHERE matching_status = 'PROGRESS';
+    </update>
+
+    <!-- userId로 전체 매칭 조회 -->
     <select id="findAllMatchingsByUserId" resultMap="MatchingResultMap" parameterType="long">
         SELECT matching_id, user1_id, user2_id, matching_status, matching_start, matching_finish
         FROM matchings
