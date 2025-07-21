@@ -1,4 +1,4 @@
-package com.choogoomoneyna.choogoomoneyna_be.jwt;
+package com.choogoomoneyna.choogoomoneyna_be.auth.jwt;
 
 import org.springframework.beans.factory.annotation.Value;
 import lombok.Getter;

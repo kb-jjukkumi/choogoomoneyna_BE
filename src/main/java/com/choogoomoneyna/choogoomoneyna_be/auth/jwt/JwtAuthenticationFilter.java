@@ -1,4 +1,4 @@
-package com.choogoomoneyna.choogoomoneyna_be.jwt;
+package com.choogoomoneyna.choogoomoneyna_be.auth.jwt;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

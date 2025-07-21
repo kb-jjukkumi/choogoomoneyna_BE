@@ -1,13 +1,12 @@
-package com.choogoomoneyna.choogoomoneyna_be.jwt.service;
+package com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service;
 
-import com.choogoomoneyna.choogoomoneyna_be.jwt.JwtProperties;
-import com.choogoomoneyna.choogoomoneyna_be.jwt.JwtTokenProvider;
-import com.choogoomoneyna.choogoomoneyna_be.jwt.mapper.RefreshTokenMapper;
-import com.choogoomoneyna.choogoomoneyna_be.jwt.vo.RefreshTokenVO;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.JwtProperties;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.JwtTokenProvider;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.mapper.RefreshTokenMapper;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.vo.RefreshTokenVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Service
