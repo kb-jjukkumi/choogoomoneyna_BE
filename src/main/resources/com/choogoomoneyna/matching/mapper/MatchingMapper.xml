@@ -15,7 +15,7 @@
     </resultMap>
 
     <!-- 최근 N개의 매칭 조회 -->
-    <select id="getRecentNMatchingsByUserId" resultMap="MatchingResultMap">
+    <select id="findRecentNMatchingsByUserId" resultMap="MatchingResultMap">
         SELECT matching_id, user1_id, user2_id, matching_status, matching_start, matching_finish
         FROM matchings
         WHERE user1_id = #{userId} OR user2_id = #{userId}
@@ -30,7 +30,7 @@
     </update>
 
     <!-- 매칭 상태가 "진행 중" 조회 -->
-    <select id="getAllProgressMatchings" resultMap="MatchingResultMap">
+    <select id="findAllProgressMatchings" resultMap="MatchingResultMap">
         SELECT matching_id, user1_id, user2_id, matching_status, matching_start, matching_finish
         FROM matchings
         WHERE matching_status = 'PROGRESS'
@@ -38,7 +38,7 @@
     </select>
 
     <!-- userId로 전체 매칭 조회 -->
-    <select id="getAllMatchingsByUserId" resultMap="MatchingResultMap" parameterType="long">
+    <select id="findAllMatchingsByUserId" resultMap="MatchingResultMap" parameterType="long">
         SELECT matching_id, user1_id, user2_id, matching_status, matching_start, matching_finish
         FROM matchings
         WHERE user1_id = #{userId} OR user2_id = #{userId}
@@ -52,14 +52,14 @@
     </insert>
 
     <!-- 매칭 ID로 상태 조회 -->
-    <select id="getMatchingStatus" parameterType="long" resultType="string">
+    <select id="findMatchingStatus" parameterType="long" resultType="string">
         SELECT matching_status
         FROM matchings
         WHERE matching_id = #{matchingId}
     </select>
 
     <!-- 매칭 ID로 매칭 조회 -->
-    <select id="getMatchingByMatchingId" parameterType="long" resultMap="MatchingResultMap">
+    <select id="findMatchingByMatchingId" parameterType="long" resultMap="MatchingResultMap">
         SELECT matching_id, user1_id, user2_id, matching_status, matching_start, matching_finish
         FROM matchings
         WHERE matching_id = #{matchingId}

@@ -125,7 +125,7 @@ public class MatchingServiceImpl implements MatchingService {
     @Override
     public void finishAllMatching() {
         // 진행 중인 매칭 전체 가져오기
-        List<MatchingVO> progressMatchings = matchingMapper.getAllProgressMatchings();
+        List<MatchingVO> progressMatchings = matchingMapper.findAllProgressMatchings();
         
         // TODO: 결과를 users table에 저장할 것!
 
@@ -135,7 +135,7 @@ public class MatchingServiceImpl implements MatchingService {
 
     @Override
     public void updateMatchingStatus(Long matchingId, String matchingStatus) {
-        MatchingVO match = matchingMapper.getMatchingByMatchingId(matchingId);
+        MatchingVO match = matchingMapper.findMatchingByMatchingId(matchingId);
         if (match == null) {
             return;
         }
@@ -144,17 +144,17 @@ public class MatchingServiceImpl implements MatchingService {
     }
 
     @Override
-    public String getMatchingStatus(Long matchingId) {
-        return matchingMapper.getMatchingStatus(matchingId);
+    public String findMatchingStatus(Long matchingId) {
+        return matchingMapper.findMatchingStatus(matchingId);
     }
 
     @Override
     public List<MatchingVO> findRecentNMatchingsByUserId(Long userId, int limit) {
-        return matchingMapper.getRecentNMatchingsByUserId(userId, limit);
+        return matchingMapper.findRecentNMatchingsByUserId(userId, limit);
     }
 
     @Override
     public List<MatchingVO> findAllMatchingsByUserId(Long userId) {
-        return matchingMapper.getAllMatchingsByUserId(userId);
+        return matchingMapper.findAllMatchingsByUserId(userId);
     }
 }

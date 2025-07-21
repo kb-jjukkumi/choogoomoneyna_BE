@@ -41,7 +41,7 @@ public interface MatchingService {
      * @param matchingId 조회할 매칭의 ID
      * @return 매칭 상태
      */
-    public String getMatchingStatus(Long matchingId);
+    public String findMatchingStatus(Long matchingId);
 
     /**
      * 특정 사용자의 최근 매칭 기록을 조회합니다
