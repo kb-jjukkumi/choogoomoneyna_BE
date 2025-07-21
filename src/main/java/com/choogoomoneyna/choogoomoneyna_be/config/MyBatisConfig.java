@@ -20,6 +20,7 @@ import javax.sql.DataSource;
         "com.choogoomoneyna.choogoomoneyna_be.jwt.mapper",
         "com.choogoomoneyna.choogoomoneyna_be.score.mapper",
         "com.choogoomoneyna.choogoomoneyna_be.matching.mapper",
+        "com.choogoomoneyna.choogoomoneyna_be.mission.mapper",
 })
 public class MyBatisConfig {
 
