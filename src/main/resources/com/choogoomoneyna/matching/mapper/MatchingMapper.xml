@@ -15,20 +15,12 @@
     </resultMap>
 
     <!-- 최근 N개의 매칭 조회 -->
-    <select id="findRecentNMatchingsByUserId" resultMap="MatchingResultMap">
+    <select id="getRecentNMatchingsByUserId" resultMap="MatchingResultMap">
         SELECT matching_id, user1_id, user2_id, matching_status, matching_start, matching_finish
         FROM matchings
         WHERE user1_id = #{userId} OR user2_id = #{userId}
         ORDER BY matching_start DESC
             LIMIT #{limit}
-    </select>
-
-    <!-- 매칭 상태가 "진행 중" 조회 -->
-    <select id="findAllProgressMatchings" resultMap="MatchingResultMap">
-        SELECT *
-        FROM matchings
-        WHERE matching_status = 'PROGRESS'
-        ORDER BY matching_start DESC
     </select>
 
     <update id="updateAllProgressMatchings">
@@ -37,8 +29,16 @@
         WHERE matching_status = 'PROGRESS';
     </update>
 
+    <!-- 매칭 상태가 "진행 중" 조회 -->
+    <select id="getAllProgressMatchings" resultMap="MatchingResultMap">
+        SELECT *
+        FROM matchings
+        WHERE matching_status = 'PROGRESS'
+        ORDER BY matching_start DESC
+    </select>
+
     <!-- userId로 전체 매칭 조회 -->
-    <select id="findAllMatchingsByUserId" resultMap="MatchingResultMap" parameterType="long">
+    <select id="getAllMatchingsByUserId" resultMap="MatchingResultMap" parameterType="long">
         SELECT matching_id, user1_id, user2_id, matching_status, matching_start, matching_finish
         FROM matchings
         WHERE user1_id = #{userId} OR user2_id = #{userId}

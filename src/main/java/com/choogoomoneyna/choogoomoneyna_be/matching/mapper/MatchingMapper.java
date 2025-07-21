@@ -10,13 +10,13 @@ import java.util.List;
 public interface MatchingMapper {
     void insertMatching(MatchingVO matchingVO);
 
-    List<MatchingVO> findAllProgressMatchings();
+    List<MatchingVO> getAllProgressMatchings();
 
     void updateAllProgressMatchings();
 
-    List<MatchingVO> findRecentNMatchingsByUserId(@Param("userId") Long userId, @Param("limit") int limit);
+    List<MatchingVO> getRecentNMatchingsByUserId(@Param("userId") Long userId, @Param("limit") int limit);
 
-    List<MatchingVO> findAllMatchingsByUserId(Long userId);
+    List<MatchingVO> getAllMatchingsByUserId(Long userId);
 
     String getMatchingStatus(Long matchingId);
 
