@@ -43,4 +43,21 @@
         VALUES (#{matchingId}, #{missionId}, #{userId}, #{resultScore})
     </insert>
 
+    <!-- update one -->
+    <update id="updateOne" parameterType="com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingMissionResultVO">
+        UPDATE matching_mission_results
+        SET result_score = #{resultScore}
+        WHERE result_id = #{id}
+    </update>
+
+    <!-- 유저, 매치, 미션 아이디를 이용해서 점수 가져오기 -->
+    <select id="findMatchingMissionResultByUserIdAndMatchingIdAndMissionId" resultType="com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingMissionResultVO">
+        SELECT result_id, matching_id, mission_id, user_id, result_score
+        FROM matching_mission_results
+        WHERE user_id = #{userId}
+          AND matching_id = #{matchingId}
+          AND mission_id = #{missionId}
+    </select>
+
+
 </mapper>
