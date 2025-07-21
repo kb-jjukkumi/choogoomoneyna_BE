@@ -21,4 +21,10 @@ public interface MatchingMissionResultMapper {
             @Param("missionId") Integer missionId
     );
 
+    // 없으면 0 반환
+    int getAllScoreByUserIdAndMatchingId(
+            @Param("userId") Long userId,
+            @Param("matchingId") Long matchingId
+    );
+
 }

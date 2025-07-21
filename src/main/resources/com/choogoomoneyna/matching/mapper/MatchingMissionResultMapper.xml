@@ -50,7 +50,7 @@
         WHERE result_id = #{id}
     </update>
 
-    <!-- 유저, 매치, 미션 아이디를 이용해서 점수 가져오기 -->
+    <!-- 유저, 매치, 미션 아이디를 이용해서 column 가져오기 -->
     <select id="findMatchingMissionResultByUserIdAndMatchingIdAndMissionId" resultType="com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingMissionResultVO">
         SELECT result_id, matching_id, mission_id, user_id, result_score
         FROM matching_mission_results
@@ -58,6 +58,15 @@
           AND matching_id = #{matchingId}
           AND mission_id = #{missionId}
     </select>
+
+    <!-- 유저, 매치 아이디를 이용해서 점수 합 가져오기 -->
+    <select id="getAllScoreByUserIdAndMatchingId" resultType="int">
+        SELECT COALESCE(SUM(result_score), 0) AS total_score
+        FROM matching_mission_results
+        WHERE user_id = #{userId}
+          AND matching_id = #{matchingId}
+    </select>
+
 
 
 </mapper>
