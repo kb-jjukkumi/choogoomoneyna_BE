@@ -58,11 +58,11 @@ public class MatchServiceImpl implements MatchService {
 
             List<MatchedUserVO> matchedUsers = new ArrayList<>();
             matchedUsers.add(users.get(i));
-            isMatched[i] = true;
 
             for (int j = i + random.nextInt(1, 10); j < userSize; j++) {
                 if (!isMatched[j]) {
                     matchedUsers.add(users.get(j));
+                    isMatched[i] = true;
                     isMatched[j] = true;
 
                     result.add(matchedUsers);
@@ -78,20 +78,18 @@ public class MatchServiceImpl implements MatchService {
             if (!isMatched[i]) {
                 if (one) {
                     matchedUsers.add(users.get(i));
-                    isMatched[i] = true;
                     result.add(matchedUsers);
-                    one = false;
                 } else {
                     matchedUsers = new ArrayList<>();
                     matchedUsers.add(users.get(i));
-                    isMatched[i] = true;
-                    one = true;
                 }
+                isMatched[i] = true;
+                one = !one;
             }
         }
 
         // 한명이 남음
-        // TODO: dummy data로 넣도록 수정
+        // TODO: dummy data로 넣도록 수정 -> 일단 마지막 사람으로 넣었음
         if (one) {
             matchedUsers.add(users.get(userSize - 1));
             result.add(matchedUsers);
