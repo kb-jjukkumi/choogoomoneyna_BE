@@ -56,17 +56,19 @@ public class CodefTokenManager {
     }
 
     //토큰 기한 만료 체크
-    private boolean isAccessTokenExpired() {
+    protected boolean isAccessTokenExpired() {
         return System.currentTimeMillis() >= tokenExpiryTime;
     }
 
 
     //access_token 재발급
-    private void refreshAccessToken() {
+    protected void refreshAccessToken() {
+
         Map<String, String> tokenMap = requestAccessToken();
+
         if(tokenMap!=null && tokenMap.containsKey("access_token")) {
             accessToken = tokenMap.get("access_token");
-            tokenExpiryTime = System.currentTimeMillis() + 3600 * 1000;
+            tokenExpiryTime = System.currentTimeMillis() + 3600 * 1000 * 24 * 7;
 
             CodefTokenVO codefTokenVO = new CodefTokenVO();
             codefTokenVO.setAccessToken(accessToken);
@@ -86,7 +88,7 @@ public class CodefTokenManager {
     }
 
     //codef api에 access_token 발급 요청
-    private HashMap<String, String> requestAccessToken() {
+    protected HashMap<String, String> requestAccessToken() {
         try {
             URL url = new URL(OAUTH_TOKEN_URL);
             String params = "grant_type=" + GRANT_TYPE + "&scope=" + SCOPE;
