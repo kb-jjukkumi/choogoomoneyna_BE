@@ -1,5 +1,8 @@
 package com.choogoomoneyna.choogoomoneyna_be.matching.service;
 
+import com.choogoomoneyna.choogoomoneyna_be.matching.dto.MatchingStatus;
+import com.choogoomoneyna.choogoomoneyna_be.matching.mapper.MatchingMapper;
+import com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingVO;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
 import com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.mapper.UserMapper;
@@ -8,6 +11,10 @@ import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -16,10 +23,80 @@ import java.util.stream.Collectors;
 public class MatchingServiceImpl implements MatchingService {
 
     private final UserMapper userMapper;
+    private final MatchingMapper matchingMapper;
     private final ScoreService scoreService;
 
+    private MatchingVO buildToMatchingVO(Long user1Id, Long user2Id) {
+        LocalDate today = LocalDate.now();
+
+        // 이번 주 월요일
+        LocalDate monday = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        // 이번 주 일요일
+        LocalDate sunday = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+
+        // 시스템 시간대를 기준으로 Date 객체로 변환
+        Date mondayDate = Date.from(monday.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date sundayDate = Date.from(sunday.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        return MatchingVO.builder()
+                .user1Id(user1Id)
+                .user2Id(user2Id)
+                .matchingStatus(MatchingStatus.PENDING.name())
+                .matchingStart(mondayDate)
+                .matchingFinish(sundayDate)
+                .build();
+    }
+
+    /**
+     * 점수로 정렬된 유저들을 둘씩 매칭해주는 알고리즘 작성
+     */
+    private void pairUsersAndSave(List<MatchedUserVO> users) {
+
+        int userSize = users.size();
+        boolean[] isMatched = new boolean[userSize];
+        Random random = new Random();
+
+        // 10등 안으로 차이 나게 랜덤 매칭
+        for (int i = 0; i < userSize; i++) {
+            if (isMatched[i]) {
+                continue;
+            }
+
+            for (int j = i + random.nextInt(1, 10); j < userSize; j++) {
+                if (!isMatched[j]) {
+                    isMatched[i] = true;
+                    isMatched[j] = true;
+
+                    matchingMapper.insertMatching(buildToMatchingVO(users.get(i).getId(), users.get(j).getId()));
+                    break;
+                }
+            }
+        }
+
+        // 매칭 안된 사람끼리 순서대로
+        boolean one = false;
+        MatchedUserVO user1 = null;
+        for (int i = 0; i < userSize; i++) {
+            if (!isMatched[i]) {
+                if (one) {
+                    matchingMapper.insertMatching(buildToMatchingVO(user1.getId(), users.get(i).getId()));
+                    user1 = null;
+                } else {
+                    user1 = users.get(i);
+                }
+                isMatched[i] = true;
+                one = !one;
+            }
+        }
+
+        // 한명이 남음
+        if (one) {
+            startMatching(user1.getId());
+        }
+    }
+
     @Override
-    public List<List<MatchedUserVO>> getUserPairs() {
+    public void startAllMatching() {
         List<UserVO> users = userMapper.findAllUsers();
         List<UserScoreVO> scores = scoreService.getAllScores();
 
@@ -36,64 +113,48 @@ public class MatchingServiceImpl implements MatchingService {
                 .sorted(Comparator.comparingInt(MatchedUserVO::getUserScore).reversed())
                 .toList();
 
-        return pairUsers(matchableUsers);
+        pairUsersAndSave(matchableUsers);
     }
 
-    /**
-     * 점수로 정렬된 유저들을 둘씩 매칭해주는 알고리즘 작성
-     */
-    private List<List<MatchedUserVO>> pairUsers(List<MatchedUserVO> users) {
-        int userSize = users.size();
-        boolean[] isMatched = new boolean[userSize];
-        Random random = new Random();
+    @Override
+    public void startMatching(Long userId) {
+        // TODO: dummy data로 넣도록 수정 -> 일단 본인
+        matchingMapper.insertMatching(buildToMatchingVO(userId, userId));
+    }
 
-        List<List<MatchedUserVO>> result = new ArrayList<>();
+    @Override
+    public void finishAllMatching() {
+        // 진행 중인 매칭 전체 가져오기
+        List<MatchingVO> progressMatchings = matchingMapper.getAllProgressMatchings();
+        
+        // TODO: 결과를 users table에 저장할 것!
 
-        // 10등 안으로 차이 나게 랜덤 매칭
-        for (int i = 0; i < userSize; i++) {
-            if (isMatched[i]) {
-                continue;
-            }
+        // 매칭 상태가 Progress인 column을 전부 Completed로 변경
+        matchingMapper.updateAllProgressMatchings();
+    }
 
-            List<MatchedUserVO> matchedUsers = new ArrayList<>();
-            matchedUsers.add(users.get(i));
-
-            for (int j = i + random.nextInt(1, 10); j < userSize; j++) {
-                if (!isMatched[j]) {
-                    matchedUsers.add(users.get(j));
-                    isMatched[i] = true;
-                    isMatched[j] = true;
-
-                    result.add(matchedUsers);
-                    break;
-                }
-            }
+    @Override
+    public void updateMatchingStatus(Long matchingId, String matchingStatus) {
+        MatchingVO match = matchingMapper.getMatchingByMatchingId(matchingId);
+        if (match == null) {
+            return;
         }
 
-        // 매칭 안된 사람끼리 순서대로
-        boolean one = false;
-        List<MatchedUserVO> matchedUsers = new ArrayList<>();
-        for (int i = 0; i < userSize; i++) {
-            if (!isMatched[i]) {
-                if (one) {
-                    matchedUsers.add(users.get(i));
-                    result.add(matchedUsers);
-                } else {
-                    matchedUsers = new ArrayList<>();
-                    matchedUsers.add(users.get(i));
-                }
-                isMatched[i] = true;
-                one = !one;
-            }
-        }
+        matchingMapper.updateMatchingStatus(matchingId, matchingStatus);
+    }
 
-        // 한명이 남음
-        // TODO: dummy data로 넣도록 수정 -> 일단 마지막 사람으로 넣었음
-        if (one) {
-            matchedUsers.add(users.get(userSize - 1));
-            result.add(matchedUsers);
-        }
+    @Override
+    public String getMatchingStatus(Long matchingId) {
+        return matchingMapper.getMatchingStatus(matchingId);
+    }
 
-        return result;
+    @Override
+    public List<MatchingVO> findRecentNMatchingsByUserId(Long userId, int limit) {
+        return matchingMapper.getRecentNMatchingsByUserId(userId, limit);
+    }
+
+    @Override
+    public List<MatchingVO> findAllMatchingsByUserId(Long userId) {
+        return matchingMapper.getAllMatchingsByUserId(userId);
     }
 }
