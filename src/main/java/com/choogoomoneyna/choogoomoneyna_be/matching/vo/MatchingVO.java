@@ -13,9 +13,9 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class MatchingVO {
-    private int id;
-    private long user1Id;
-    private long user2Id;
+    private Integer id;
+    private Long user1Id;
+    private Long user2Id;
     private String matchingStatus;
     private Date matchingStart;
     private Date matchingFinish;
