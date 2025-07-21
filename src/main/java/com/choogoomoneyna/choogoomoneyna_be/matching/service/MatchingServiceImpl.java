@@ -5,6 +5,7 @@ import com.choogoomoneyna.choogoomoneyna_be.matching.mapper.MatchingMapper;
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingVO;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
 import com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO;
+import com.choogoomoneyna.choogoomoneyna_be.user.dto.ChoogooMi;
 import com.choogoomoneyna.choogoomoneyna_be.user.mapper.UserMapper;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.MatchedUserVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
@@ -95,25 +96,34 @@ public class MatchingServiceImpl implements MatchingService {
         }
     }
 
+    private List<UserVO> groupByChoogooMi(List<UserVO> users, ChoogooMi choogooMi) {
+        return users.stream()
+                .filter(user -> user.getChoogooMi().equals(choogooMi.name()))
+                .collect(Collectors.toList());
+    }
+
     @Override
     public void startAllMatching() {
-        List<UserVO> users = userMapper.findAllUsers();
+        List<UserVO> totalUsers = userMapper.findAllUsers();
         List<UserScoreVO> scores = scoreService.getAllScores();
 
         Map<Long, Integer> scoreMap = scores.stream()
                 .collect(Collectors.toMap(UserScoreVO::getUserId, UserScoreVO::getScore));
 
         // User를 점수에 따라 내림차순 정렬
-        List<MatchedUserVO> matchableUsers = users.stream()
-                .map(user -> new MatchedUserVO(
-                        user.getId(),
-                        user.getEmail(),
-                        user.getProfileImageUrl(),
-                        scoreMap.getOrDefault(user.getId(), 0)))
-                .sorted(Comparator.comparingInt(MatchedUserVO::getUserScore).reversed())
-                .toList();
+        for (ChoogooMi choogooMi : ChoogooMi.values()) {
+            List<UserVO> users = groupByChoogooMi(totalUsers, choogooMi);
+            List<MatchedUserVO> matchableUsers = users.stream()
+                    .map(user -> new MatchedUserVO(
+                            user.getId(),
+                            user.getEmail(),
+                            user.getProfileImageUrl(),
+                            scoreMap.getOrDefault(user.getId(), 0)))
+                    .sorted(Comparator.comparingInt(MatchedUserVO::getUserScore).reversed())
+                    .toList();
 
-        pairUsersAndSave(matchableUsers);
+            pairUsersAndSave(matchableUsers);
+        }
     }
 
     @Override
