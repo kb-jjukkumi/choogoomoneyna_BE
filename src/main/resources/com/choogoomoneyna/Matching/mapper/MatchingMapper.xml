@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.choogoomoneyna.choogoomoneyna_be.matching.mapper.MatchingMapper">
+
+    <resultMap id="MatchingResultMap" type="com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingVO">
+        <id property="id" column="matching_id"/>
+        <result property="user1Id" column="user1_id"/>
+        <result property="user2Id" column="user2_id"/>
+        <result property="matchingStatus" column="matching_status"/>
+        <result property="matchingStart" column="matching_start"/>
+        <result property="matchingFinish" column="matching_finish"/>
+    </resultMap>
+
+    <!-- 최근 N개의 매칭 조회 -->
+    <select id="findRecentNMatchingsByUserId" resultMap="MatchingResultMap">
+        SELECT matching_id, user1_id, user2_id, matching_status, matching_start, matching_finish
+        FROM matchings
+        WHERE user1_id = #{userId} OR user2_id = #{userId}
+        ORDER BY matching_start DESC
+            LIMIT #{limit}
+    </select>
+
+    <!-- 전체 매칭 조회 -->
+    <select id="findAllMatchingsByUserId" resultMap="MatchingResultMap" parameterType="long">
+        SELECT matching_id, user1_id, user2_id, matching_status, matching_start, matching_finish
+        FROM matchings
+        WHERE user1_id = #{userId} OR user2_id = #{userId}
+        ORDER BY matching_start DESC
+    </select>
+
+    <!-- 매칭 삽입 -->
+    <insert id="insertMatching" parameterType="com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingVO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO matchings (user1_id, user2_id, matching_status, matching_start, matching_finish)
+        VALUES (#{user1Id}, #{user2Id}, #{matchingStatus}, #{matchingStart}, #{matchingFinish})
+    </insert>
+
+    <!-- 매칭 ID로 상태 조회 -->
+    <select id="getMatchingStatus" parameterType="int" resultType="string">
+        SELECT matching_status
+        FROM matchings
+        WHERE matching_id = #{matchingId}
+    </select>
+
+    <!-- 매칭 상태 업데이트 -->
+    <update id="updateMatchingStatus" parameterType="map">
+        UPDATE matchings
+        SET matching_status = #{matchingStatus}
+        WHERE matching_id = #{matchingId}
+    </update>
+
+</mapper>
+
