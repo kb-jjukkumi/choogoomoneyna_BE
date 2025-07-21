@@ -1,4 +1,4 @@
-package com.choogoomoneyna.choogoomoneyna_be.match.service;
+package com.choogoomoneyna.choogoomoneyna_be.matching.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
 import com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO;
@@ -7,14 +7,13 @@ import com.choogoomoneyna.choogoomoneyna_be.user.vo.MatchedUserVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class MatchServiceImpl implements MatchService {
+public class MatchingServiceImpl implements MatchingService {
 
     private final UserMapper userMapper;
     private final ScoreService scoreService;

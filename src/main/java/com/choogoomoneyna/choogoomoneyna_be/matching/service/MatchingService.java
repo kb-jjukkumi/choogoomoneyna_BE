@@ -1,10 +1,10 @@
-package com.choogoomoneyna.choogoomoneyna_be.match.service;
+package com.choogoomoneyna.choogoomoneyna_be.matching.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.MatchedUserVO;
 
 import java.util.List;
 
-public interface MatchService {
+public interface MatchingService {
 
     /**
      * 사용자를 둘 씩 매칭합니다

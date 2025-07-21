@@ -1,11 +1,10 @@
-package com.choogoomoneyna.choogoomoneyna_be.match.service;
+package com.choogoomoneyna.choogoomoneyna_be.matching.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
 import com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.mapper.UserMapper;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.MatchedUserVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,7 +16,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class MatchServiceImplTest {
+public class MatchingServiceImplTest {
 
     @Mock
     private UserMapper userMapper;
@@ -26,7 +25,7 @@ public class MatchServiceImplTest {
     private ScoreService scoreService;
 
     @InjectMocks
-    private MatchServiceImpl matchService;
+    private MatchingServiceImpl matchService;
 
     @BeforeEach
     public void setUp() {
