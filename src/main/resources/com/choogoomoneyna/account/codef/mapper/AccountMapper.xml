@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.choogoomoneyna.choogoomoneyna_be.account.db.mapper.AccountMapper">
+
+    <select id="findByAccountNum" parameterType="String" resultType="com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.AccountVO">
+        SELECT * FROM accounts WHERE account_num = #{accountNum}
+    </select>
+
+    <insert id="insertAccount" parameterType="list">
+        INSERT INTO accounts (account_num, user_id, bank_id, account_name, account_balance)
+        VALUES
+        <foreach collection="list" item="account" separator=",">
+            (#{account.accountNum}, #{account.userId}, #{account.bankId}, #{account.accountName}, #{account.accountBalance})
+        </foreach>
+    </insert>
+
+</mapper>

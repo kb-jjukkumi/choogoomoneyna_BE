@@ -25,6 +25,11 @@ class CodefTokenManagerTest {
         ReflectionTestUtils.setField(realManager, "clientSecret", "dummy-client-secret");
     }
 
+    @Test
+    void getToken() {
+        System.out.println("✅ clientId: " + realManager.clientId);
+        System.out.println("✅ clientSecret: " + realManager.clientSecret);
+    }
     /**
      * 유효한 토큰이 DB에 존재하고, 만료되지 않았을 때 그대로 반환하는지 테스트
      */

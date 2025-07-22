@@ -4,7 +4,7 @@ import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.AccountRequestDto;
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.AccountResponseDto;
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.TransactionRequestDto;
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.TransactionResponseDto;
-import com.choogoomoneyna.choogoomoneyna_be.account.codef.mapper.AccountMapper;
+import com.choogoomoneyna.choogoomoneyna_be.account.db.mapper.AccountMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -91,7 +91,7 @@ public class CodefApiRequester {
 
             // 특정 에러 코드에 대한 커스텀 메시지 처리
             if ("CF-04004".equals(errorCode)) {
-                return "기존에 연결한 계좌가 존재합니다.";  // 커스텀 메시지
+                return "already added account sxists.";  // 커스텀 메시지
             }
 
             // 기본 메시지 반환
@@ -221,6 +221,44 @@ public class CodefApiRequester {
         return accountList;
     }
 
+    // 계좌 하나 업데이트 메서드
+    public List<AccountResponseDto> getAccountOne(String bankId, String connectedId) throws Exception {
+        String requestUrl = "https://development.codef.io/v1/kr/bank/p/account/account-list";
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode requestBody = mapper.createObjectNode();
+        requestBody.put("organization", bankId);
+        requestBody.put("connectedId", connectedId);
+
+        String response = sendPostRequest(requestUrl, codefTokenManager.getAccessToken(), requestBody.toString());
+
+        List<AccountResponseDto> accountList = new ArrayList<>();
+        JsonNode jsonResponse = mapper.readTree(response);
+
+        // 응답에서 따로 메시지를 추출
+        String message = jsonResponse.path("result").path("message").asText();
+
+        JsonNode depositTrustList = jsonResponse.path("data").path("resDepositTrust");
+        if (depositTrustList.isArray() && depositTrustList.size() > 0) {
+            for (JsonNode accountInfo : depositTrustList) {
+                AccountResponseDto accountResponseDto = new AccountResponseDto();
+                String resAccount = (accountInfo.get("resAccount").asText());
+                if(accountMapper.findAccountByAccountNum(resAccount)!=null){
+                    continue;
+                } else{
+                    accountResponseDto.setAccountNum(resAccount);
+                }
+                accountResponseDto.setAccountBalance(accountInfo.get("resAccountBalance").asText());
+                accountResponseDto.setAccountName(accountInfo.get("resAccountName").asText());
+                accountResponseDto.setBankId(bankId);
+
+                accountList.add(accountResponseDto);
+            }
+        }
+        return accountList;
+    }
+
+
     public TransactionResponseDto getTransactionList(TransactionRequestDto requestDto, String connectedId) throws Exception {
         try {
             String accessToken = codefTokenManager.getAccessToken();
@@ -262,7 +300,7 @@ public class CodefApiRequester {
 
         } catch (Exception e) {
             // 에러가 발생하면 로그를 남기고 null 반환
-            log.error("거래 내역 조회 중 에러 발생: ", e);
+            log.error("error occur in transaction get: ", e);
             return null; // 에러 발생 시 null 반환
         }
     }

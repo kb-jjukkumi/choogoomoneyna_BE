@@ -4,13 +4,12 @@ import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.AccountRequestDto;
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.AccountResponseDto;
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.TransactionRequestDto;
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.TransactionResponseDto;
-import com.choogoomoneyna.choogoomoneyna_be.account.codef.mapper.AccountMapper;
+import com.choogoomoneyna.choogoomoneyna_be.account.db.mapper.AccountMapper;
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.AccountVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;

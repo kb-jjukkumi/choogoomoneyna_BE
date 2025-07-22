@@ -28,10 +28,10 @@ public class CodefTokenManager {
     private static final String SCOPE = "read";
 
     @Value("${codef.client_id}")
-    private String clientId;
+    protected String clientId;
 
     @Value("${codef.client_secret}")
-    private String clientSecret;
+    protected String clientSecret;
 
     private final CodefTokenMapper codefTokenMapper;
     private String accessToken;
@@ -42,15 +42,15 @@ public class CodefTokenManager {
 
         CodefTokenVO latestToken = codefTokenMapper.getLatestToken();
 
-        //토큰이 없거나 만료된 경우 재발급
-        if (latestToken == null || isAccessTokenExpired()) {
-            refreshAccessToken();
-        }
-
         //토큰이 유효하면 vo getter로 access_token 추출
         if (latestToken!=null) {
             accessToken = latestToken.getAccessToken();
             tokenExpiryTime = latestToken.getTokenExpiryTime().getTime();
+        }
+
+        //토큰이 없거나 만료된 경우 재발급
+        if (latestToken == null || isAccessTokenExpired()) {
+            refreshAccessToken();
         }
         return accessToken;
     }
@@ -64,7 +64,9 @@ public class CodefTokenManager {
     //access_token 재발급
     protected void refreshAccessToken() {
 
-        Map<String, String> tokenMap = requestAccessToken();
+        HashMap<String, String> tokenMap = requestAccessToken();
+        System.out.println("✅ clientId: " + clientId);
+        System.out.println("✅ clientSecret: " + clientSecret);
 
         if(tokenMap!=null && tokenMap.containsKey("access_token")) {
             accessToken = tokenMap.get("access_token");
@@ -83,7 +85,7 @@ public class CodefTokenManager {
                 codefTokenMapper.insertToken(codefTokenVO);
             }
         } else {
-            throw new RuntimeException("토큰 발급에 실패하였습니다.");
+            throw new RuntimeException("토큰 발급에 실패하였습니다(failed get token)");
         }
     }
 
@@ -91,7 +93,9 @@ public class CodefTokenManager {
     protected HashMap<String, String> requestAccessToken() {
         try {
             URL url = new URL(OAUTH_TOKEN_URL);
-            String params = "grant_type=" + GRANT_TYPE + "&scope=" + SCOPE;
+            //String params = "grant_type=" + GRANT_TYPE + "&scope=" + SCOPE;
+            String params = "grant_type=client_credentials";
+
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -114,7 +118,7 @@ public class CodefTokenManager {
                     while ((inputLine = br.readLine()) != null) {
                         response.append(inputLine);
                     }
-
+                    System.out.println("Error Body: " + response);
                     ObjectMapper mapper = new ObjectMapper();
                     return mapper.readValue(response.toString(), new TypeReference<HashMap<String, String>>(){});
                 }
