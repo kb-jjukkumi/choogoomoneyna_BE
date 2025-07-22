@@ -72,5 +72,15 @@
         WHERE matching_id = #{matchingId}
     </update>
 
+    <!-- 매칭 id 가져오기 -->
+    <select id="getProgressMatchingIdByUserId" resultType="long" parameterType="long">
+        SELECT matching_id
+        FROM matchings
+        WHERE (user1_id = #{userId} OR user2_id = #{userId})
+          AND matching_status = 'PROGRESS'
+        LIMIT 1
+    </select>
+
+
 </mapper>
 

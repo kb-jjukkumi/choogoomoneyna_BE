@@ -59,4 +59,12 @@ public interface MatchingService {
      * @return 해당 사용자의 모든 매칭 정보 목록
      */
     public List<MatchingVO> findAllMatchingsByUserId(Long userId);
+
+    /**
+     * 현재 진행 중인 매칭 중에서 특정 사용자가 참여하고 있는 매칭의 ID를 조회합니다
+     *
+     * @param userId 조회할 사용자의 ID
+     * @return 해당 사용자의 진행 중인 매칭 ID
+     */
+    public Long getProgressMatchingIdByUserId(Long userId);
 }

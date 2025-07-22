@@ -163,4 +163,9 @@ public class MatchingServiceImpl implements MatchingService {
     public List<MatchingVO> findAllMatchingsByUserId(Long userId) {
         return matchingMapper.findAllMatchingsByUserId(userId);
     }
+
+    @Override
+    public Long getProgressMatchingIdByUserId(Long userId) {
+        return matchingMapper.getProgressMatchingIdByUserId(userId);
+    }
 }

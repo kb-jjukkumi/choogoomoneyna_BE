@@ -23,4 +23,6 @@ public interface MatchingMapper {
     String findMatchingStatus(Long matchingId);
 
     void updateMatchingStatus(Long matchingId, String matchingStatus);
+
+    Long getProgressMatchingIdByUserId(Long userId);
 }
