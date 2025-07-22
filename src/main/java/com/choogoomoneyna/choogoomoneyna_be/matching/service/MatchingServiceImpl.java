@@ -156,7 +156,7 @@ public class MatchingServiceImpl implements MatchingService {
     public void startMatching(Long userId) {
         // TODO: dummy data로 넣도록 수정 -> 일단 본인
         matchingMapper.insertMatching(buildToMatchingVO(userId, userId));
-        assignMatchMission(userId, userId, userService.getChoogooMiByUserId(userId););
+        assignMatchMission(userId, userId, userService.getChoogooMiByUserId(userId));
     }
 
     @Override
