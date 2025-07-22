@@ -1,5 +1,10 @@
 package com.choogoomoneyna.choogoomoneyna_be.matching.service;
 
+import com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingMissionResultVO;
+import com.choogoomoneyna.choogoomoneyna_be.mission.dto.response.MissionProgressDTO;
+
+import java.util.List;
+
 public interface MatchingMissionResultService {
 
     /**
@@ -34,4 +39,12 @@ public interface MatchingMissionResultService {
      */
     int getAllScoreByUserIdAndMatchingId(Long userId, Long matchingId);
 
+    /**
+     * 특정 사용자와 매칭에 대한 모든 미션의 진행 상황을 조회합니다.
+     *
+     * @param userId  미션 진행 상황을 조회할 사용자의 ID
+     * @param matchId 미션 진행 상황과 연관된 매칭의 ID
+     * @return 미션 진행 상황 정보가 담긴 {@code MatchingMissionResultVO} 객체 리스트
+     */
+    List<MatchingMissionResultVO> getAllMissionProgress(Long userId, Long matchId);
 }

@@ -3,9 +3,12 @@ package com.choogoomoneyna.choogoomoneyna_be.matching.service;
 import com.choogoomoneyna.choogoomoneyna_be.matching.mapper.MatchingMapper;
 import com.choogoomoneyna.choogoomoneyna_be.matching.mapper.MatchingMissionResultMapper;
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingMissionResultVO;
+import com.choogoomoneyna.choogoomoneyna_be.mission.dto.response.MissionProgressDTO;
 import com.choogoomoneyna.choogoomoneyna_be.mission.mapper.MissionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -46,5 +49,10 @@ public class MatchingMissionResultServiceImpl implements MatchingMissionResultSe
     @Override
     public int getAllScoreByUserIdAndMatchingId(Long userId, Long matchingId) {
         return matchingMissionResultMapper.getAllScoreByUserIdAndMatchingId(userId, matchingId);
+    }
+
+    @Override
+    public List<MatchingMissionResultVO> getAllMissionProgress(Long userId, Long matchId) {
+        return matchingMissionResultMapper.findAllMatchingMissionResultByUserIdAndMatchingId(userId, matchId);
     }
 }

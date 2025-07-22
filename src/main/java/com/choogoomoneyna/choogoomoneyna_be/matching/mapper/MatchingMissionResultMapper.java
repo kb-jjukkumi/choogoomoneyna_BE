@@ -27,4 +27,8 @@ public interface MatchingMissionResultMapper {
             @Param("matchingId") Long matchingId
     );
 
+    List<MatchingMissionResultVO> findAllMatchingMissionResultByUserIdAndMatchingId(
+            @Param("userId") Long UserId,
+            @Param("matchingId") Long matchingId
+    );
 }
