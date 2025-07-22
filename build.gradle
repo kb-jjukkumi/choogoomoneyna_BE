@@ -117,6 +117,10 @@ dependencies {
   // controller valid
   implementation 'javax.validation:validation-api:2.0.1.Final'
   implementation 'org.hibernate.validator:hibernate-validator:6.0.13.Final'
+
+  testImplementation 'junit:junit:4.13.2'
+  testImplementation 'com.jayway.jsonpath:json-path:2.7.0'
+
 }
 
 
