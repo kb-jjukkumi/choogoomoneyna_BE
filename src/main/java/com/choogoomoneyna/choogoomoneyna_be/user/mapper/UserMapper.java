@@ -23,6 +23,8 @@ public interface UserMapper {
 
     UserVO findById(Long id);
 
+    String getChoogooMiByUserId(Long userId);
+
     void updateUser(UserVO user);
 
     void deleteByEmail(String email);

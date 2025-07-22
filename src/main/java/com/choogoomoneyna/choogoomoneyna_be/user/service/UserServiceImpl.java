@@ -91,4 +91,9 @@ public class UserServiceImpl implements UserService {
     public int countAllUsers() {
         return userMapper.countAllUsers();
     }
+
+    @Override
+    public ChoogooMi getChoogooMiByUserId(Long userId) {
+        return ChoogooMi.valueOf(userMapper.getChoogooMiByUserId(userId));
+    }
 }

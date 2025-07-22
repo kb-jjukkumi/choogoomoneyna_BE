@@ -75,4 +75,11 @@ public interface UserService {
      */
     int countAllUsers();
 
+    /**
+     * 주어진 사용자 ID에 해당하는 ChoogooMi(선호 타입)를 조회합니다.
+     *
+     * @param userId 조회할 사용자의 ID
+     * @return 사용자의 ChoogooMi(선호 타입) 값
+     */
+    ChoogooMi getChoogooMiByUserId(Long userId);
 }
