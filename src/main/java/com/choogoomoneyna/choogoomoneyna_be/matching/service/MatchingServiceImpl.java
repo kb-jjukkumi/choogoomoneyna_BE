@@ -1,6 +1,8 @@
 package com.choogoomoneyna.choogoomoneyna_be.matching.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.matching.dto.MatchingStatus;
+import com.choogoomoneyna.choogoomoneyna_be.matching.enums.ChoogooMiMissionType;
+import com.choogoomoneyna.choogoomoneyna_be.matching.enums.CommonMissionType;
 import com.choogoomoneyna.choogoomoneyna_be.matching.mapper.MatchingMapper;
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingVO;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
@@ -12,6 +14,7 @@ import com.choogoomoneyna.choogoomoneyna_be.user.vo.MatchedUserVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -28,6 +31,28 @@ public class MatchingServiceImpl implements MatchingService {
     private final MatchingMapper matchingMapper;
     private final ScoreService scoreService;
     private final RoundInfoService roundInfoService;
+    private final MatchingMissionResultService matchingMissionResultService;
+    private final UserService userService;
+
+    private void assignMatchMission(Long user1Id, Long user2Id, ChoogooMi choogooMi) {
+        Long matchingId = matchingMapper.getProgressMatchingIdByUserId(user1Id);
+        if (matchingId == null) {
+            throw new IllegalArgumentException("Matching ID is null");
+        }
+
+        int commonMissionId = CommonMissionType.COMMON.getRandomId();
+        List<Integer> choogooMiMissionIds = choogooMi.getMissionType().getRandomIds(2);
+
+        System.out.println("matchingId: " + matchingId);
+        System.out.println("choogooMiMissionIds: " + choogooMiMissionIds);
+        System.out.println("commonMissionId: " + commonMissionId);
+        System.out.println();
+
+        matchingMissionResultService.createMatchingMissionResult(user1Id, matchingId, commonMissionId);
+        if (!user1Id.equals(user2Id)) {
+            matchingMissionResultService.createMatchingMissionResult(user2Id, matchingId, commonMissionId);
+        }
+    }
 
     private MatchingVO buildToMatchingVO(Long user1Id, Long user2Id) {
         // 시스템 시간대를 기준으로 Date 객체로 변환
@@ -46,7 +71,7 @@ public class MatchingServiceImpl implements MatchingService {
     /**
      * 점수로 정렬된 유저들을 둘씩 매칭해주는 알고리즘 작성
      */
-    private void pairUsersAndSave(List<MatchedUserVO> users) {
+    private void pairUsersAndSave(List<MatchedUserVO> users, ChoogooMi choogooMi) {
 
         int userSize = users.size();
         boolean[] isMatched = new boolean[userSize];
@@ -64,6 +89,8 @@ public class MatchingServiceImpl implements MatchingService {
                     isMatched[j] = true;
 
                     matchingMapper.insertMatching(buildToMatchingVO(users.get(i).getId(), users.get(j).getId()));
+                    assignMatchMission(users.get(i).getId(), users.get(j).getId(), choogooMi);
+                    
                     break;
                 }
             }
@@ -76,6 +103,7 @@ public class MatchingServiceImpl implements MatchingService {
             if (!isMatched[i]) {
                 if (one) {
                     matchingMapper.insertMatching(buildToMatchingVO(user1.getId(), users.get(i).getId()));
+                    assignMatchMission(user1.getId(), users.get(i).getId(), choogooMi);
                     user1 = null;
                 } else {
                     user1 = users.get(i);
@@ -87,7 +115,9 @@ public class MatchingServiceImpl implements MatchingService {
 
         // 한명이 남음
         if (one) {
-            startMatching(user1.getId());
+            // TODO: dummy data로 넣도록 수정 -> 일단 본인
+            matchingMapper.insertMatching(buildToMatchingVO(user1.getId(), user1.getId()));
+            assignMatchMission(user1.getId(), user1.getId(), choogooMi);
         }
     }
 
@@ -118,7 +148,7 @@ public class MatchingServiceImpl implements MatchingService {
                     .sorted(Comparator.comparingInt(MatchedUserVO::getUserScore).reversed())
                     .toList();
 
-            pairUsersAndSave(matchableUsers);
+            pairUsersAndSave(matchableUsers, choogooMi);
         }
     }
 
@@ -126,9 +156,11 @@ public class MatchingServiceImpl implements MatchingService {
     public void startMatching(Long userId) {
         // TODO: dummy data로 넣도록 수정 -> 일단 본인
         matchingMapper.insertMatching(buildToMatchingVO(userId, userId));
+        assignMatchMission(userId, userId, userService.getChoogooMiByUserId(userId););
     }
 
     @Override
+    @Transactional
     public void finishAllMatching() {
         // 진행 중인 매칭 전체 가져오기
         List<MatchingVO> progressMatchings = matchingMapper.findAllProgressMatchings();
