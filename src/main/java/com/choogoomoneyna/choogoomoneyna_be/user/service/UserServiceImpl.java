@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -95,5 +97,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public ChoogooMi getChoogooMiByUserId(Long userId) {
         return ChoogooMi.valueOf(userMapper.getChoogooMiByUserId(userId));
+    }
+
+    @Override
+    public List<UserVO> findAllUsers() {
+        return userMapper.findAllUsers();
     }
 }

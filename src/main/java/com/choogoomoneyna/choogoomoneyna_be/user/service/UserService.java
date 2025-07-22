@@ -6,6 +6,7 @@ import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserJoinRequestDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 public interface UserService {
 
@@ -82,4 +83,12 @@ public interface UserService {
      * @return 사용자의 ChoogooMi(선호 타입) 값
      */
     ChoogooMi getChoogooMiByUserId(Long userId);
+
+
+    /**
+     * 시스템에 등록된 모든 사용자 목록을 조회합니다.
+     *
+     * @return 시스템에 등록된 모든 사용자 목록
+     */
+    List<UserVO> findAllUsers();
 }
