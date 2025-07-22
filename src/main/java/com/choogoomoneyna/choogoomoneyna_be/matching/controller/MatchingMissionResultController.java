@@ -11,6 +11,7 @@ import com.choogoomoneyna.choogoomoneyna_be.mission.service.MissionService;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
 import com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,8 +29,8 @@ public class MatchingMissionResultController {
     private final RoundInfoService roundInfoService;
     private final ScoreService scoreService;
 
-    @PutMapping("/update/{userId}/complete")
-    public ResponseEntity<?> missionComplete(
+    @PutMapping("/missions/{userId}/complete")
+    public ResponseEntity<?> completeMatchingMission(
             @PathVariable Long userId,
             @RequestBody MatchingMissionUpdateRequest request) {
         Long matchId = matchingService.getProgressMatchingIdByUserId(userId);
@@ -53,11 +54,11 @@ public class MatchingMissionResultController {
                         .map(MatchingMissionConverter::toMissionProgressDTO)
                         .toList();
 
-        int scoreBefore = scoreService.getScore(userId);
+        int updateScore = scoreService.getScore(userId) + score;
         scoreService.updateScore(
                 UserScoreVO.builder()
                         .userId(userId)
-                        .score(scoreBefore + score)
+                        .score(updateScore)
                         .build()
         );
 
@@ -65,7 +66,29 @@ public class MatchingMissionResultController {
                 MissionProgressListResponseDTO.builder()
                         .message("Mission progress updated")
                         .missionProgressDTOList(progressList)
-                        .resultScore(scoreBefore + score)
+                        .resultScore(updateScore)
+                        .build()
+        );
+    }
+
+    @GetMapping("/detail/{userId}")
+    public ResponseEntity<?> getMatchingMissionProgress(@PathVariable Long userId) {
+        Long matchId = matchingService.getProgressMatchingIdByUserId(userId);
+        if (matchId == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "matching progress not found"));
+        }
+
+        List<MissionProgressDTO> progressList =
+                matchingMissionResultService.getAllMissionProgress(userId, matchId)
+                        .stream()
+                        .map(MatchingMissionConverter::toMissionProgressDTO)
+                        .toList();
+
+        return ResponseEntity.ok(
+                MissionProgressListResponseDTO.builder()
+                        .message("Mission progress detail")
+                        .missionProgressDTOList(progressList)
                         .build()
         );
     }
