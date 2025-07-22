@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MatchingServiceImpl implements MatchingService {
 
-    private final UserMapper userMapper;
     private final MatchingMapper matchingMapper;
     private final ScoreService scoreService;
     private final RoundInfoService roundInfoService;
@@ -129,8 +128,7 @@ public class MatchingServiceImpl implements MatchingService {
 
     @Override
     public void startAllMatching() {
-        // TODO: UserService 로 수정 할 것!
-        List<UserVO> totalUsers = userMapper.findAllUsers();
+        List<UserVO> totalUsers = userService.findAllUsers();
         List<UserScoreVO> scores = scoreService.getAllScores();
 
         Map<Long, Integer> scoreMap = scores.stream()
