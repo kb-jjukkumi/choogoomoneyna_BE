@@ -7,6 +7,7 @@ import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
 import com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.ChoogooMi;
 import com.choogoomoneyna.choogoomoneyna_be.user.mapper.UserMapper;
+import com.choogoomoneyna.choogoomoneyna_be.user.service.UserService;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.MatchedUserVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
@@ -26,18 +27,12 @@ public class MatchingServiceImpl implements MatchingService {
     private final UserMapper userMapper;
     private final MatchingMapper matchingMapper;
     private final ScoreService scoreService;
+    private final RoundInfoService roundInfoService;
 
     private MatchingVO buildToMatchingVO(Long user1Id, Long user2Id) {
-        LocalDate today = LocalDate.now();
-
-        // 이번 주 월요일
-        LocalDate monday = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-        // 이번 주 일요일
-        LocalDate sunday = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
-
         // 시스템 시간대를 기준으로 Date 객체로 변환
-        Date mondayDate = Date.from(monday.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        Date sundayDate = Date.from(sunday.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date mondayDate = roundInfoService.getStartDate();
+        Date sundayDate = roundInfoService.getEndDate();
 
         return MatchingVO.builder()
                 .user1Id(user1Id)
@@ -104,6 +99,7 @@ public class MatchingServiceImpl implements MatchingService {
 
     @Override
     public void startAllMatching() {
+        // TODO: UserService 로 수정 할 것!
         List<UserVO> totalUsers = userMapper.findAllUsers();
         List<UserScoreVO> scores = scoreService.getAllScores();
 
