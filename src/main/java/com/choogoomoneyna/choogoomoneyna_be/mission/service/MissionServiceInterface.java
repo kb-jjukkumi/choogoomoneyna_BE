@@ -11,7 +11,7 @@ public class MissionServiceInterface implements MissionService {
     private final MissionMapper missionMapper;
 
     @Override
-    public int getMissionScore(Integer missionId) {
+    public Integer getMissionScore(Integer missionId) {
         return missionMapper.getMissionScore(missionId);
     }
 }

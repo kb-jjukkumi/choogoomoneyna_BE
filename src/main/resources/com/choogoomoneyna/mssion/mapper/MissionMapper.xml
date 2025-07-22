@@ -33,6 +33,7 @@
         SELECT mission_score
         FROM missions
         WHERE mission_id = #{missionId}
+        LIMIT 1
     </select>
 
 </mapper>
