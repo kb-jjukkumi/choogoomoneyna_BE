@@ -8,19 +8,17 @@
     <resultMap id="MatchingResultMap" type="com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingVO">
         <id property="id" column="matching_id"/>
         <result property="user1Id" column="user1_id"/>
+        <result property="roundNumber" column="round_number"/>
         <result property="user2Id" column="user2_id"/>
         <result property="matchingStatus" column="matching_status"/>
-        <result property="matchingStart" column="matching_start"/>
-        <result property="matchingFinish" column="matching_finish"/>
     </resultMap>
 
-    <!-- 최근 N개의 매칭 조회 -->
     <select id="findRecentNMatchingsByUserId" resultMap="MatchingResultMap">
-        SELECT matching_id, user1_id, user2_id, matching_status, matching_start, matching_finish
+        SELECT matching_id, user1_id, round_number, user2_id, matching_status
         FROM matchings
         WHERE user1_id = #{userId} OR user2_id = #{userId}
-        ORDER BY matching_start DESC
-            LIMIT #{limit}
+        ORDER BY round_number DESC
+        LIMIT #{limit}
     </select>
 
     <update id="updateAllProgressMatchings">
@@ -29,50 +27,43 @@
         WHERE matching_status = 'PROGRESS';
     </update>
 
-    <!-- 매칭 상태가 "진행 중" 조회 -->
     <select id="findAllProgressMatchings" resultMap="MatchingResultMap">
-        SELECT matching_id, user1_id, user2_id, matching_status, matching_start, matching_finish
+        SELECT matching_id, user1_id, round_number, user2_id, matching_status
         FROM matchings
         WHERE matching_status = 'PROGRESS'
-        ORDER BY matching_start DESC
+        ORDER BY round_number DESC
     </select>
 
-    <!-- userId로 전체 매칭 조회 -->
     <select id="findAllMatchingsByUserId" resultMap="MatchingResultMap" parameterType="long">
-        SELECT matching_id, user1_id, user2_id, matching_status, matching_start, matching_finish
+        SELECT matching_id, user1_id, round_number, user2_id, matching_status
         FROM matchings
         WHERE user1_id = #{userId} OR user2_id = #{userId}
-        ORDER BY matching_start DESC
+        ORDER BY round_number DESC
     </select>
 
-    <!-- 매칭 삽입 -->
     <insert id="insertMatching" parameterType="com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingVO" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO matchings (user1_id, user2_id, matching_status, matching_start, matching_finish)
-        VALUES (#{user1Id}, #{user2Id}, #{matchingStatus}, #{matchingStart}, #{matchingFinish})
+        INSERT INTO matchings (user1_id, round_number, user2_id, matching_status)
+        VALUES (#{user1Id}, #{roundNumber}, #{user2Id}, #{matchingStatus})
     </insert>
 
-    <!-- 매칭 ID로 상태 조회 -->
     <select id="findMatchingStatus" parameterType="long" resultType="string">
         SELECT matching_status
         FROM matchings
         WHERE matching_id = #{matchingId}
     </select>
 
-    <!-- 매칭 ID로 매칭 조회 -->
     <select id="findMatchingByMatchingId" parameterType="long" resultMap="MatchingResultMap">
-        SELECT matching_id, user1_id, user2_id, matching_status, matching_start, matching_finish
+        SELECT matching_id, user1_id, round_number, user2_id, matching_status
         FROM matchings
         WHERE matching_id = #{matchingId}
     </select>
 
-    <!-- 매칭 상태 업데이트 -->
     <update id="updateMatchingStatus" parameterType="map">
         UPDATE matchings
         SET matching_status = #{matchingStatus}
         WHERE matching_id = #{matchingId}
     </update>
 
-    <!-- 매칭 id 가져오기 -->
     <select id="getProgressMatchingIdByUserId" resultType="long" parameterType="long">
         SELECT matching_id
         FROM matchings
@@ -81,6 +72,4 @@
         LIMIT 1
     </select>
 
-
 </mapper>
-
