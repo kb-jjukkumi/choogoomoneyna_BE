@@ -54,7 +54,7 @@ public class MatchingMissionResultServiceImpl implements MatchingMissionResultSe
 
     @Override
     public List<MissionProgressDTO> getAllMissionProgressDTO(Long userId, Long matchId) {
-        return getMatchingMissionResults(userId, matchId)
+        return matchingMissionResultMapper.getAllUserMissionByUserIdAndMatchingId(userId, matchId)
                 .stream()
                 .map(MatchingMissionConverter::toMissionProgressDTO)
                 .toList();
