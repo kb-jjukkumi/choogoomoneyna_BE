@@ -122,5 +122,11 @@
         SELECT * FROM USERS;
     </select>
 
+    <!-- 사용자 connectedId 업데이트 -->
+    <update id="updateConnectedId">
+        UPDATE users
+        SET connected_id = #{connectedId}
+        WHERE user_id = #{id}
+    </update>
 
 </mapper>

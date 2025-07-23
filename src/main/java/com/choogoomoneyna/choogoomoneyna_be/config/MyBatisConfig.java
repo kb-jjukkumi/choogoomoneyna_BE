@@ -14,13 +14,19 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import javax.sql.DataSource;
 
 @Configuration
-@PropertySource("classpath:application-secret-database.properties")
+//@PropertySource("classpath:application-secret-database.properties")
+@PropertySource({
+        "classpath:application-secret-database.properties",
+        "classpath:application-secret-codef.properties"
+})
 @MapperScan(basePackages = {
         "com.choogoomoneyna.choogoomoneyna_be.user.mapper",
         "com.choogoomoneyna.choogoomoneyna_be.score.mapper",
         "com.choogoomoneyna.choogoomoneyna_be.matching.mapper",
         "com.choogoomoneyna.choogoomoneyna_be.mission.mapper",
         "com.choogoomoneyna.choogoomoneyna_be.auth.jwt.mapper",
+        "com.choogoomoneyna.choogoomoneyna_be.account.codef.mapper",
+        "com.choogoomoneyna.choogoomoneyna_be.account.db.mapper"
 })
 public class MyBatisConfig {
 
@@ -53,7 +59,13 @@ public class MyBatisConfig {
         sessionFactory.setMapperLocations(
                 new PathMatchingResourcePatternResolver()
                         .getResources("classpath:com/choogoomoneyna/**/mapper/*.xml")
+
         );
+        // 👇 여기를 추가해야 camelCase 자동 매핑이 동작함
+        org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
+        configuration.setMapUnderscoreToCamelCase(true);
+        sessionFactory.setConfiguration(configuration);
+
         return sessionFactory.getObject();
     }
 
