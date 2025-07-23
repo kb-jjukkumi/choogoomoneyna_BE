@@ -78,6 +78,14 @@
         SELECT * FROM users WHERE user_id = #{id}
     </select>
 
+    <!-- ID로 추구미 조회 -->
+    <select id="getChoogooMiByUserId" parameterType="long" resultType="string">
+        SELECT choogoomi_name
+        FROM users
+        WHERE user_id = #{userId}
+    </select>
+
+
     <!-- nickname으로 존재 여부 확인 -->
     <select id="existsByNickname" resultType="java.lang.Boolean">
         SELECT COUNT(*) > 0 FROM users WHERE nickname = #{nickname}
@@ -109,6 +117,9 @@
     <!-- 전체 user 수 반환하기 -->
     <select id="countAllUsers" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM users;
+    </select>
+    <select id="findAllUsers" resultType="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO">
+        SELECT * FROM USERS;
     </select>
 
 

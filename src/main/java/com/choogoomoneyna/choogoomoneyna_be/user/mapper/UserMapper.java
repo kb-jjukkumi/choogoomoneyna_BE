@@ -5,6 +5,8 @@ import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 @Mapper
 public interface UserMapper {
     void insertUser(UserVO user);
@@ -21,9 +23,13 @@ public interface UserMapper {
 
     UserVO findById(Long id);
 
+    String getChoogooMiByUserId(Long userId);
+
     void updateUser(UserVO user);
 
     void deleteByEmail(String email);
 
     int countAllUsers();
+
+    List<UserVO> findAllUsers();
 }

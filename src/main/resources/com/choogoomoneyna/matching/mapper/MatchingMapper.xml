@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.choogoomoneyna.choogoomoneyna_be.matching.mapper.MatchingMapper">
+
+    <resultMap id="MatchingResultMap" type="com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingVO">
+        <id property="id" column="matching_id"/>
+        <result property="user1Id" column="user1_id"/>
+        <result property="roundNumber" column="round_number"/>
+        <result property="user2Id" column="user2_id"/>
+        <result property="matchingStatus" column="matching_status"/>
+    </resultMap>
+
+    <select id="findRecentNMatchingsByUserId" resultMap="MatchingResultMap">
+        SELECT matching_id, user1_id, round_number, user2_id, matching_status
+        FROM matchings
+        WHERE user1_id = #{userId} OR user2_id = #{userId}
+        ORDER BY round_number DESC
+        LIMIT #{limit}
+    </select>
+
+    <update id="updateAllProgressMatchings">
+        UPDATE matchings
+        SET matching_status = 'COMPLETED'
+        WHERE matching_status = 'PROGRESS';
+    </update>
+
+    <select id="findAllProgressMatchings" resultMap="MatchingResultMap">
+        SELECT matching_id, user1_id, round_number, user2_id, matching_status
+        FROM matchings
+        WHERE matching_status = 'PROGRESS'
+        ORDER BY round_number DESC
+    </select>
+
+    <select id="findAllMatchingsByUserId" resultMap="MatchingResultMap" parameterType="long">
+        SELECT matching_id, user1_id, round_number, user2_id, matching_status
+        FROM matchings
+        WHERE user1_id = #{userId} OR user2_id = #{userId}
+        ORDER BY round_number DESC
+    </select>
+
+    <insert id="insertMatching" parameterType="com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingVO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO matchings (user1_id, round_number, user2_id, matching_status)
+        VALUES (#{user1Id}, #{roundNumber}, #{user2Id}, #{matchingStatus})
+    </insert>
+
+    <select id="findMatchingStatus" parameterType="long" resultType="string">
+        SELECT matching_status
+        FROM matchings
+        WHERE matching_id = #{matchingId}
+    </select>
+
+    <select id="findMatchingByMatchingId" parameterType="long" resultMap="MatchingResultMap">
+        SELECT matching_id, user1_id, round_number, user2_id, matching_status
+        FROM matchings
+        WHERE matching_id = #{matchingId}
+    </select>
+
+    <update id="updateMatchingStatus" parameterType="map">
+        UPDATE matchings
+        SET matching_status = #{matchingStatus}
+        WHERE matching_id = #{matchingId}
+    </update>
+
+    <select id="getProgressMatchingIdByUserId" resultType="long" parameterType="long">
+        SELECT matching_id
+        FROM matchings
+        WHERE (user1_id = #{userId} OR user2_id = #{userId})
+          AND matching_status = 'PROGRESS'
+        LIMIT 1
+    </select>
+
+</mapper>
