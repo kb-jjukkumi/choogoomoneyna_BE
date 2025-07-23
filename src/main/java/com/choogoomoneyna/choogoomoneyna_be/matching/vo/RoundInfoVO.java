@@ -12,6 +12,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class RoundInfoVO {
+    private Long id;
     private Integer roundNumber;
     private Date startDate;
     private Date endDate;
