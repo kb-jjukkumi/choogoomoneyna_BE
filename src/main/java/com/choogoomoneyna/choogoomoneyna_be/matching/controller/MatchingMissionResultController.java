@@ -1,6 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.matching.controller;
 
 import com.choogoomoneyna.choogoomoneyna_be.matching.dto.Request.MatchingMissionUpdateRequest;
+import com.choogoomoneyna.choogoomoneyna_be.matching.dto.Response.MatchingMainResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.matching.service.MatchingMissionConverter;
 import com.choogoomoneyna.choogoomoneyna_be.matching.service.MatchingMissionResultService;
 import com.choogoomoneyna.choogoomoneyna_be.matching.service.MatchingService;
@@ -49,7 +50,7 @@ public class MatchingMissionResultController {
         );
 
         List<MissionProgressDTO> progressList =
-                matchingMissionResultService.getAllMissionProgress(userId, matchId)
+                matchingMissionResultService.getMatchingMissionResults(userId, matchId)
                         .stream()
                         .map(MatchingMissionConverter::toMissionProgressDTO)
                         .toList();
@@ -80,15 +81,40 @@ public class MatchingMissionResultController {
         }
 
         List<MissionProgressDTO> progressList =
-                matchingMissionResultService.getAllMissionProgress(userId, matchId)
-                        .stream()
-                        .map(MatchingMissionConverter::toMissionProgressDTO)
-                        .toList();
+                matchingMissionResultService.getAllMissionProgressDTO(userId, matchId);
 
         return ResponseEntity.ok(
                 MissionProgressListResponseDTO.builder()
                         .message("Mission progress detail")
                         .missionProgressDTOList(progressList)
+                        .build()
+        );
+    }
+
+    @GetMapping("/main/{userId}")
+    public ResponseEntity<?> getMatchingMain(@PathVariable Long userId) {
+        Long matchId = matchingService.getProgressMatchingIdByUserId(userId);
+        if (matchId == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "matching progress not found"));
+        }
+
+        Long opponentUserId = matchingService.getComponentUserIdByUserId(userId);
+        if (opponentUserId == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "opponent user not found"));
+        }
+
+        List<MissionProgressDTO> myProgressList =
+                matchingMissionResultService.getAllMissionProgressDTO(userId, matchId);
+        List<MissionProgressDTO> opponentProgressList =
+                matchingMissionResultService.getAllMissionProgressDTO(opponentUserId, matchId);
+
+        return ResponseEntity.ok(
+                MatchingMainResponseDTO.builder()
+                        .message("Matching main detail")
+                        .myMissionProgressList(myProgressList)
+                        .opponentMissionProgressList(opponentProgressList)
                         .build()
         );
     }
