@@ -1,5 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.account.db.mapper;
 
+import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.AccountResponseDto;
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.AccountVO;
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.TransactionVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -23,4 +24,6 @@ public interface AccountMapper {
             @Param("endDate") LocalDateTime endDate);
 
     void insertTransaction(List<TransactionVO> transactionVO);
+
+    List<AccountResponseDto> findByUserId(Long userId);
 }
