@@ -14,27 +14,27 @@ public class RoundInfoServiceImpl implements RoundInfoService {
     private final RoundInfoMapper roundInfoMapper;
 
     @Override
-    public void updateRoundInfo(RoundInfoVO roundInfoVO) {
-        roundInfoMapper.updateRoundInfo(roundInfoVO);
+    public void createRoundInfo(RoundInfoVO roundInfoVO) {
+        roundInfoMapper.insertRoundInfo(roundInfoVO);
     }
 
     @Override
-    public RoundInfoVO getRoundInfo() {
-        return roundInfoMapper.findRoundInfo();
+    public RoundInfoVO getLatestRoundInfo() {
+        return roundInfoMapper.findLatestRoundInfo();
     }
 
     @Override
-    public Integer getRoundNumber() {
-        return roundInfoMapper.getRoundNumber();
+    public Integer getRoundNumber(Integer roundNumber) {
+        return roundInfoMapper.getRoundNumber(roundNumber);
     }
 
     @Override
-    public Date getStartDate() {
-        return roundInfoMapper.getStartDate();
+    public Date getStartDate(Integer roundNumber) {
+        return roundInfoMapper.getStartDate(roundNumber);
     }
 
     @Override
-    public Date getEndDate() {
-        return roundInfoMapper.getEndDate();
+    public Date getEndDate(Integer roundNumber) {
+        return roundInfoMapper.getEndDate(roundNumber);
     }
 }
