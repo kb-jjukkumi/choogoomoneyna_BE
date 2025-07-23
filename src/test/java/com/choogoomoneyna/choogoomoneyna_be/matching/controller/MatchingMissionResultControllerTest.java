@@ -6,8 +6,6 @@ import com.choogoomoneyna.choogoomoneyna_be.matching.service.MatchingService;
 import com.choogoomoneyna.choogoomoneyna_be.matching.service.RoundInfoService;
 import com.choogoomoneyna.choogoomoneyna_be.mission.service.MissionService;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
-import com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO;
-import com.choogoomoneyna.choogoomoneyna_be.mission.dto.response.MissionProgressDTO;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -28,7 +26,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.mockito.Mockito.when;
 
@@ -79,7 +76,7 @@ public class MatchingMissionResultControllerTest {
         when(matchingService.getProgressMatchingIdByUserId(userId)).thenReturn(matchId);
         when(missionService.getMissionScore(missionId)).thenReturn(score);
         when(scoreService.getScore(userId)).thenReturn(70);
-        when(matchingMissionResultService.getAllMissionProgress(userId, matchId))
+        when(matchingMissionResultService.getMatchingMissionResults(userId, matchId))
                 .thenReturn(new ArrayList<>());
 
         MatchingMissionUpdateRequest request = new MatchingMissionUpdateRequest();
