@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.choogoomoneyna.choogoomoneyna_be.matching.mapper.MatchingMissionResultMapper">
+
+    <resultMap id="MatchingMissionResultMap" type="com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingMissionResultVO">
+        <id property="id" column="result_id"/>
+        <result property="matchingId" column="matching_id"/>
+        <result property="missionId" column="mission_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="resultScore" column="result_score"/>
+    </resultMap>
+
+    <!-- 사용자 ID로 결과 조회 -->
+    <select id="findMatchingMissionByUserId" resultMap="MatchingMissionResultMap">
+        SELECT result_id, matching_id, mission_id, user_id, result_score
+        FROM matching_mission_results
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- batch insert -->
+    <insert id="insertAll"
+            parameterType="list"
+            useGeneratedKeys="true"
+            keyProperty="id"
+            keyColumn="result_id">
+        INSERT INTO matching_mission_results (matching_id, mission_id, user_id, result_score)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.matchingId}, #{item.missionId}, #{item.userId}, #{item.resultScore})
+        </foreach>
+    </insert>
+
+    <!-- one insert -->
+    <insert id="insertOne"
+            parameterType="com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingMissionResultVO"
+            useGeneratedKeys="true"
+            keyProperty="id"
+            keyColumn="result_id">
+        INSERT INTO matching_mission_results (matching_id, mission_id, user_id, result_score)
+        VALUES (#{matchingId}, #{missionId}, #{userId}, #{resultScore})
+    </insert>
+
+    <!-- update one -->
+    <update id="updateOne" parameterType="com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingMissionResultVO">
+        UPDATE matching_mission_results
+        SET result_score = #{resultScore}
+        WHERE result_id = #{id}
+    </update>
+
+    <!-- 유저, 매치, 미션 아이디를 이용해서 column 가져오기 -->
+    <select id="findMatchingMissionResultByUserIdAndMatchingIdAndMissionId" resultType="com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingMissionResultVO">
+        SELECT result_id, matching_id, mission_id, user_id, result_score
+        FROM matching_mission_results
+        WHERE user_id = #{userId}
+          AND matching_id = #{matchingId}
+          AND mission_id = #{missionId}
+    </select>
+
+    <!-- 유저, 매치 아이디를 이용해서 점수 합 가져오기 -->
+    <select id="getAllScoreByUserIdAndMatchingId" resultType="int">
+        SELECT COALESCE(SUM(result_score), 0) AS total_score
+        FROM matching_mission_results
+        WHERE user_id = #{userId}
+          AND matching_id = #{matchingId}
+    </select>
+
+    <!-- 유저, 매치 아이디를 이용하여 전체 가져오기 -->
+    <select id="findAllMatchingMissionResultByUserIdAndMatchingId" resultType="com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingMissionResultVO">
+        SELECT result_id, matching_id, mission_id, user_id, result_score
+        FROM matching_mission_results
+        WHERE user_id = #{userId}
+          AND matching_id = #{matchingId}
+    </select>
+
+</mapper>

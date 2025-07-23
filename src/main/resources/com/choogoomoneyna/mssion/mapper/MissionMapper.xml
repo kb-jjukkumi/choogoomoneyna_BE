@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.choogoomoneyna.choogoomoneyna_be.mission.mapper.MissionMapper">
+
+    <!-- ResultMap -->
+    <resultMap id="MissionResultMap" type="com.choogoomoneyna.choogoomoneyna_be.mission.vo.MissionVO">
+        <id property="id" column="mission_id"/>
+        <result property="choogooMiName" column="choogoomi_name"/>
+        <result property="missionTitle" column="mission_title"/>
+        <result property="missionContent" column="mission_content"/>
+        <result property="missionScore" column="mission_score"/>
+        <result property="missionType" column="mission_type"/>
+    </resultMap>
+
+    <!-- INSERT -->
+    <insert id="insertMission" parameterType="com.choogoomoneyna.choogoomoneyna_be.mission.vo.MissionVO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO missions (choogoomi_name, mission_title, mission_content, mission_score, mission_type)
+        VALUES (#{choogooMiName}, #{missionTitle}, #{missionContent}, #{missionScore}, #{missionType})
+    </insert>
+
+    <!-- SELECT by missionId -->
+    <select id="findMissionByMissionId" parameterType="int" resultMap="MissionResultMap">
+        SELECT *
+        FROM missions
+        WHERE mission_id = #{missionId}
+    </select>
+
+    <!-- GET Score Only -->
+    <select id="getMissionScore" parameterType="int" resultType="int">
+        SELECT mission_score
+        FROM missions
+        WHERE mission_id = #{missionId}
+        LIMIT 1
+    </select>
+
+</mapper>

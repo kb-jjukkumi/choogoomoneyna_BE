@@ -1,9 +1,23 @@
 package com.choogoomoneyna.choogoomoneyna_be.user.dto;
 
+import com.choogoomoneyna.choogoomoneyna_be.matching.enums.ChoogooMiMissionType;
+
 public enum ChoogooMi {
     A,
     B,
     C,
     D,
-    E,
+    E;
+
+    public ChoogooMiMissionType getMissionType() {
+        switch (this) {
+            case A: return ChoogooMiMissionType.A;
+            case B: return ChoogooMiMissionType.B;
+            case C: return ChoogooMiMissionType.C;
+            case D: return ChoogooMiMissionType.D;
+            case E: return ChoogooMiMissionType.E;
+            default: throw new IllegalArgumentException("Unknown ChoogooMi: " + this);
+        }
+    }
+
 }

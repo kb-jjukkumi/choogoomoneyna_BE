@@ -21,6 +21,9 @@ import javax.sql.DataSource;
 })
 @MapperScan(basePackages = {
         "com.choogoomoneyna.choogoomoneyna_be.user.mapper",
+        "com.choogoomoneyna.choogoomoneyna_be.score.mapper",
+        "com.choogoomoneyna.choogoomoneyna_be.matching.mapper",
+        "com.choogoomoneyna.choogoomoneyna_be.mission.mapper",
         "com.choogoomoneyna.choogoomoneyna_be.auth.jwt.mapper",
         "com.choogoomoneyna.choogoomoneyna_be.account.codef.mapper",
         "com.choogoomoneyna.choogoomoneyna_be.account.db.mapper"
