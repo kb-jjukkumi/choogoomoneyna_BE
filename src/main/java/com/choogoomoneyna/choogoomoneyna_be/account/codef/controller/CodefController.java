@@ -1,9 +1,8 @@
 package com.choogoomoneyna.choogoomoneyna_be.account.codef.controller;
 
-import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.AccountRequestDto;
-import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.AccountResponseDto;
-import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.AccountUpdateRequestDto;
+import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.*;
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.service.CodefService;
+import com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.TransactionVO;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -69,15 +68,22 @@ public class CodefController {
         }
     }
 
-    @GetMapping("/transaction/get")
-    public ResponseEntity<?> getTransaction() {
-        return ResponseEntity.ok(200);
+    @PostMapping("/transaction/add")
+    public ResponseEntity<?> addTransaction(@RequestHeader("Authorization")String token,
+                                            @RequestBody TransactionRequestDto transactionRequestDto) {
+        try {
+            //token에서 userId 추출
+            String[] parts = token.split(" ");                 // ["Bearer", "eyJhbGciOi..."]
+            String accessToken = parts[1];
+            Long userId = jwtTokenProvider.getUserIdFromToken(accessToken);
+
+            //List<TransactionVO> transactionVOList = codefService.addTransaction(userId, transactionRequestDto);
+            TransactionResponseDto transactionResponseDto = codefService.addTransaction(userId, transactionRequestDto);
+            return ResponseEntity.ok(transactionResponseDto);
+        } catch (Exception e) {
+            log.error("transaction add failed {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("거래 내역 저장 중 오류가 발생했습니다.");
+        }
     }
-
-
-
-
-
-
 
 }

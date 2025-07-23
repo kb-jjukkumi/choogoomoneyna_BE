@@ -26,4 +26,30 @@
             account_num = #{accountNum}
     </update>
 
+    <!-- 계좌번호와 날짜 범위로 거래 내역 조회 -->
+    <select id="findTransactionsByAccountNumAndDateRange" resultType="com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.TransactionVO">
+        SELECT * FROM transactions
+        WHERE account_num = #{accountNum}
+        AND tr_time BETWEEN #{startDate} AND #{endDate}
+    </select>
+
+    <insert id="insertTransaction" parameterType="java.util.List">
+        INSERT INTO transactions (account_num, tr_time, tr_account_out, tr_account_in,
+        tr_after_balance, transaction_type, tr_desc1, tr_desc2, tr_desc3, tr_desc4 )
+        VALUES
+        <foreach collection="list" item="tr" separator=",">
+            ( #{tr.accountNum},
+            #{tr.trTime},
+            #{tr.trAccountOut},
+            #{tr.trAccountIn},
+            #{tr.trAfterBalance},
+            #{tr.transactionType},
+            #{tr.trDesc1},
+            #{tr.trDesc2},
+            #{tr.trDesc3},
+            #{tr.trDesc4}
+            )
+        </foreach>
+    </insert>
+
 </mapper>

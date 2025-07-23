@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,9 +15,10 @@ public class TransactionVO {
     private Long transactionId;       // 거래내역 아이디
     private String accountNum;        // 계좌번호
 
-    private Integer trTime;           // 거래시각
+    private LocalDateTime trTime;           // 거래시각
     private Integer trAccountOut;     // 출금금액
     private Integer trAccountIn;      // 입금금액
+    private String transactionType;   //거래 타입 입금 or 출금
     private Integer trAfterBalance;   // 거래 후 잔액
 
     private String trDesc1;           // 비고1 (보낸분, 받은분)

@@ -1,9 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.account.codef.service;
 
-import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.AccountRequestDto;
-import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.AccountResponseDto;
-import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.TransactionRequestDto;
-import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.TransactionResponseDto;
+import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.*;
 import com.choogoomoneyna.choogoomoneyna_be.account.db.mapper.AccountMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -85,30 +82,6 @@ public class CodefApiRequester {
 
         return connectedId;
     }
-// 커넥티드 아이디에 기관 계정 등록 (이미 등록된 경우는 무시)
-
-//    public String addConnectedId(String connectedId, AccountRequestDto accountRequestDto) throws Exception {
-//        String accessToken = codefTokenManager.getAccessToken();
-//        String requestUrl = "https://development.codef.io/v1/account/add";
-//
-//        String requestBody = buildRequestBody(accountRequestDto, connectedId);
-//        String response = sendPostRequest(requestUrl, accessToken, requestBody);
-//        log.info("CODEF 계정 추가 응답: {}", response);
-//
-//        String errorMessage = extractErrorMessage(response);
-//
-//        // ✅ 이미 등록된 기관인 경우는 무시
-//        if (errorMessage != null) {
-//            if (errorMessage.contains("이미 계정이 등록된 기관")) {
-//                log.warn("이미 등록된 기관이므로 addConnectedId는 생략합니다.");
-//                return connectedId;
-//            }
-//            throw new Exception(errorMessage); // 다른 오류는 그대로 처리
-//        }
-//
-//        return connectedId;
-//    }
-
 
 
     protected String extractErrorMessage(String response) throws Exception {
@@ -288,32 +261,15 @@ public class CodefApiRequester {
         }
 
         return accountList;
-
-//        // 응답에서 따로 메시지를 추출
-//        String message = jsonResponse.path("result").path("message").asText();
-//        JsonNode depositTrustList = jsonResponse.path("data").path("resDepositTrust");
-//
-//        if (depositTrustList.isArray() && depositTrustList.size() > 0) {
-//            for (JsonNode accountInfo : depositTrustList) {
-//                AccountResponseDto accountResponseDto = new AccountResponseDto();
-//                accountResponseDto.setAccountNum(accountInfo.get("resAccount").asText());
-//                accountResponseDto.setAccountBalance(accountInfo.get("resAccountBalance").asText());
-//                accountResponseDto.setAccountName(accountInfo.get("resAccountName").asText());
-//                accountResponseDto.setBankId(bankId);
-//                accountList.add(accountResponseDto);
-//            }
-//        }
-//        return accountList;
     }
 
 
-    public TransactionResponseDto getTransactionList(TransactionRequestDto requestDto, String connectedId) throws Exception {
+    public CodefTransactionResponseDto getTransactionList(TransactionRequestDto requestDto) throws Exception {
         try {
             String accessToken = codefTokenManager.getAccessToken();
             String requestUrl = "https://development.codef.io/v1/kr/bank/p/account/transaction-list";
 
             // 요청 바디 생성
-            requestDto.setConnectedId(connectedId);
             ObjectMapper objectMapper = new ObjectMapper();
             String requestBody = objectMapper.writeValueAsString(requestDto);
 
@@ -330,21 +286,22 @@ public class CodefApiRequester {
             }
 
             // TransactionResponseDto 생성
-            TransactionResponseDto transactionResponseDto = new TransactionResponseDto();
-            transactionResponseDto.setAccountNum(jsonNode.path("data").path("resAccount").asText());
+            //TransactionResponseDto transactionResponseDto = new TransactionResponseDto();
+            CodefTransactionResponseDto codefTransactionResponseDto = new CodefTransactionResponseDto();
+            codefTransactionResponseDto.setAccountNum(jsonNode.path("data").path("resAccount").asText());
 
             // 거래 내역 리스트 존재 여부 체크
             ArrayNode transactionArray = (ArrayNode) jsonNode.path("data").path("resTrHistoryList");
-            List<TransactionResponseDto.trItem> transactionList = new ArrayList<>();
+            List<CodefTransactionResponseDto.HistoryItem> transactionList = new ArrayList<>();
 
             // 각 항목을 DTO로 변환하여 리스트에 추가
             for (JsonNode node : transactionArray) {
-                TransactionResponseDto.trItem trItem = objectMapper.treeToValue(node, TransactionResponseDto.trItem.class);
+                CodefTransactionResponseDto.HistoryItem trItem = objectMapper.treeToValue(node, CodefTransactionResponseDto.HistoryItem.class);
                 transactionList.add(trItem);
             }
 
-            transactionResponseDto.setTransactionList(transactionList);
-            return transactionResponseDto;
+            codefTransactionResponseDto.setResTrHistoryList(transactionList);
+            return codefTransactionResponseDto;
 
         } catch (Exception e) {
             // 에러가 발생하면 로그를 남기고 null 반환

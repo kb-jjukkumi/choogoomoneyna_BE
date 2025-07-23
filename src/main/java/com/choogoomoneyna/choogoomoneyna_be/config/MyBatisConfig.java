@@ -58,6 +58,11 @@ public class MyBatisConfig {
                         .getResources("classpath:com/choogoomoneyna/**/mapper/*.xml")
 
         );
+        // 👇 여기를 추가해야 camelCase 자동 매핑이 동작함
+        org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
+        configuration.setMapUnderscoreToCamelCase(true);
+        sessionFactory.setConfiguration(configuration);
+
         return sessionFactory.getObject();
     }
 
