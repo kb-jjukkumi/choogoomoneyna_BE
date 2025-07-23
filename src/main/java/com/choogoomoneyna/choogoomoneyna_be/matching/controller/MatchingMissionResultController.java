@@ -50,10 +50,7 @@ public class MatchingMissionResultController {
         );
 
         List<MissionProgressDTO> progressList =
-                matchingMissionResultService.getMatchingMissionResults(userId, matchId)
-                        .stream()
-                        .map(MatchingMissionConverter::toMissionProgressDTO)
-                        .toList();
+                matchingMissionResultService.getAllMissionProgressDTO(userId, matchId);
 
         int updateScore = scoreService.getScore(userId) + score;
         scoreService.updateScore(
