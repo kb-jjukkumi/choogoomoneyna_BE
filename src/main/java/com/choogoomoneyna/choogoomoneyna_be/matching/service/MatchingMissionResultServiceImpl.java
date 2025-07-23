@@ -1,10 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.matching.service;
 
-import com.choogoomoneyna.choogoomoneyna_be.matching.mapper.MatchingMapper;
 import com.choogoomoneyna.choogoomoneyna_be.matching.mapper.MatchingMissionResultMapper;
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingMissionResultVO;
-import com.choogoomoneyna.choogoomoneyna_be.mission.dto.response.MissionProgressDTO;
-import com.choogoomoneyna.choogoomoneyna_be.mission.mapper.MissionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +11,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MatchingMissionResultServiceImpl implements MatchingMissionResultService {
 
-    private final MatchingMapper matchingMapper;
-    private final MissionMapper missionMapper;
     private final MatchingMissionResultMapper matchingMissionResultMapper;
 
     @Override
