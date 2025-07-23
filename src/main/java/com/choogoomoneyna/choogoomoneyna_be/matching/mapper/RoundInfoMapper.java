@@ -8,13 +8,15 @@ import java.util.Date;
 @Mapper
 public interface RoundInfoMapper {
 
-    void updateRoundInfo(RoundInfoVO roundInfoVO);
+    void insertRoundInfo(RoundInfoVO roundInfoVO);
 
-    RoundInfoVO findRoundInfo();
+    RoundInfoVO findLatestRoundInfo();
 
-    Integer getRoundNumber();
+    RoundInfoVO findRoundInfoByRoundNumber(Integer roundNumber);
 
-    Date getStartDate();
+    Integer getRoundNumber(Integer roundNumber);
 
-    Date getEndDate();
+    Date getStartDate(Integer roundNumber);
+
+    Date getEndDate(Integer roundNumber);
 }
