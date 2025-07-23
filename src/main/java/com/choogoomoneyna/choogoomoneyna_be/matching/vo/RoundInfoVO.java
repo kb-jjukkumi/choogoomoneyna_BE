@@ -13,6 +13,6 @@ import java.util.Date;
 @Builder
 public class RoundInfoVO {
     private Integer roundNumber;
-    private Date StartDate;
-    private Date EndDate;
+    private Date startDate;
+    private Date endDate;
 }
