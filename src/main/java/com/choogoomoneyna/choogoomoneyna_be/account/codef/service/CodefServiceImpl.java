@@ -2,6 +2,7 @@ package com.choogoomoneyna.choogoomoneyna_be.account.codef.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.AccountRequestDto;
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.AccountResponseDto;
+import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.AccountUpdateRequestDto;
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.AccountVO;
 import com.choogoomoneyna.choogoomoneyna_be.account.db.mapper.AccountMapper;
 import com.choogoomoneyna.choogoomoneyna_be.user.mapper.UserMapper;
@@ -41,6 +42,7 @@ public class CodefServiceImpl implements CodefService {
 
         // 3. codef api로 계좌 리스트 가져오기
         List<AccountResponseDto> accountList = codefApiRequester.getAccountList(accountRequestDto, connectedId);
+        System.out.println(accountList);
 
         if (accountList == null || accountList.isEmpty()) {
             log.info("None account added.");
@@ -58,6 +60,41 @@ public class CodefServiceImpl implements CodefService {
 
         return accountList;
     }
+//@Override
+//public List<AccountResponseDto> addAccount(Long userId, AccountRequestDto accountRequestDto) throws Exception {
+//    // 1. 유저 정보 및 connectedId 조회
+//    UserVO userVO = userMapper.findById(userId);
+//    String connectedId = userVO.getConnectedId();
+//
+//    // 2. connectedId가 없다면 생성 (최초 연동 시)
+//    if (connectedId == null) {
+//        connectedId = codefApiRequester.registerConnectedId(accountRequestDto);
+//        userMapper.updateConnectedId(userId, connectedId);  // DB에 저장
+//    }
+//
+//    // 3. 기관 계정 등록 (항상 수행, 중복 등록 예외는 내부 처리)
+//    connectedId = codefApiRequester.addConnectedId(connectedId, accountRequestDto);
+//
+//    // 4. 계좌 목록 조회
+//    List<AccountResponseDto> accountList = codefApiRequester.getAccountList(accountRequestDto, connectedId);
+//
+//    if (accountList == null || accountList.isEmpty()) {
+//        log.info("None account added.");
+//        throw new Exception("check id/password.");
+//    }
+//
+//    // 5. 계좌 정보를 DB에 저장
+//    List<AccountVO> accountVOList = accountList.stream()
+//            .map(accountInfo -> mapToAccountVO(userId, accountInfo))
+//            .toList();
+//
+//    accountMapper.insertAccount(accountVOList);
+//    log.info("{} accounts added.", accountVOList.size());
+//
+//    return accountList;
+//}
+
+
 
     private AccountVO mapToAccountVO(Long userId, AccountResponseDto accountResponseDto) {
         AccountVO accountVO = new AccountVO();
@@ -70,15 +107,19 @@ public class CodefServiceImpl implements CodefService {
     }
 
     @Override
-    public AccountResponseDto updateAccountOne(Long userId,String bankId, String accountNum) throws Exception {
+    public AccountResponseDto updateAccountOne(Long userId, AccountUpdateRequestDto accountUpdateRequestDto) throws Exception {
         //1. 유저 정보 추출
         UserVO userVO = userMapper.findById(userId);
         String connectedId = userVO.getConnectedId();
+        log.debug("connectedId: {}", connectedId);
+        String bankId = accountUpdateRequestDto.getBankId();
+        String accountNum = accountUpdateRequestDto.getAccountNum();
 
         // 2. codef api로 계좌 리스트 가져오기
         List<AccountResponseDto> accountList = codefApiRequester.getAccountOne(bankId, connectedId);
 
         if (accountList == null || accountList.isEmpty()) {
+            System.out.println("accountList is empty."+ accountList);
             log.info("None account added.");
             throw new Exception("check id/password.");
         }

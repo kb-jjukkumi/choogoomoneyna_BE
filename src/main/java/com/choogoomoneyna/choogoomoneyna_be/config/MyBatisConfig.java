@@ -14,10 +14,16 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import javax.sql.DataSource;
 
 @Configuration
-@PropertySource("classpath:application-secret-database.properties")
+//@PropertySource("classpath:application-secret-database.properties")
+@PropertySource({
+        "classpath:application-secret-database.properties",
+        "classpath:application-secret-codef.properties"
+})
 @MapperScan(basePackages = {
         "com.choogoomoneyna.choogoomoneyna_be.user.mapper",
         "com.choogoomoneyna.choogoomoneyna_be.auth.jwt.mapper",
+        "com.choogoomoneyna.choogoomoneyna_be.account.codef.mapper",
+        "com.choogoomoneyna.choogoomoneyna_be.account.db.mapper"
 })
 public class MyBatisConfig {
 
@@ -50,6 +56,7 @@ public class MyBatisConfig {
         sessionFactory.setMapperLocations(
                 new PathMatchingResourcePatternResolver()
                         .getResources("classpath:com/choogoomoneyna/**/mapper/*.xml")
+
         );
         return sessionFactory.getObject();
     }

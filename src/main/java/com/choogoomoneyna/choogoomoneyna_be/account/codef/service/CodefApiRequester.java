@@ -71,12 +71,45 @@ public class CodefApiRequester {
 
         // 에러 메시지 추출
         String errorMessage = extractErrorMessage(response);
+//        if (errorMessage != null) {
+//
+//            //throw new Exception(errorMessage);  // 에러가 있으면 예외 발생
+//        }
         if (errorMessage != null) {
-            throw new Exception(errorMessage);  // 에러가 있으면 예외 발생
+            if (errorMessage.contains("이미 계정이 등록된 기관")) {
+                log.warn("이미 등록된 기관이므로 addConnectedId는 생략합니다.");
+                return connectedId;
+            }
+            //throw new Exception(errorMessage);
         }
 
         return connectedId;
     }
+// 커넥티드 아이디에 기관 계정 등록 (이미 등록된 경우는 무시)
+
+//    public String addConnectedId(String connectedId, AccountRequestDto accountRequestDto) throws Exception {
+//        String accessToken = codefTokenManager.getAccessToken();
+//        String requestUrl = "https://development.codef.io/v1/account/add";
+//
+//        String requestBody = buildRequestBody(accountRequestDto, connectedId);
+//        String response = sendPostRequest(requestUrl, accessToken, requestBody);
+//        log.info("CODEF 계정 추가 응답: {}", response);
+//
+//        String errorMessage = extractErrorMessage(response);
+//
+//        // ✅ 이미 등록된 기관인 경우는 무시
+//        if (errorMessage != null) {
+//            if (errorMessage.contains("이미 계정이 등록된 기관")) {
+//                log.warn("이미 등록된 기관이므로 addConnectedId는 생략합니다.");
+//                return connectedId;
+//            }
+//            throw new Exception(errorMessage); // 다른 오류는 그대로 처리
+//        }
+//
+//        return connectedId;
+//    }
+
+
 
     protected String extractErrorMessage(String response) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
@@ -206,7 +239,7 @@ public class CodefApiRequester {
             for (JsonNode accountInfo : depositTrustList) {
                 AccountResponseDto accountResponseDto = new AccountResponseDto();
                 String resAccount = (accountInfo.get("resAccount").asText());
-                if(accountMapper.findAccountByAccountNum(resAccount)!=null){
+                if(accountMapper.findByAccountNum(resAccount)!=null){
                     continue;
                 } else{
                     accountResponseDto.setAccountNum(resAccount);
@@ -235,19 +268,17 @@ public class CodefApiRequester {
         List<AccountResponseDto> accountList = new ArrayList<>();
         JsonNode jsonResponse = mapper.readTree(response);
 
-        // 응답에서 따로 메시지를 추출
+        // 응답 메시지 확인 (디버깅용)
         String message = jsonResponse.path("result").path("message").asText();
+        log.info("CODEF 응답 메시지: {}", message);
+        log.info("CODEF 전체 응답: {}", jsonResponse.toPrettyString());
 
+        // 계좌 목록 추출
         JsonNode depositTrustList = jsonResponse.path("data").path("resDepositTrust");
         if (depositTrustList.isArray() && depositTrustList.size() > 0) {
             for (JsonNode accountInfo : depositTrustList) {
                 AccountResponseDto accountResponseDto = new AccountResponseDto();
-                String resAccount = (accountInfo.get("resAccount").asText());
-                if(accountMapper.findAccountByAccountNum(resAccount)!=null){
-                    continue;
-                } else{
-                    accountResponseDto.setAccountNum(resAccount);
-                }
+                accountResponseDto.setAccountNum(accountInfo.get("resAccount").asText());
                 accountResponseDto.setAccountBalance(accountInfo.get("resAccountBalance").asText());
                 accountResponseDto.setAccountName(accountInfo.get("resAccountName").asText());
                 accountResponseDto.setBankId(bankId);
@@ -255,7 +286,24 @@ public class CodefApiRequester {
                 accountList.add(accountResponseDto);
             }
         }
+
         return accountList;
+
+//        // 응답에서 따로 메시지를 추출
+//        String message = jsonResponse.path("result").path("message").asText();
+//        JsonNode depositTrustList = jsonResponse.path("data").path("resDepositTrust");
+//
+//        if (depositTrustList.isArray() && depositTrustList.size() > 0) {
+//            for (JsonNode accountInfo : depositTrustList) {
+//                AccountResponseDto accountResponseDto = new AccountResponseDto();
+//                accountResponseDto.setAccountNum(accountInfo.get("resAccount").asText());
+//                accountResponseDto.setAccountBalance(accountInfo.get("resAccountBalance").asText());
+//                accountResponseDto.setAccountName(accountInfo.get("resAccountName").asText());
+//                accountResponseDto.setBankId(bankId);
+//                accountList.add(accountResponseDto);
+//            }
+//        }
+//        return accountList;
     }
 
 

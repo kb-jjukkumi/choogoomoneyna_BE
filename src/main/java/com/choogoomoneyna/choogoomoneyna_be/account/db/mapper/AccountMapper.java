@@ -11,4 +11,6 @@ public interface AccountMapper {
     AccountVO findByAccountNum(String accountNum);
 
     void insertAccount(List<AccountVO> accountVOList);
+
+    void updateAccount(AccountVO accountVO);
 }

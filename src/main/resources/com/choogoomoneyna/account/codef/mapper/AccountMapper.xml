@@ -17,4 +17,13 @@
         </foreach>
     </insert>
 
+    <update id="updateAccount" parameterType="com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.AccountVO">
+        UPDATE accounts
+        SET
+            account_balance = #{accountBalance},
+            update_date = NOW()
+        WHERE
+            account_num = #{accountNum}
+    </update>
+
 </mapper>
