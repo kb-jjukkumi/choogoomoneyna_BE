@@ -1,14 +1,13 @@
 package com.choogoomoneyna.choogoomoneyna_be.matching.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.matching.dto.MatchingStatus;
-import com.choogoomoneyna.choogoomoneyna_be.matching.enums.ChoogooMiMissionType;
 import com.choogoomoneyna.choogoomoneyna_be.matching.enums.CommonMissionType;
 import com.choogoomoneyna.choogoomoneyna_be.matching.mapper.MatchingMapper;
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingVO;
+import com.choogoomoneyna.choogoomoneyna_be.matching.vo.RoundInfoVO;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
 import com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.ChoogooMi;
-import com.choogoomoneyna.choogoomoneyna_be.user.mapper.UserMapper;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserService;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.MatchedUserVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
@@ -16,10 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,6 +27,9 @@ public class MatchingServiceImpl implements MatchingService {
     private final RoundInfoService roundInfoService;
     private final MatchingMissionResultService matchingMissionResultService;
     private final UserService userService;
+
+    private Date mondayDate;
+    private Date sundayDate;
 
     private void assignMatchMission(Long user1Id, Long user2Id, ChoogooMi choogooMi) {
         Long matchingId = matchingMapper.getProgressMatchingIdByUserId(user1Id);
@@ -54,10 +52,6 @@ public class MatchingServiceImpl implements MatchingService {
     }
 
     private MatchingVO buildToMatchingVO(Long user1Id, Long user2Id) {
-        // 시스템 시간대를 기준으로 Date 객체로 변환
-        Date mondayDate = roundInfoService.getStartDate();
-        Date sundayDate = roundInfoService.getEndDate();
-
         return MatchingVO.builder()
                 .user1Id(user1Id)
                 .user2Id(user2Id)
@@ -119,15 +113,64 @@ public class MatchingServiceImpl implements MatchingService {
             assignMatchMission(user1.getId(), user1.getId(), choogooMi);
         }
     }
-
+    
     private List<UserVO> groupByChoogooMi(List<UserVO> users, ChoogooMi choogooMi) {
         return users.stream()
                 .filter(user -> user.getChoogooMi().equals(choogooMi.name()))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 주어진 날짜로부터 다음주 같은 요일의 날짜를 반환
+     *
+     * @param date 기준이 되는 날짜
+     * @return 다음 주 같은 요일의 날짜
+     */
+    private Date getNextWeekDate(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, 7);
+        return cal.getTime();
+    }
+
+    /**
+     * 데이터베이스의 라운드 정보를 업데이트합니다. 새로운 라운드를 생성하고 라운드 번호를 증가시키며
+     * 시작일과 종료일을 업데이트합니다.
+     *
+     * <b>처리 과정:</b>
+     * 1. roundInfoService를 사용하여 최신 라운드 정보를 가져옵니다.
+     * 2. 현재 라운드 번호에 1을 더해 다음 라운드 번호를 계산합니다.
+     * 3. 최신 라운드의 시작일과 종료일에 7일을 더해 다음 라운드의 시작일과 종료일을 결정합니다.
+     * 4. roundInfoService의 createRoundInfo 메소드를 호출하여 계산된 값으로 
+     *    데이터베이스에 새로운 라운드 항목을 생성합니다.
+     *
+     * <b>사용된 의존성:</b>
+     * - roundInfoService: 라운드 정보 데이터와 상호작용하는 서비스 계층
+     * - RoundInfoVO: 라운드의 세부 정보를 포함하는 값 객체
+     *
+     */
+    private void prepareNewRoundAndUpdateDates() {
+        RoundInfoVO roundInfoVO = roundInfoService.getLatestRoundInfo();
+        int nextRoundNumber = roundInfoVO.getRoundNumber() + 1;
+        Date nextStartDate = getNextWeekDate(roundInfoVO.getStartDate());
+        Date nextEndDate = getNextWeekDate(roundInfoVO.getEndDate());
+
+        mondayDate = nextStartDate;
+        sundayDate = nextEndDate;
+
+        roundInfoService.createRoundInfo(
+                RoundInfoVO.builder()
+                        .roundNumber(nextRoundNumber)
+                        .startDate(nextStartDate)
+                        .endDate(nextEndDate)
+                        .build()
+        );
+    }
+
     @Override
     public void startAllMatching() {
+        prepareNewRoundAndUpdateDates();
+
         List<UserVO> totalUsers = userService.findAllUsers();
         List<UserScoreVO> scores = scoreService.getAllScores();
 
