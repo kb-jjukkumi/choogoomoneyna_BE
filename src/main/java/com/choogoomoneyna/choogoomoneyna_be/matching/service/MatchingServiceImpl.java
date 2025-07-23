@@ -238,4 +238,9 @@ public class MatchingServiceImpl implements MatchingService {
     public Long getProgressMatchingIdByUserId(Long userId) {
         return matchingMapper.getProgressMatchingIdByUserId(userId);
     }
+
+    @Override
+    public Long getComponentUserIdByUserId(Long userId) {
+        return matchingMapper.getComponentUserIdByUserId(userId);
+    }
 }

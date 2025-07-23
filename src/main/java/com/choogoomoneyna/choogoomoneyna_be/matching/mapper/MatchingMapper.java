@@ -25,4 +25,6 @@ public interface MatchingMapper {
     void updateMatchingStatus(Long matchingId, String matchingStatus);
 
     Long getProgressMatchingIdByUserId(Long userId);
+
+    Long getComponentUserIdByUserId(Long userId);
 }
