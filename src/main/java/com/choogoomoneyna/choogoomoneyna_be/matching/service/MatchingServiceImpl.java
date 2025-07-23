@@ -28,8 +28,7 @@ public class MatchingServiceImpl implements MatchingService {
     private final MatchingMissionResultService matchingMissionResultService;
     private final UserService userService;
 
-    private Date mondayDate;
-    private Date sundayDate;
+    private int roundNumber;
 
     private void assignMatchMission(Long user1Id, Long user2Id, ChoogooMi choogooMi) {
         Long matchingId = matchingMapper.getProgressMatchingIdByUserId(user1Id);
@@ -54,10 +53,9 @@ public class MatchingServiceImpl implements MatchingService {
     private MatchingVO buildToMatchingVO(Long user1Id, Long user2Id) {
         return MatchingVO.builder()
                 .user1Id(user1Id)
+                .roundNumber(roundNumber)
                 .user2Id(user2Id)
                 .matchingStatus(MatchingStatus.PENDING.name())
-                .matchingStart(mondayDate)
-                .matchingFinish(sundayDate)
                 .build();
     }
 
@@ -155,8 +153,7 @@ public class MatchingServiceImpl implements MatchingService {
         Date nextStartDate = getNextWeekDate(roundInfoVO.getStartDate());
         Date nextEndDate = getNextWeekDate(roundInfoVO.getEndDate());
 
-        mondayDate = nextStartDate;
-        sundayDate = nextEndDate;
+        roundNumber = nextRoundNumber;
 
         roundInfoService.createRoundInfo(
                 RoundInfoVO.builder()
