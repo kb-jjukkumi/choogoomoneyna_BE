@@ -7,50 +7,57 @@
 
     <!-- resultMap -->
     <resultMap id="RoundInfoResultMap" type="com.choogoomoneyna.choogoomoneyna_be.matching.vo.RoundInfoVO">
+        <id property="id" column="round_info_id"/>
         <result property="roundNumber" column="round_number"/>
         <result property="startDate" column="start_date"/>
         <result property="endDate" column="end_date"/>
     </resultMap>
 
-    <!-- 최신 회차 정보 한 건 조회 -->
-    <select id="findRoundInfo" resultMap="RoundInfoResultMap">
-        SELECT round_number, start_date, end_date
+    <!-- 회차 번호로 조회 -->
+    <select id="findRoundInfoByRoundNumber" resultMap="RoundInfoResultMap" parameterType="int">
+        SELECT round_info_id, round_number, start_date, end_date
         FROM round_info
-        ORDER BY round_number DESC
+        WHERE round_number = #{roundNumber}
         LIMIT 1
     </select>
 
-    <!-- 최신 회차 번호만 조회 -->
-    <select id="getRoundNumber" resultType="int">
+    <!-- 회차 번호 단일 조회 -->
+    <select id="getRoundNumber" resultType="int" parameterType="int">
         SELECT round_number
         FROM round_info
-        ORDER BY round_number DESC
+        WHERE round_number = #{roundNumber}
         LIMIT 1
     </select>
 
-    <!-- 최신 시작일만 조회 -->
-    <select id="getStartDate" resultType="date">
+    <!-- 시작일 조회 -->
+    <select id="getStartDate" resultType="date" parameterType="int">
         SELECT start_date
         FROM round_info
-        ORDER BY round_number DESC
+        WHERE round_number = #{roundNumber}
         LIMIT 1
     </select>
 
-    <!-- 최신 종료일만 조회 -->
-    <select id="getEndDate" resultType="date">
+    <!-- 종료일 조회 -->
+    <select id="getEndDate" resultType="date" parameterType="int">
         SELECT end_date
+        FROM round_info
+        WHERE round_number = #{roundNumber}
+        LIMIT 1
+    </select>
+
+    <!-- 최신 회차 전체 정보 조회 -->
+    <select id="findLatestRoundInfo" resultMap="RoundInfoResultMap">
+        SELECT round_info_id, round_number, start_date, end_date
         FROM round_info
         ORDER BY round_number DESC
         LIMIT 1
     </select>
 
-    <!-- 회차 정보 전체 업데이트 (가장 최근 회차에 대해) -->
-    <update id="updateRoundInfo" parameterType="com.choogoomoneyna.choogoomoneyna_be.matching.vo.RoundInfoVO">
-        UPDATE round_info
-        SET
-            start_date = #{startDate},
-            end_date = #{endDate}
-        WHERE round_number = #{roundNumber}
-    </update>
+    <!-- 회차 삽입 -->
+    <insert id="insertRoundInfo" parameterType="com.choogoomoneyna.choogoomoneyna_be.matching.vo.RoundInfoVO"
+            useGeneratedKeys="true" keyProperty="id" keyColumn="round_info_id">
+        INSERT INTO round_info (round_number, start_date, end_date)
+        VALUES (#{roundNumber}, #{startDate}, #{endDate})
+    </insert>
 
 </mapper>
