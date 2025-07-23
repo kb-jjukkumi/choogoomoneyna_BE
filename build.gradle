@@ -121,6 +121,11 @@ dependencies {
   testImplementation 'junit:junit:4.13.2'
   testImplementation 'com.jayway.jsonpath:json-path:2.7.0'
 
+  // Spring Mail 기능 (JavaMailSenderImpl 포함)
+  implementation("org.springframework:spring-context-support:${springVersion}")
+
+  // JavaMail (SMTP 전송)
+  implementation 'com.sun.mail:javax.mail:1.6.2'
 }
 
 

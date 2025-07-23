@@ -1,6 +1,6 @@
-package com.choogoomoneyna.choogoomoneyna_be.jwt.mapper;
+package com.choogoomoneyna.choogoomoneyna_be.auth.jwt.mapper;
 
-import com.choogoomoneyna.choogoomoneyna_be.jwt.vo.RefreshTokenVO;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.vo.RefreshTokenVO;
 import org.apache.ibatis.annotations.Param;
 import org.mapstruct.Mapper;
 

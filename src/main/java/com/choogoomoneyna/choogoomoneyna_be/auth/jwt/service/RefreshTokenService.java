@@ -1,4 +1,4 @@
-package com.choogoomoneyna.choogoomoneyna_be.jwt.service;
+package com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service;
 
 public interface RefreshTokenService {
 

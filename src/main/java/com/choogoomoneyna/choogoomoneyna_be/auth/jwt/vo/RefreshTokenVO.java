@@ -1,4 +1,4 @@
-package com.choogoomoneyna.choogoomoneyna_be.jwt.vo;
+package com.choogoomoneyna.choogoomoneyna_be.auth.jwt.vo;
 
 import lombok.Data;
 
