@@ -1,8 +1,10 @@
 package com.choogoomoneyna.choogoomoneyna_be.account.db.mapper;
 
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.AccountResponseDto;
+import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.TransactionResponseDto;
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.AccountVO;
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.TransactionVO;
+import com.choogoomoneyna.choogoomoneyna_be.account.db.dto.TransactionItemDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -26,4 +28,7 @@ public interface AccountMapper {
     void insertTransaction(List<TransactionVO> transactionVO);
 
     List<AccountResponseDto> findByUserId(Long userId);
+
+    List<TransactionVO> findAllTransactionsVo(String account);
+
 }
