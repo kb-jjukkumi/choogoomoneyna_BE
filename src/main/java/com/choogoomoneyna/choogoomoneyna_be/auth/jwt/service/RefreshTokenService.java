@@ -6,10 +6,9 @@ public interface RefreshTokenService {
      * 사용자의 리프레시 토큰을 생성하고 저장합니다.
      *
      * @param userId   사용자 ID
-     * @param nickname 사용자 닉네임
      * @return 생성된 리프레시 토큰
      */
-    String generateRefreshTokenAndSave(Long userId, String nickname);
+    String generateRefreshTokenAndSave(Long userId);
 
     /**
      * 특정 사용자의 모든 리프레시 토큰을 삭제합니다.
