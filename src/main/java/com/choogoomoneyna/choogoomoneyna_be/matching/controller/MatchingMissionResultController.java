@@ -1,5 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.matching.controller;
 
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.CustomUserDetails;
 import com.choogoomoneyna.choogoomoneyna_be.matching.dto.Request.MatchingMissionUpdateRequest;
 import com.choogoomoneyna.choogoomoneyna_be.matching.dto.Response.MatchingMainResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.matching.service.MatchingMissionConverter;
@@ -14,6 +15,9 @@ import com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,10 +34,13 @@ public class MatchingMissionResultController {
     private final RoundInfoService roundInfoService;
     private final ScoreService scoreService;
 
-    @PutMapping("/missions/{userId}/complete")
+    @PutMapping("/missions/complete")
     public ResponseEntity<?> completeMatchingMission(
-            @PathVariable Long userId,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody MatchingMissionUpdateRequest request) {
+
+        Long userId = userDetails.getId();
+
         Long matchId = matchingService.getProgressMatchingIdByUserId(userId);
         if (matchId == null) {
             return ResponseEntity.badRequest().body(Map.of("message", "matching progress not found"));
@@ -69,8 +76,10 @@ public class MatchingMissionResultController {
         );
     }
 
-    @GetMapping("/detail/{userId}")
-    public ResponseEntity<?> getMatchingMissionProgress(@PathVariable Long userId) {
+    @GetMapping("/detail")
+    public ResponseEntity<?> getMatchingMissionProgress(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long userId = userDetails.getId();
+
         Long matchId = matchingService.getProgressMatchingIdByUserId(userId);
         if (matchId == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -88,8 +97,10 @@ public class MatchingMissionResultController {
         );
     }
 
-    @GetMapping("/main/{userId}")
-    public ResponseEntity<?> getMatchingMain(@PathVariable Long userId) {
+    @GetMapping("/main")
+    public ResponseEntity<?> getMatchingMain(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long userId = userDetails.getId();
+
         Long matchId = matchingService.getProgressMatchingIdByUserId(userId);
         if (matchId == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)

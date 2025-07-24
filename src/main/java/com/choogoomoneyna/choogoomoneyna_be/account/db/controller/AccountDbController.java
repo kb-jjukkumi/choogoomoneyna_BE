@@ -5,12 +5,13 @@ import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.TransactionRequest
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.TransactionResponseDto;
 import com.choogoomoneyna.choogoomoneyna_be.account.db.dto.TransactionItemDto;
 import com.choogoomoneyna.choogoomoneyna_be.account.db.service.AccountDbService;
-import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.JwtTokenProvider;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.CustomUserDetails;
 import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,16 +25,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AccountDbController {
 
-    private final JwtTokenProvider jwtTokenProvider;
     private final AccountDbService accountDbService;
 
 
     @GetMapping("/account/db")
-    public ResponseEntity<?> getAccountDb(@RequestHeader("Authorization")String token) {
+    public ResponseEntity<?> getAccountDb(@AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
-            String[] parts = token.split(" ");
-            String accessToken = parts[1];
-            Long userId = jwtTokenProvider.getUserIdFromToken(accessToken);
+            Long userId = userDetails.getId();
 
             List<AccountResponseDto> accountList = accountDbService.getAllAccounts(userId);
 
@@ -46,12 +44,10 @@ public class AccountDbController {
     }
 
     @GetMapping("/transaction/db")
-    public ResponseEntity<?> getTransactionDb(@RequestHeader("Authorization")String token,
+    public ResponseEntity<?> getTransactionDb(@AuthenticationPrincipal CustomUserDetails userDetails,
                                               @RequestParam String account) {
         try {
-            String[] parts = token.split(" ");
-            String accessToken = parts[1];
-            Long userId = jwtTokenProvider.getUserIdFromToken(accessToken);
+            Long userId = userDetails.getId();
             List<TransactionItemDto> transactions = accountDbService.getAllTransactions(account);
             return ResponseEntity.ok(transactions);
         } catch (Exception e) {
