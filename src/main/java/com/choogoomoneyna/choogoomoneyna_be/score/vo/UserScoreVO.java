@@ -1,12 +1,10 @@
 package com.choogoomoneyna.choogoomoneyna_be.score.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class UserScoreVO {
