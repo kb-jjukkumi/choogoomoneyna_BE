@@ -26,6 +26,16 @@ public class MatchingTestController {
     }
 
     /**
+     * 모든 사용자에 대해 매칭 종료 (테스트 용)
+     */
+    @PostMapping("/finish-all")
+    public ResponseEntity<String> finishAllMatching() {
+        System.out.println("finish all matching");
+        matchingService.finishAllMatching();
+        return ResponseEntity.ok("Matching finished for all users (test)");
+    }
+
+    /**
      * 특정 유저에 대해 매칭 시작 (테스트용)
      */
     @PostMapping("/start/{userId}")
@@ -62,4 +72,6 @@ public class MatchingTestController {
         String status = matchingService.findMatchingStatus(matchingId);
         return ResponseEntity.ok(status);
     }
+
+
 }
