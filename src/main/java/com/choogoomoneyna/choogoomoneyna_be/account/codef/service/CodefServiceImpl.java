@@ -33,11 +33,11 @@ public class CodefServiceImpl implements CodefService {
     @Override
     public List<AccountResponseDto> addAccount(Long userId, AccountRequestDto accountRequestDto) throws Exception {
 
-        //1. À¯Àú Á¤º¸ ÃßÃâ
+        //1. ìœ ì € ì •ë³´ ì¶”ì¶œ
         UserVO userVO = userMapper.findById(userId);
         String connectedId = userVO.getConnectedId();
 
-        // 2. connectedId Ã³¸® (¾øÀ» °æ¿ì µî·Ï api·Î ¿¬°á)
+        // 2. connectedId ì²˜ë¦¬ (ì—†ì„ ê²½ìš° ë“±ë¡ apië¡œ ì—°ê²°)
         if (connectedId == null) {
             connectedId = codefApiRequester.registerConnectedId(accountRequestDto);
             userMapper.updateConnectedId(userId, connectedId);
@@ -45,7 +45,7 @@ public class CodefServiceImpl implements CodefService {
             connectedId = codefApiRequester.addConnectedId(connectedId, accountRequestDto);
         }
 
-        // 3. codef api·Î °èÁÂ ¸®½ºÆ® °¡Á®¿À±â
+        // 3. codef apië¡œ ê³„ì¢Œ ë¦¬ìŠ¤íŠ¸ ê°€ì ¸ì˜¤ê¸°
         List<AccountResponseDto> accountList = codefApiRequester.getAccountList(accountRequestDto, connectedId);
         System.out.println(accountList);
 
@@ -54,12 +54,12 @@ public class CodefServiceImpl implements CodefService {
             throw new Exception("check id/password.");
         }
 
-        // 5. °èÁÂ Á¤º¸¸¦ AccountVo ¸®½ºÆ®·Î ¸ÅÇÎ
+        // 5. ê³„ì¢Œ ì •ë³´ë¥¼ AccountVo ë¦¬ìŠ¤íŠ¸ë¡œ ë§¤í•‘
         List<AccountVO> accountVOList = accountList.stream()
                 .map(accountInfo -> mapToAccountVO(userId, accountInfo))
                 .toList();
 
-        // 6. accounts db ÀúÀå
+        // 6. accounts db ì €ì¥
         accountMapper.insertAccount(accountVOList);
         log.info("{} accounts added.", accountVOList.size());
 
@@ -72,14 +72,14 @@ public class CodefServiceImpl implements CodefService {
 
     @Override
     public AccountResponseDto updateAccountOne(Long userId, AccountUpdateRequestDto accountUpdateRequestDto) throws Exception {
-        //1. À¯Àú Á¤º¸ ÃßÃâ
+        //1. ìœ ì € ì •ë³´ ì¶”ì¶œ
         UserVO userVO = userMapper.findById(userId);
         String connectedId = userVO.getConnectedId();
         log.debug("connectedId: {}", connectedId);
         String bankId = accountUpdateRequestDto.getBankId();
         String accountNum = accountUpdateRequestDto.getAccountNum();
 
-        // 2. codef api·Î °èÁÂ ¸®½ºÆ® °¡Á®¿À±â
+        // 2. codef apië¡œ ê³„ì¢Œ ë¦¬ìŠ¤íŠ¸ ê°€ì ¸ì˜¤ê¸°
         List<AccountResponseDto> accountList = codefApiRequester.getAccountOne(bankId, connectedId);
 
         if (accountList == null || accountList.isEmpty()) {
@@ -88,7 +88,7 @@ public class CodefServiceImpl implements CodefService {
             throw new Exception("check id/password.");
         }
 
-        //3. µ¿ÀÏ °èÁÂ Ã£±â
+        //3. ë™ì¼ ê³„ì¢Œ ì°¾ê¸°
         for(AccountResponseDto accountResponseDto : accountList) {
             if (accountResponseDto.getAccountNum().equals(accountNum)) {
                 AccountVO accountVO = accountMapper.findByAccountNum(accountNum);
@@ -96,7 +96,7 @@ public class CodefServiceImpl implements CodefService {
                     throw new Exception("Account not found in DB.");
                 }
 
-                //5. ÀÜ¾× ºñ±³ ÈÄ ´Ù¸£¸é ¾÷µ¥ÀÌÆ®
+                //5. ì”ì•¡ ë¹„êµ í›„ ë‹¤ë¥´ë©´ ì—…ë°ì´íŠ¸
                 if(!accountVO.getAccountBalance().equals(accountResponseDto.getAccountBalance())) {
                     accountVO.setAccountBalance(accountResponseDto.getAccountBalance());
                     accountVO.setUpdateDate(LocalDateTime.now());
@@ -114,7 +114,7 @@ public class CodefServiceImpl implements CodefService {
     @Override
     public TransactionResponseDto addTransaction(Long userId, TransactionRequestDto transactionRequestDto) throws Exception {
 
-        //1. ¿äÃ» dto¿¡ connectedId Ãß°¡
+        //1. ìš”ì²­ dtoì— connectedId ì¶”ê°€
         UserVO userVO = userMapper.findById(userId);
         String connectedId = userVO.getConnectedId();
         log.info("user info {}" , connectedId);
@@ -122,7 +122,7 @@ public class CodefServiceImpl implements CodefService {
         transactionRequestDto.setOrderBy("0");
         log.info(transactionRequestDto.toString());
 
-        //2. °Å·¡³»¿ª Á¶È¸
+        //2. ê±°ë˜ë‚´ì—­ ì¡°íšŒ
          CodefTransactionResponseDto codefTransactionResponseDto = codefApiRequester.getTransactionList(transactionRequestDto);
         if (codefTransactionResponseDto == null) {
             log.info("None transaction list added.");
@@ -133,29 +133,29 @@ public class CodefServiceImpl implements CodefService {
         List<CodefTransactionResponseDto.HistoryItem> trItemList = codefTransactionResponseDto.getResTrHistoryList();
         List<TransactionVO> transactionVOList = mapToTransactionList(accountNum, trItemList);
 
-        // 3. ÃÖ±Ù ÀÌÆ²Ä¡ °Å·¡ ³»¿ª Á¶È¸ (ÃÖÀûÈ­µÈ Äõ¸® ¼öÇà)
+        // 3. ìµœê·¼ ì´í‹€ì¹˜ ê±°ë˜ ë‚´ì—­ ì¡°íšŒ (ìµœì í™”ëœ ì¿¼ë¦¬ ìˆ˜í–‰)
         LocalDateTime endDate = LocalDateTime.now();
         LocalDateTime startDate = endDate.minusDays(2);
         List<TransactionVO> existingTransactions = accountMapper.findTransactionsByAccountNumAndDateRange(
                 accountNum, startDate, endDate);
 
         if (existingTransactions.isEmpty()) {
-            // ±âÁ¸ °Å·¡°¡ ¾øÀ¸¸é ¸ğµç °Å·¡¸¦ ÀúÀå
+            // ê¸°ì¡´ ê±°ë˜ê°€ ì—†ìœ¼ë©´ ëª¨ë“  ê±°ë˜ë¥¼ ì €ì¥
             accountMapper.insertTransaction(transactionVOList);
-            log.info("¸ğµç °Å·¡ ³»¿ªÀÌ ÀúÀåµÇ¾ú½À´Ï´Ù.");
+            log.info("ëª¨ë“  ê±°ë˜ ë‚´ì—­ì´ ì €ì¥ë˜ì—ˆìŠµë‹ˆë‹¤.");
         }
 
-        // 4. ±âÁ¸ °Å·¡ ³»¿ªÀ» HashSet¿¡ ÀúÀå (Áßº¹ Ã¼Å©¿ë Å° »ı¼º)
+        // 4. ê¸°ì¡´ ê±°ë˜ ë‚´ì—­ì„ HashSetì— ì €ì¥ (ì¤‘ë³µ ì²´í¬ìš© í‚¤ ìƒì„±)
         Set<String> existingTransactionKeys = existingTransactions.stream()
                 .map(tx -> tx.getTrTime() + "_" + tx.getTrAccountIn() + "_" + tx.getTrAccountOut())
                 .collect(Collectors.toSet());
 
-        // 5. Áßº¹µÇÁö ¾Ê´Â °Å·¡¸¸ ÇÊÅÍ¸µ
+        // 5. ì¤‘ë³µë˜ì§€ ì•ŠëŠ” ê±°ë˜ë§Œ í•„í„°ë§
         List<TransactionVO> transactionsToSave = transactionVOList.stream()
                 .filter(tx -> !existingTransactionKeys.contains(tx.getTrTime() + "_" + tx.getTrAccountIn() + "_" + tx.getTrAccountOut()))
                 .toList();
 
-        // 6. »õ·Î¿î °Å·¡ ³»¿ªÀÌ ÀÖ´Ù¸é ÀúÀå
+        // 6. ìƒˆë¡œìš´ ê±°ë˜ ë‚´ì—­ì´ ìˆë‹¤ë©´ ì €ì¥
         if (!transactionsToSave.isEmpty()) {
             accountMapper.insertTransaction(transactionsToSave);
             log.info("new transaction added");
@@ -163,7 +163,7 @@ public class CodefServiceImpl implements CodefService {
             log.info("no new transaction to add");
         }
 
-        // 4. TransactionVO ¡æ TransactionResponseDto º¯È¯
+        // 4. TransactionVO â†’ TransactionResponseDto ë³€í™˜
         List<TransactionResponseDto.trItem> dtoList = transactionVOList.stream()
                 .map(tx -> {
                     TransactionResponseDto.trItem dto = new TransactionResponseDto.trItem();
@@ -216,7 +216,7 @@ public class CodefServiceImpl implements CodefService {
 //
 //            LocalDateTime transactionDate = LocalDateTime.parse(trItem.getTrDate() + " " + trItem.getTrTime());
 //            transactionVo.setTrTime(transactionDate);
-//            transactionVo.setTransactionType(transactionOut != 0 ? "Ãâ±İ" : "ÀÔ±İ");
+//            transactionVo.setTransactionType(transactionOut != 0 ? "ì¶œê¸ˆ" : "ì…ê¸ˆ");
 //
 //            transactionVo.setTrDesc1(trItem.getTrDesc1());
 //            transactionVo.setTrDesc2(trItem.getTrDesc2());
@@ -235,7 +235,7 @@ public class CodefServiceImpl implements CodefService {
             TransactionVO transactionVo = new TransactionVO();
             transactionVo.setAccountNum(accountNum);
 
-            // Ãâ±İ, ÀÔ±İ, ÀÜ¾× ÆÄ½Ì (ºó ¹®ÀÚ¿­ÀÌ¸é 0 Ã³¸®)
+            // ì¶œê¸ˆ, ì…ê¸ˆ, ì”ì•¡ íŒŒì‹± (ë¹ˆ ë¬¸ìì—´ì´ë©´ 0 ì²˜ë¦¬)
             int transactionIn = Integer.parseInt(item.getResAccountIn());
             int transactionOut = Integer.parseInt(item.getResAccountOut());
             int transactionBalance = Integer.parseInt(item.getResAfterTranBalance());
@@ -243,16 +243,16 @@ public class CodefServiceImpl implements CodefService {
             transactionVo.setTrAccountOut(transactionOut);
             transactionVo.setTrAfterBalance(transactionBalance);
 
-            // °Å·¡ÀÏÀÚ ¹× ½Ã°£ ÆÄ½Ì
+            // ê±°ë˜ì¼ì ë° ì‹œê°„ íŒŒì‹±
             String dateTimeStr = item.getResAccountTrDate() + " " + item.getResAccountTrTime(); // yyyyMMdd HHmmss
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd HHmmss");
             LocalDateTime transactionDate = LocalDateTime.parse(dateTimeStr, formatter);
             transactionVo.setTrTime(transactionDate);
 
-            // Ãâ±İ ¿©ºÎ¿¡ µû¶ó °Å·¡ À¯Çü ¼³Á¤
+            // ì¶œê¸ˆ ì—¬ë¶€ì— ë”°ë¼ ê±°ë˜ ìœ í˜• ì„¤ì •
             transactionVo.setTransactionType(transactionOut != 0 ? "Output" : "Input");
 
-            // ±âÅ¸ ¼³¸í ÇÊµå ¸ÅÇÎ
+            // ê¸°íƒ€ ì„¤ëª… í•„ë“œ ë§¤í•‘
             transactionVo.setTrDesc1(item.getResAccountDesc1());
             transactionVo.setTrDesc2(item.getResAccountDesc2());
             transactionVo.setTrDesc3(item.getResAccountDesc3());
