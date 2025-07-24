@@ -9,6 +9,10 @@
         SELECT * FROM accounts WHERE account_num = #{accountNum}
     </select>
 
+    <select id="findByUserId" resultType="com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.AccountResponseDto">
+        SELECT * FROM accounts WHERE user_id = #{userId}
+    </select>
+
     <insert id="insertAccount" parameterType="list">
         INSERT INTO accounts (account_num, user_id, bank_id, account_name, account_balance)
         VALUES
@@ -51,5 +55,9 @@
             )
         </foreach>
     </insert>
+
+    <select id="findAllTransactionsVo" resultType="com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.TransactionVO">
+        SELECT * FROM transactions WHERE account_num = #{account}
+    </select>
 
 </mapper>
