@@ -168,11 +168,10 @@ public class CodefServiceImpl implements CodefService {
                 .map(tx -> {
                     TransactionResponseDto.trItem dto = new TransactionResponseDto.trItem();
                     dto.setTransactionId(tx.getTransactionId());
-                    dto.setTrDate(tx.getTrTime().toLocalDate().toString());  // yyyy-MM-dd
-                    dto.setTrTime(Integer.parseInt(tx.getTrTime().toLocalTime().format(DateTimeFormatter.ofPattern("HHmmss")))); // HHmmss
-                    dto.setTrAccountOut(String.valueOf(tx.getTrAccountOut()));
-                    dto.setTrAccountIn(String.valueOf(tx.getTrAccountIn()));
-                    dto.setTrAfterBalance(String.valueOf(tx.getTrAfterBalance()));
+                    dto.setTrTime(tx.getTrTime().toString());
+                    dto.setTrAccountIn(tx.getTrAccountIn());
+                    dto.setTrAccountOut(tx.getTrAccountOut());
+                    dto.setTrAfterBalance(tx.getTrAfterBalance());
                     dto.setTransactionType(tx.getTransactionType());
                     dto.setTrDesc1(tx.getTrDesc1());
                     dto.setTrDesc2(tx.getTrDesc2());
@@ -186,9 +185,8 @@ public class CodefServiceImpl implements CodefService {
         responseDto.setAccountNum(accountNum);
         responseDto.setTransactionList(dtoList);
         return responseDto;
-        //return accountMapper.findTransactionsByAccountNumAndDateRange(accountNum, startDate, endDate);
-
     }
+
     private AccountVO mapToAccountVO(Long userId, AccountResponseDto accountResponseDto) {
         AccountVO accountVO = new AccountVO();
         accountVO.setUserId(userId);
@@ -198,35 +196,6 @@ public class CodefServiceImpl implements CodefService {
         accountVO.setAccountBalance(accountResponseDto.getAccountBalance());
         return accountVO;
     }
-
-//    private List<TransactionVO> mapToTransactionList(String accountNum, List<TransactionResponseDto.trItem> trItemList) throws Exception {
-//        List<TransactionVO> transactionVoList = new ArrayList<>();
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd HHmmss");
-//
-//        for (TransactionResponseDto.trItem trItem : trItemList) {
-//            TransactionVO transactionVo = new TransactionVO();
-//            transactionVo.setAccountNum(accountNum);
-//
-//            int transactionIn = Integer.parseInt(trItem.getTrAccountIn());
-//            int transactionOut = Integer.parseInt(trItem.getTrAccountOut());
-//            int transactionBalance = Integer.parseInt(trItem.getTrAfterBalance());
-//            transactionVo.setTrAccountIn(transactionIn);
-//            transactionVo.setTrAccountOut(transactionOut);
-//            transactionVo.setTrAfterBalance(transactionBalance);
-//
-//            LocalDateTime transactionDate = LocalDateTime.parse(trItem.getTrDate() + " " + trItem.getTrTime());
-//            transactionVo.setTrTime(transactionDate);
-//            transactionVo.setTransactionType(transactionOut != 0 ? "출금" : "입금");
-//
-//            transactionVo.setTrDesc1(trItem.getTrDesc1());
-//            transactionVo.setTrDesc2(trItem.getTrDesc2());
-//            transactionVo.setTrDesc3(trItem.getTrDesc3());
-//            transactionVo.setTrDesc4(trItem.getTrDesc4());
-//
-//            transactionVoList.add(transactionVo);
-//        }
-//        return transactionVoList;
-//    }
 
     private List<TransactionVO> mapToTransactionList(String accountNum, List<CodefTransactionResponseDto.HistoryItem> historyItemList) throws Exception {
         List<TransactionVO> transactionVoList = new ArrayList<>();
@@ -260,7 +229,6 @@ public class CodefServiceImpl implements CodefService {
 
             transactionVoList.add(transactionVo);
         }
-
         return transactionVoList;
     }
 
