@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.choogoomoneyna.choogoomoneyna_be.account.db.mapper.AccountMapper">
+
+    <select id="findByAccountNum" parameterType="String" resultType="com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.AccountVO">
+        SELECT * FROM accounts WHERE account_num = #{accountNum}
+    </select>
+
+    <insert id="insertAccount" parameterType="list">
+        INSERT INTO accounts (account_num, user_id, bank_id, account_name, account_balance)
+        VALUES
+        <foreach collection="list" item="account" separator=",">
+            (#{account.accountNum}, #{account.userId}, #{account.bankId}, #{account.accountName}, #{account.accountBalance})
+        </foreach>
+    </insert>
+
+    <update id="updateAccount" parameterType="com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.AccountVO">
+        UPDATE accounts
+        SET
+            account_balance = #{accountBalance},
+            update_date = NOW()
+        WHERE
+            account_num = #{accountNum}
+    </update>
+
+    <!-- 계좌번호와 날짜 범위로 거래 내역 조회 -->
+    <select id="findTransactionsByAccountNumAndDateRange" resultType="com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.TransactionVO">
+        SELECT * FROM transactions
+        WHERE account_num = #{accountNum}
+        AND tr_time BETWEEN #{startDate} AND #{endDate}
+    </select>
+
+    <insert id="insertTransaction" parameterType="java.util.List">
+        INSERT INTO transactions (account_num, tr_time, tr_account_out, tr_account_in,
+        tr_after_balance, transaction_type, tr_desc1, tr_desc2, tr_desc3, tr_desc4 )
+        VALUES
+        <foreach collection="list" item="tr" separator=",">
+            ( #{tr.accountNum},
+            #{tr.trTime},
+            #{tr.trAccountOut},
+            #{tr.trAccountIn},
+            #{tr.trAfterBalance},
+            #{tr.transactionType},
+            #{tr.trDesc1},
+            #{tr.trDesc2},
+            #{tr.trDesc3},
+            #{tr.trDesc4}
+            )
+        </foreach>
+    </insert>
+
+</mapper>

@@ -31,5 +31,9 @@ public interface UserMapper {
 
     int countAllUsers();
 
+    //void updateConnectedId(Long id, String connectedId);
+    void updateConnectedId(@Param("id") Long id, @Param("connectedId") String connectedId);
+
+
     List<UserVO> findAllUsers();
 }
