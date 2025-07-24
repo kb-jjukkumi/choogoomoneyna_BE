@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 public class AccountDbServiceImpl implements AccountDbService {
 
     private final AccountMapper accountMapper;
-    //private final TransactionConverter transactionConverter;
 
     @Override
     public List<AccountResponseDto> getAllAccounts(Long userId) {
