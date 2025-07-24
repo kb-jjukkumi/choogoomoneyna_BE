@@ -7,11 +7,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MissionVO {
-    private Integer id;
-    private String ChoogooMiName;
+public class UserMissionVO {
+    private Long userId;
+    private Integer missionId;
     private String missionTitle;
     private String missionContent;
     private Integer missionScore;
-    private String missionType;
+    private Integer ResultScore;
 }

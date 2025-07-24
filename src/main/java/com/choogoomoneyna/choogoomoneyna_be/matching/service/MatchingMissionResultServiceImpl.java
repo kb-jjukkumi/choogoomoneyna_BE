@@ -2,6 +2,7 @@ package com.choogoomoneyna.choogoomoneyna_be.matching.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.matching.mapper.MatchingMissionResultMapper;
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingMissionResultVO;
+import com.choogoomoneyna.choogoomoneyna_be.mission.dto.response.MissionProgressDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +48,15 @@ public class MatchingMissionResultServiceImpl implements MatchingMissionResultSe
     }
 
     @Override
-    public List<MatchingMissionResultVO> getAllMissionProgress(Long userId, Long matchId) {
+    public List<MatchingMissionResultVO> getMatchingMissionResults(Long userId, Long matchId) {
         return matchingMissionResultMapper.findAllMatchingMissionResultByUserIdAndMatchingId(userId, matchId);
+    }
+
+    @Override
+    public List<MissionProgressDTO> getAllMissionProgressDTO(Long userId, Long matchId) {
+        return matchingMissionResultMapper.getAllUserMissionByUserIdAndMatchingId(userId, matchId)
+                .stream()
+                .map(MatchingMissionConverter::toMissionProgressDTO)
+                .toList();
     }
 }

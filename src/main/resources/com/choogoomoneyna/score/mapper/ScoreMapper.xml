@@ -30,12 +30,12 @@
     </update>
 
     <!-- 4. 모든 점수 목록 -->
-    <select id="findAllScores" resultType="com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO">
-        SELECT user_id AS userId, score_value FROM scores
+    <select id="findAllScores" resultMap="userScoreResultMap">
+        SELECT user_id, score_value FROM scores
     </select>
 
     <!-- 5. 점수 상위 N명 조회 -->
-    <select id="findTopNScores" parameterType="int" resultType="com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO">
+    <select id="findTopNScores" parameterType="int" resultMap="userScoreResultMap">
         SELECT user_id AS userId, score_value
         FROM scores
         ORDER BY score_value DESC

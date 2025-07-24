@@ -1,6 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.matching.mapper;
 
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingMissionResultVO;
+import com.choogoomoneyna.choogoomoneyna_be.mission.vo.UserMissionVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -28,6 +29,11 @@ public interface MatchingMissionResultMapper {
     );
 
     List<MatchingMissionResultVO> findAllMatchingMissionResultByUserIdAndMatchingId(
+            @Param("userId") Long UserId,
+            @Param("matchingId") Long matchingId
+    );
+
+    List<UserMissionVO> getAllUserMissionByUserIdAndMatchingId(
             @Param("userId") Long UserId,
             @Param("matchingId") Long matchingId
     );
