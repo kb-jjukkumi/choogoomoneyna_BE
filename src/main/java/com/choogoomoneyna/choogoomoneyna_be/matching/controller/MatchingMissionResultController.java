@@ -53,12 +53,12 @@ public class MatchingMissionResultController {
                 matchingMissionResultService.getAllMissionProgressDTO(userId, matchId);
 
         int updateScore = scoreService.getScore(userId) + score;
-        scoreService.updateScore(
-                UserScoreVO.builder()
-                        .userId(userId)
-                        .score(updateScore)
-                        .build()
-        );
+//        scoreService.updateScore(
+//                UserScoreVO.builder()
+//                        .userId(userId)
+//                        .score(updateScore)
+//                        .build()
+//        );
 
         return ResponseEntity.ok(
                 MissionProgressListResponseDTO.builder()
