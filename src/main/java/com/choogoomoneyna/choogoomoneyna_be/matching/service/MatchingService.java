@@ -67,4 +67,12 @@ public interface MatchingService {
      * @return 해당 사용자의 진행 중인 매칭 ID
      */
     public Long getProgressMatchingIdByUserId(Long userId);
+
+    /**
+     * 매칭된 상대방 사용자의 ID를 조회합니다
+     *
+     * @param userId 조회할 사용자의 ID
+     * @return 매칭된 상대방의 사용자 ID
+     */
+    public Long getComponentUserIdByUserId(Long userId);
 }

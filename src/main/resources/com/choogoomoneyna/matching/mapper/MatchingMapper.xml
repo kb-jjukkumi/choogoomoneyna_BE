@@ -72,4 +72,16 @@
         LIMIT 1
     </select>
 
+    <select id="getComponentUserIdByUserId" resultType="long" parameterType="long">
+        SELECT
+            CASE
+                WHEN user1_id = #{userId} THEN user2_id
+                ELSE user1_id
+            END AS component_user_id
+        FROM matchings
+        WHERE (user1_id = #{userId} OR user2_id = #{userId})
+          AND matching_status = 'PROGRESS'
+        LIMIT 1
+    </select>
+
 </mapper>

@@ -9,6 +9,9 @@ import lombok.*;
 @Builder
 public class MissionProgressDTO {
     int missionId;
+    String missionTitle;
+    String missionContent;
+    Integer missionScore;
     long userId;
     int score;
 }

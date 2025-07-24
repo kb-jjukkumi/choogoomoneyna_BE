@@ -55,7 +55,7 @@ public class MatchingServiceImpl implements MatchingService {
                 .user1Id(user1Id)
                 .roundNumber(roundNumber)
                 .user2Id(user2Id)
-                .matchingStatus(MatchingStatus.PENDING.name())
+                .matchingStatus(MatchingStatus.PROGRESS.name())
                 .build();
     }
 
@@ -81,7 +81,7 @@ public class MatchingServiceImpl implements MatchingService {
 
                     matchingMapper.insertMatching(buildToMatchingVO(users.get(i).getId(), users.get(j).getId()));
                     assignMatchMission(users.get(i).getId(), users.get(j).getId(), choogooMi);
-                    
+
                     break;
                 }
             }
@@ -237,5 +237,10 @@ public class MatchingServiceImpl implements MatchingService {
     @Override
     public Long getProgressMatchingIdByUserId(Long userId) {
         return matchingMapper.getProgressMatchingIdByUserId(userId);
+    }
+
+    @Override
+    public Long getComponentUserIdByUserId(Long userId) {
+        return matchingMapper.getComponentUserIdByUserId(userId);
     }
 }
