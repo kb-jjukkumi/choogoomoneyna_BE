@@ -2,9 +2,11 @@ package com.choogoomoneyna.choogoomoneyna_be.matching.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.matching.dto.MatchingStatus;
 import com.choogoomoneyna.choogoomoneyna_be.matching.enums.CommonMissionType;
+import com.choogoomoneyna.choogoomoneyna_be.matching.enums.MatchingResult;
 import com.choogoomoneyna.choogoomoneyna_be.matching.mapper.MatchingMapper;
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingVO;
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.RoundInfoVO;
+import com.choogoomoneyna.choogoomoneyna_be.matching.vo.UserMatchingHistoryVO;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
 import com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.ChoogooMi;
@@ -27,6 +29,7 @@ public class MatchingServiceImpl implements MatchingService {
     private final RoundInfoService roundInfoService;
     private final MatchingMissionResultService matchingMissionResultService;
     private final UserService userService;
+    private final UserMatchingHistoryService userMatchingHistoryService;
 
     private int roundNumber;
 
@@ -197,13 +200,90 @@ public class MatchingServiceImpl implements MatchingService {
         assignMatchMission(userId, userId, userService.getChoogooMiByUserId(userId));
     }
 
+    /**
+     * Inserts the match result into the user matching history.
+     *
+     * @param userId the unique identifier of the user
+     * @param matchingId the unique identifier of the matching session
+     * @param roundNumber the round number of the match
+     * @param result the result of the matching session
+     */
+    private void insertUserMatchingHistoryMatchResult(
+            long userId, long matchingId, int roundNumber, MatchingResult result
+    ) {
+        userMatchingHistoryService.insertUserMatchingHistory(
+                UserMatchingHistoryVO.builder()
+                        .userId(userId)
+                        .matchingId(matchingId)
+                        .roundNumber(roundNumber)
+                        .matchingResult(result.name())
+                        .build()
+        );
+    }
+
     @Override
     @Transactional
     public void finishAllMatching() {
+        // 승리 점수
+        int unitScore = 50;
+        
         // 진행 중인 매칭 전체 가져오기
         List<MatchingVO> progressMatchings = matchingMapper.findAllProgressMatchings();
-        
-        // TODO: 결과를 users table에 저장할 것!
+
+        for (MatchingVO progressMatching : progressMatchings) {
+            System.out.println("progressMatching: " + progressMatching);
+            System.out.println(progressMatching.getUser1Id());
+            System.out.println(progressMatching.getUser2Id());
+            System.out.println(progressMatching.getMatchingStatus());
+            System.out.println(progressMatching);
+
+            long matchingId = progressMatching.getId();
+            int roundNumber = progressMatching.getRoundNumber();
+
+            long user1Id = progressMatching.getUser1Id();
+            long user2Id = progressMatching.getUser2Id();
+
+            int user1Score = matchingMissionResultService.getAllScoreByUserIdAndMatchingId(user1Id, matchingId);
+            int user2Score = matchingMissionResultService.getAllScoreByUserIdAndMatchingId(user2Id, matchingId);
+
+            System.out.println("user1Score: " + user1Score);
+            System.out.println("user2Score: " + user2Score);
+            System.out.println();
+            
+            if (user1Score > user2Score) {
+                insertUserMatchingHistoryMatchResult(user1Id, matchingId, roundNumber, MatchingResult.WIN);
+                insertUserMatchingHistoryMatchResult(user2Id, matchingId, roundNumber, MatchingResult.LOSE);
+                
+                user1Score += unitScore;
+            } else if (user1Score < user2Score) {
+                insertUserMatchingHistoryMatchResult(user1Id, matchingId, roundNumber, MatchingResult.LOSE);
+                insertUserMatchingHistoryMatchResult(user2Id, matchingId, roundNumber, MatchingResult.WIN);
+
+                user2Score += unitScore;
+            } else {
+                insertUserMatchingHistoryMatchResult(user1Id, matchingId, roundNumber, MatchingResult.DRAW);
+                insertUserMatchingHistoryMatchResult(user2Id, matchingId, roundNumber, MatchingResult.DRAW);
+
+                user1Score += unitScore / 2;
+                user2Score += unitScore / 2;
+            }
+
+            int updateScore1 = scoreService.getScore(user1Id) + user1Score;
+            scoreService.updateScore(
+                    UserScoreVO.builder()
+                            .userId(user1Id)
+                            .score(updateScore1)
+                            .build()
+            );
+
+            int updateScore2 = scoreService.getScore(user2Id) + user2Score;
+            scoreService.updateScore(
+                    UserScoreVO.builder()
+                            .userId(user2Id)
+                            .score(updateScore2)
+                            .build()
+            );
+        }
 
         // 매칭 상태가 Progress인 column을 전부 Completed로 변경
         matchingMapper.updateAllProgressMatchings();
