@@ -63,8 +63,8 @@ public class UserController {
         // 중복 로그인 방지 위해 기존 토큰 삭제
         refreshTokenService.deleteAllTokensByUserId(user.getId());
 
-        String accessToken = jwtTokenProvider.generateAccessToken(user.getId(), user.getNickname());
-        String refreshToken = refreshTokenService.generateRefreshTokenAndSave(user.getId(), user.getNickname());
+        String accessToken = jwtTokenProvider.generateAccessToken(user.getId());
+        String refreshToken = refreshTokenService.generateRefreshTokenAndSave(user.getId());
 
         System.out.println("accessToken = " + accessToken);
         System.out.println("refreshToken = " + refreshToken);

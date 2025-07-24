@@ -18,8 +18,8 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     private final JwtProperties jwtProperties;
 
     @Override
-    public String generateRefreshTokenAndSave(Long userId, String nickname) {
-        String refreshToken = jwtTokenProvider.generateRefreshToken(userId, nickname);
+    public String generateRefreshTokenAndSave(Long userId) {
+        String refreshToken = jwtTokenProvider.generateRefreshToken(userId);
 
         Date issuedAt = new Date(); // 현재 시간
         Date expiresAt = new Date(issuedAt.getTime() + jwtProperties.getRefreshTokenExpirationTime());
@@ -57,6 +57,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         RefreshTokenVO tokenVO = refreshTokenMapper.findByRefreshToken(refreshToken);
 
         // 예: User 닉네임은 userService로 조회 필요 (간단히 userId만 넣음)
-        return jwtTokenProvider.generateAccessToken(tokenVO.getUserId(), "닉네임은 필요에 따라 조회");
+        return jwtTokenProvider.generateAccessToken(tokenVO.getUserId());
     }
 }

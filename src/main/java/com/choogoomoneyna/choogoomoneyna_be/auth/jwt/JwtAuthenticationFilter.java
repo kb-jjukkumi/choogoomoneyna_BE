@@ -1,5 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.auth.jwt;
 
+import com.choogoomoneyna.choogoomoneyna_be.user.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,6 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String BEARER_PREFIX = "Bearer ";
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final CustomUserDetailsService customUserDetailsService;
 
     /**
      * Authorization 헤더의 JWT 토큰을 사용하여 HTTP 요청을 인증 처리합니다.
@@ -75,14 +77,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      */
     private Authentication getAuthentication(String token) {
         Long userId = jwtTokenProvider.getUserIdFromToken(token);
-        String nickname = jwtTokenProvider.getNicknameFromToken(token);
 
-        Map<String, Object> principal = Map.of(
-                "userId", userId,
-                "nickname", nickname
-        );
-        return new UsernamePasswordAuthenticationToken(principal, null, Collections.emptyList());
+        CustomUserDetails userDetails =
+                (CustomUserDetails) customUserDetailsService.loadUserByUsername(String.valueOf(userId));
+
+        return new UsernamePasswordAuthenticationToken(
+                userDetails, null, userDetails.getAuthorities());
     }
-
-
 }

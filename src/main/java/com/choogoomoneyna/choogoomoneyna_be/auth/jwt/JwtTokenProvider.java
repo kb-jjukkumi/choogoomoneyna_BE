@@ -32,16 +32,14 @@ public class JwtTokenProvider {
      * userId 와 nickname을 이용하여 JWT access token 생성
      *
      * @param userId   토큰을 생성할 사용자의 ID
-     * @param nickname 토큰을 생성할 사용자의 닉네임
      * @return 생성된 JWT access token String
      */
-    public String generateAccessToken(Long userId, String nickname) {
+    public String generateAccessToken(Long userId) {
         Date now = new Date();  // 현재 시각
         Date expirationDate = new Date(now.getTime() + jwtProperties.getAccessTokenExpirationTime());  // 만료 시각
 
         return Jwts.builder()
                 .claim("userId", userId)
-                .claim("nickname", nickname)
                 .setIssuedAt(now)
                 .setExpiration(expirationDate)
                 .signWith(getSecretKey(), SignatureAlgorithm.HS256)
@@ -50,19 +48,17 @@ public class JwtTokenProvider {
 
 
     /**
-     * userId와 nickname을 이용하여 JWT refresh token 생성
+     * userId를 이용하여 JWT refresh token 생성
      *
      * @param userId   토큰을 생성할 사용자의 ID
-     * @param nickname 토큰을 생성할 사용자의 닉네임
      * @return 생성된 JWT refresh token String
      */
-    public String generateRefreshToken(Long userId, String nickname) {
+    public String generateRefreshToken(Long userId) {
         Date now = new Date();  // 현재 시각
         Date expirationDate = new Date(now.getTime() + jwtProperties.getRefreshTokenExpirationTime());  // 만료 시각
 
         return Jwts.builder()
                 .claim("userId", userId)
-                .claim("nickname", nickname)
                 .setIssuedAt(now)
                 .setExpiration(expirationDate)
                 .signWith(getSecretKey(), SignatureAlgorithm.HS256)
@@ -83,22 +79,6 @@ public class JwtTokenProvider {
                 .getBody()
                 .get("userId", Long.class);
     }
-
-    /**
-     * JWT 토큰에서 사용자의 닉네임을 추출
-     *
-     * @param token 파싱할 JWT 토큰
-     * @return 토큰에서 추출한 사용자의 닉네임
-     */
-    public String getNicknameFromToken(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSecretKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .get("nickname", String.class);
-    }
-
 
     /**
      * 주어진 JWT 토큰의 유효성을 검사

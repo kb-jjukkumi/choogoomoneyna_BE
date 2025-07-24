@@ -13,7 +13,7 @@ public class RefreshTokenService {
     private final JwtProperties jwtProperties;
 
     public String generateRefreshTokenAndSave(Long userId, String nickname) {
-        String refreshToken = jwtTokenProvider.generateRefreshToken(userId, nickname);
+        String refreshToken = jwtTokenProvider.generateRefreshToken(userId);
 
         // TODO: DB에 저장할거면 추가 할 것
         // Date expirationTime = new Date(System.currentTimeMillis() + jwtProperties.getRefreshTokenExpirationTime());
