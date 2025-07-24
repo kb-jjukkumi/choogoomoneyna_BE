@@ -161,4 +161,8 @@
         FROM users
     </select>
 
+    <update id="updateConnectedId">
+        UPDATE users SET connected_id = #{connectedId} WHERE user_id = #{id}
+    </update>
+
 </mapper>
