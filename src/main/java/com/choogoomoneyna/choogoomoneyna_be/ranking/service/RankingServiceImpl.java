@@ -17,6 +17,11 @@ public class RankingServiceImpl implements RankingService {
     }
 
     @Override
+    public void updateCurrentRankingByUserId(Long userId, int currentRank) {
+        rankingMapper.updateCurrentRankingByUserId(userId, currentRank);
+    }
+
+    @Override
     public RankingVO findRankingByUserId(Long userId) {
         return rankingMapper.findRankingByUserId(userId);
     }

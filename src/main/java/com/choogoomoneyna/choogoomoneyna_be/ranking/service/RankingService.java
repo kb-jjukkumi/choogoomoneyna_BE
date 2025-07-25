@@ -6,6 +6,8 @@ public interface RankingService {
 
     void createRanking(RankingVO rankingVO);
 
+    void updateCurrentRankingByUserId(Long userId, int currentRank);
+
     RankingVO findRankingByUserId(Long userId);
 
     Integer getCurrentRanking(Long userId);

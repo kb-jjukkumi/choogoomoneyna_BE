@@ -18,6 +18,13 @@
         VALUES (#{userId}, #{previousRanking}, #{currentRanking})
     </insert>
 
+    <!-- 특정 유저의 현재 랭킹 변경 -->
+    <update id="updateCurrentRankingByUserId">
+        UPDATE ranking
+        SET current_rank = #{currentRank}
+        WHERE user_id = #{userId}
+    </update>
+
     <!-- 특정 유저의 랭킹 정보 조회 -->
     <select id="findRankingByUserId" parameterType="long"
             resultMap="RankingResultMap">
@@ -35,7 +42,7 @@
 
     <!-- 이번 주 랭킹을 저번 주 랭킹으로 이월 -->
     <update id="rolloverWeeklyRankings">
-        UPDATE user_ranking
+        UPDATE ranking
         SET previous_rank = current_rank
     </update>
 
