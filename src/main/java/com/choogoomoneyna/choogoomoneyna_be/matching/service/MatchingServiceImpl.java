@@ -7,6 +7,7 @@ import com.choogoomoneyna.choogoomoneyna_be.matching.mapper.MatchingMapper;
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingVO;
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.RoundInfoVO;
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.UserMatchingHistoryVO;
+import com.choogoomoneyna.choogoomoneyna_be.ranking.service.RankingService;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
 import com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.ChoogooMi;
@@ -30,6 +31,7 @@ public class MatchingServiceImpl implements MatchingService {
     private final MatchingMissionResultService matchingMissionResultService;
     private final UserService userService;
     private final UserMatchingHistoryService userMatchingHistoryService;
+    private final RankingService rankingService;
 
     private int roundNumber;
 
@@ -221,6 +223,25 @@ public class MatchingServiceImpl implements MatchingService {
         );
     }
 
+    private void updateRanking() {
+        // 이번주 랭킹을 저번주 랭킹으로 이월
+        rankingService.rolloverWeeklyRankings();
+        
+        List<UserScoreVO> sortedUserScores = scoreService.getAllScores();
+        sortedUserScores.sort((Comparator.comparingInt(UserScoreVO::getScore).reversed()));
+
+        int befScore = -1;
+        int befRank = 0;
+        for (UserScoreVO userScore : sortedUserScores) {
+            if (befScore < userScore.getScore()) {
+                befRank++;
+                befScore = userScore.getScore();
+            }
+
+            rankingService.updateCurrentRankingByUserId(userScore.getUserId(), befRank);
+        }
+    }
+
     @Override
     @Transactional
     public void finishAllMatching() {
@@ -274,6 +295,9 @@ public class MatchingServiceImpl implements MatchingService {
                             .build()
             );
         }
+
+        // ranking table 업데이트
+        updateRanking();
 
         // 매칭 상태가 Progress인 column을 전부 Completed로 변경
         matchingMapper.updateAllProgressMatchings();
