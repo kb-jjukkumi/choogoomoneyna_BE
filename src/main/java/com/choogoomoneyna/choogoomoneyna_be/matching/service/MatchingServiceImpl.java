@@ -1,6 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.matching.service;
 
-import com.choogoomoneyna.choogoomoneyna_be.matching.dto.MatchingStatus;
+import com.choogoomoneyna.choogoomoneyna_be.matching.enums.MatchingStatus;
 import com.choogoomoneyna.choogoomoneyna_be.matching.enums.CommonMissionType;
 import com.choogoomoneyna.choogoomoneyna_be.matching.enums.MatchingResult;
 import com.choogoomoneyna.choogoomoneyna_be.matching.mapper.MatchingMapper;
