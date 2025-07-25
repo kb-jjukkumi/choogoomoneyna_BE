@@ -33,4 +33,10 @@
         WHERE user_id = #{userId}
     </select>
 
+    <!-- 이번 주 랭킹을 저번 주 랭킹으로 이월 -->
+    <update id="rolloverWeeklyRankings">
+        UPDATE user_ranking
+        SET previous_rank = current_rank
+    </update>
+
 </mapper>

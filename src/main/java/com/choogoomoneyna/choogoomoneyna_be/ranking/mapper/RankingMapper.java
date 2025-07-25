@@ -11,4 +11,6 @@ public interface RankingMapper {
     RankingVO findRankingByUserId(Long userId);
 
     Integer getCurrentRanking(Long userId);
+
+    void rolloverWeeklyRankings();
 }

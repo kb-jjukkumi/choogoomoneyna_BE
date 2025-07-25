@@ -9,4 +9,6 @@ public interface RankingService {
     RankingVO findRankingByUserId(Long userId);
 
     Integer getCurrentRanking(Long userId);
+
+    void rolloverWeeklyRankings();
 }

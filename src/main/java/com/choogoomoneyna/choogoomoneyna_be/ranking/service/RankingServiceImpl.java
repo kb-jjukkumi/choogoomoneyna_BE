@@ -25,4 +25,9 @@ public class RankingServiceImpl implements RankingService {
     public Integer getCurrentRanking(Long userId) {
         return rankingMapper.getCurrentRanking(userId);
     }
+
+    @Override
+    public void rolloverWeeklyRankings() {
+        rankingMapper.rolloverWeeklyRankings();
+    }
 }
