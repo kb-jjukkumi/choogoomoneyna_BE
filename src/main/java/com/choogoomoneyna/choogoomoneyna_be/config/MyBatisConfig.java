@@ -26,7 +26,8 @@ import javax.sql.DataSource;
         "com.choogoomoneyna.choogoomoneyna_be.mission.mapper",
         "com.choogoomoneyna.choogoomoneyna_be.auth.jwt.mapper",
         "com.choogoomoneyna.choogoomoneyna_be.account.codef.mapper",
-        "com.choogoomoneyna.choogoomoneyna_be.account.db.mapper"
+        "com.choogoomoneyna.choogoomoneyna_be.account.db.mapper",
+        "com.choogoomoneyna.choogoomoneyna_be.ranking.mapper",
 })
 public class MyBatisConfig {
 

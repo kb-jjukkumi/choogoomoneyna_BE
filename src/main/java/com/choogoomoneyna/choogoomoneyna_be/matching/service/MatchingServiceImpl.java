@@ -1,12 +1,14 @@
 package com.choogoomoneyna.choogoomoneyna_be.matching.service;
 
-import com.choogoomoneyna.choogoomoneyna_be.matching.dto.MatchingStatus;
+import com.choogoomoneyna.choogoomoneyna_be.matching.enums.MatchingStatus;
 import com.choogoomoneyna.choogoomoneyna_be.matching.enums.CommonMissionType;
 import com.choogoomoneyna.choogoomoneyna_be.matching.enums.MatchingResult;
 import com.choogoomoneyna.choogoomoneyna_be.matching.mapper.MatchingMapper;
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingVO;
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.RoundInfoVO;
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.UserMatchingHistoryVO;
+import com.choogoomoneyna.choogoomoneyna_be.ranking.service.RankingService;
+import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingUpdateVO;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
 import com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.ChoogooMi;
@@ -30,6 +32,7 @@ public class MatchingServiceImpl implements MatchingService {
     private final MatchingMissionResultService matchingMissionResultService;
     private final UserService userService;
     private final UserMatchingHistoryService userMatchingHistoryService;
+    private final RankingService rankingService;
 
     private int roundNumber;
 
@@ -231,12 +234,6 @@ public class MatchingServiceImpl implements MatchingService {
         List<MatchingVO> progressMatchings = matchingMapper.findAllProgressMatchings();
 
         for (MatchingVO progressMatching : progressMatchings) {
-            System.out.println("progressMatching: " + progressMatching);
-            System.out.println(progressMatching.getUser1Id());
-            System.out.println(progressMatching.getUser2Id());
-            System.out.println(progressMatching.getMatchingStatus());
-            System.out.println(progressMatching);
-
             long matchingId = progressMatching.getId();
             int roundNumber = progressMatching.getRoundNumber();
 
@@ -245,10 +242,6 @@ public class MatchingServiceImpl implements MatchingService {
 
             int user1Score = matchingMissionResultService.getAllScoreByUserIdAndMatchingId(user1Id, matchingId);
             int user2Score = matchingMissionResultService.getAllScoreByUserIdAndMatchingId(user2Id, matchingId);
-
-            System.out.println("user1Score: " + user1Score);
-            System.out.println("user2Score: " + user2Score);
-            System.out.println();
             
             if (user1Score > user2Score) {
                 insertUserMatchingHistoryMatchResult(user1Id, matchingId, roundNumber, MatchingResult.WIN);
@@ -284,6 +277,9 @@ public class MatchingServiceImpl implements MatchingService {
                             .build()
             );
         }
+
+        // ranking table 업데이트
+        rankingService.updateRanking();
 
         // 매칭 상태가 Progress인 column을 전부 Completed로 변경
         matchingMapper.updateAllProgressMatchings();

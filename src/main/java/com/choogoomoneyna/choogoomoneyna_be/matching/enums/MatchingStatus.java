@@ -1,4 +1,4 @@
-package com.choogoomoneyna.choogoomoneyna_be.matching.dto;
+package com.choogoomoneyna.choogoomoneyna_be.matching.enums;
 
 public enum MatchingStatus {
     PROGRESS, // 매칭 진행 중
