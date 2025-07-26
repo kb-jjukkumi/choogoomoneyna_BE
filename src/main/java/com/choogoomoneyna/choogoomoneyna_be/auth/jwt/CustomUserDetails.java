@@ -1,9 +1,8 @@
 package com.choogoomoneyna.choogoomoneyna_be.auth.jwt;
 
-import com.choogoomoneyna.choogoomoneyna_be.user.dto.LoginType;
+import com.choogoomoneyna.choogoomoneyna_be.user.enums.LoginType;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

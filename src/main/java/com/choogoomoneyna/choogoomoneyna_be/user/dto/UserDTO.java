@@ -1,5 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.user.dto;
 
+import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
+import com.choogoomoneyna.choogoomoneyna_be.user.enums.LoginType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,6 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.user.dto.request;
 
-import com.choogoomoneyna.choogoomoneyna_be.user.dto.ChoogooMi;
+import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
