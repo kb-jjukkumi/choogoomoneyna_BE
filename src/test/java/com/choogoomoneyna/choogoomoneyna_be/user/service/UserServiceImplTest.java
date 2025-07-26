@@ -1,5 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.user.service;
 
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service.AuthServiceImpl;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.ChoogooMi;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.LoginType;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserJoinRequestDTO;
@@ -28,6 +29,9 @@ class UserServiceImplTest {
     @InjectMocks
     private UserServiceImpl userService;
 
+    @InjectMocks
+    private AuthServiceImpl authService;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -48,7 +52,7 @@ class UserServiceImplTest {
         when(passwordEncoder.encode(dto.getPassword())).thenReturn(encryptedPassword);
 
         // when
-        userService.registerUser(dto);
+        authService.registerUser(dto);
 
         // then
         // ArgumentCaptor 객체를 생성해서 UserVO 타입의 인자를 캡처할 준비

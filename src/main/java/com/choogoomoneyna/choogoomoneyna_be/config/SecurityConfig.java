@@ -24,8 +24,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 @RequiredArgsConstructor
 @ComponentScan(basePackages = {
-        "com.choogoomoneyna.choogoomoneyna_be.auth.jwt",
-        "com.choogoomoneyna.choogoomoneyna_be.user.service"
+        "com.choogoomoneyna.choogoomoneyna_be"
 })
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 

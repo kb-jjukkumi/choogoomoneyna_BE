@@ -19,20 +19,10 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
-    private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void registerUser(UserJoinRequestDTO dto) {
-        // email 중복 체크
-        if (existsByEmailAndLoginType(dto.getEmail(), LoginType.LOCAL)) {
-            throw new EmailAlreadyExistsException("이미 존재하는 이메일입니다.");
-        }
-        String encryptedPassword = passwordEncoder.encode(dto.getPassword());
-
-        UserVO userVO = UserConverter.joinRequestDtoToVo(dto, LoginType.LOCAL, encryptedPassword);
-
-        userMapper.insertUser(userVO);
-        log.info("User registered: {}", userVO);
+    public void insertUser(UserVO user) {
+        userMapper.insertUser(user);
     }
 
     @Override
