@@ -26,7 +26,4 @@ public class UserJoinRequestDTO {
     private String nickname;
 
     private MultipartFile profileImage;
-
-    @NotNull(message = "추구미는 필수로 선택해야 합니다")
-    private ChoogooMi choogooMi;
 }
