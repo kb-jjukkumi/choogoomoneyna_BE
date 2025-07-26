@@ -53,7 +53,6 @@ public class UserConverter {
                 .password(encryptedPassword)
                 .nickname(dto.getNickname())
 //                .profileImageUrl(dto.getProfileImage() != null ? dto.getProfileImage().getOriginalFilename() : null)
-                .choogooMi(dto.getChoogooMi().name())
                 .loginType(loginType.name())
                 .build();
     }
