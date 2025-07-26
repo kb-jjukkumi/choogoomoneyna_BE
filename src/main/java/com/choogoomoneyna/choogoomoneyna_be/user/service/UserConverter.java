@@ -1,7 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.user.service;
 
-import com.choogoomoneyna.choogoomoneyna_be.user.dto.ChoogooMi;
-import com.choogoomoneyna.choogoomoneyna_be.user.dto.LoginType;
+import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
+import com.choogoomoneyna.choogoomoneyna_be.user.enums.LoginType;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.UserDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserJoinRequestDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
@@ -53,7 +53,6 @@ public class UserConverter {
                 .password(encryptedPassword)
                 .nickname(dto.getNickname())
 //                .profileImageUrl(dto.getProfileImage() != null ? dto.getProfileImage().getOriginalFilename() : null)
-                .choogooMi(dto.getChoogooMi().name())
                 .loginType(loginType.name())
                 .build();
     }

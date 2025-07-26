@@ -3,7 +3,7 @@ package com.choogoomoneyna.choogoomoneyna_be.auth.jwt.controller;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.JwtTokenProvider;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service.AuthService;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service.RefreshTokenService;
-import com.choogoomoneyna.choogoomoneyna_be.user.dto.LoginType;
+import com.choogoomoneyna.choogoomoneyna_be.user.enums.LoginType;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.JwtTokenResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserJoinRequestDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserLoginRequestDTO;

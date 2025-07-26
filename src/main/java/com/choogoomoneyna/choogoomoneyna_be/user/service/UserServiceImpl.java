@@ -1,14 +1,11 @@
 package com.choogoomoneyna.choogoomoneyna_be.user.service;
 
-import com.choogoomoneyna.choogoomoneyna_be.exception.EmailAlreadyExistsException;
-import com.choogoomoneyna.choogoomoneyna_be.user.dto.ChoogooMi;
-import com.choogoomoneyna.choogoomoneyna_be.user.dto.LoginType;
-import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserJoinRequestDTO;
+import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
+import com.choogoomoneyna.choogoomoneyna_be.user.enums.LoginType;
 import com.choogoomoneyna.choogoomoneyna_be.user.mapper.UserMapper;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

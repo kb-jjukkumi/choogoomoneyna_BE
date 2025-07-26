@@ -1,4 +1,4 @@
-package com.choogoomoneyna.choogoomoneyna_be.user.dto;
+package com.choogoomoneyna.choogoomoneyna_be.user.enums;
 
 import com.choogoomoneyna.choogoomoneyna_be.matching.enums.ChoogooMiMissionType;
 
