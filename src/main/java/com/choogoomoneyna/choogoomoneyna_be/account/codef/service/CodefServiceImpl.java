@@ -50,8 +50,8 @@ public class CodefServiceImpl implements CodefService {
         System.out.println(accountList);
 
         if (accountList == null || accountList.isEmpty()) {
-            log.info("None account added.");
-            throw new Exception("check id/password.");
+            log.info("None account to added.");
+            return List.of();
         }
 
         // 5. 계좌 정보를 AccountVo 리스트로 매핑

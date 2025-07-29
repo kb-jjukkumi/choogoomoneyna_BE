@@ -35,7 +35,7 @@ public class CodefController {
             // 3. 계좌 정보가 없을 때 처리
             if (accountList == null || accountList.isEmpty()) {
                 log.info("None account added.");
-                return ResponseEntity.status(HttpStatus.OK).body("User already added Accounts");
+                return ResponseEntity.status(HttpStatus.OK).body("Already added Accounts");
             }
             return ResponseEntity.ok(accountList);
         } catch (Exception e) {
