@@ -10,7 +10,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class RankingVO {
-    Long roundNumber;  // 복합키 1
+    Integer roundNumber;  // 복합키 1
     Long userId;       // 복합키 2
     Integer currentRanking;
     Date regDate;
