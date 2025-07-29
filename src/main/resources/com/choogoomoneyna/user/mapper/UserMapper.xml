@@ -152,7 +152,9 @@
             user_login_type,
             connected_id
         FROM users
+        WHERE choogoomi_name IS NOT NULL
     </select>
+
 
     <update id="updateConnectedId">
         UPDATE users SET connected_id = #{connectedId} WHERE user_id = #{id}
