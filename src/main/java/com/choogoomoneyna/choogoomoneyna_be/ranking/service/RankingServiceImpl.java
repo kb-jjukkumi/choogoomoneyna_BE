@@ -3,15 +3,10 @@ package com.choogoomoneyna.choogoomoneyna_be.ranking.service;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.mapper.RankingMapper;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingUpdateVO;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO;
-import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
-import com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -27,8 +22,8 @@ public class RankingServiceImpl implements RankingService {
     }
 
     @Override
-    public List<RankingVO> getAllRanking() {
-        return rankingMapper.getAllRanking();
+    public List<RankingVO> getAllRankings() {
+        return rankingMapper.getAllRankings();
     }
 
     @Override

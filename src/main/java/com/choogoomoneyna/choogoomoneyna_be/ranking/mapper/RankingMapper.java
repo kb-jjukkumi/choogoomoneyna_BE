@@ -12,7 +12,7 @@ public interface RankingMapper {
 
     void insertRanking(RankingVO rankingVO);
 
-    List<RankingVO> getAllRanking();
+    List<RankingVO> getAllRankings();
 
     List<RankingVO> findLatestRankingPerUser();
 

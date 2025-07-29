@@ -22,7 +22,7 @@
     </insert>
 
     <!-- 전체 랭킹 가져오기 -->
-    <select id="getAllRanking" resultType="com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO">
+    <select id="getAllRankings" resultType="com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO">
         SELECT
             ranking_id,
             user_id,
