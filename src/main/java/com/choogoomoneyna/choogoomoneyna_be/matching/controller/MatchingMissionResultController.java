@@ -3,7 +3,6 @@ package com.choogoomoneyna.choogoomoneyna_be.matching.controller;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.CustomUserDetails;
 import com.choogoomoneyna.choogoomoneyna_be.matching.dto.Request.MatchingMissionUpdateRequest;
 import com.choogoomoneyna.choogoomoneyna_be.matching.dto.Response.MatchingMainResponseDTO;
-import com.choogoomoneyna.choogoomoneyna_be.matching.service.MatchingMissionConverter;
 import com.choogoomoneyna.choogoomoneyna_be.matching.service.MatchingMissionResultService;
 import com.choogoomoneyna.choogoomoneyna_be.matching.service.MatchingService;
 import com.choogoomoneyna.choogoomoneyna_be.matching.service.RoundInfoService;
@@ -11,13 +10,10 @@ import com.choogoomoneyna.choogoomoneyna_be.mission.dto.response.MissionProgress
 import com.choogoomoneyna.choogoomoneyna_be.mission.dto.response.MissionProgressListResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.mission.service.MissionService;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
-import com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -59,7 +55,7 @@ public class MatchingMissionResultController {
         List<MissionProgressDTO> progressList =
                 matchingMissionResultService.getAllMissionProgressDTO(userId, matchId);
 
-        int updateScore = scoreService.getScore(userId) + score;
+        int updateScore = scoreService.getScoreByUserIdAndRoundNumber(userId, roundInfoService.getRoundNumber()) + score;
 //        scoreService.updateScore(
 //                UserScoreVO.builder()
 //                        .userId(userId)
