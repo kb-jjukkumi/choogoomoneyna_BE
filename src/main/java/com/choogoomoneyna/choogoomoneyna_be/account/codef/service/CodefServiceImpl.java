@@ -78,6 +78,7 @@ public class CodefServiceImpl implements CodefService {
         log.debug("connectedId: {}", connectedId);
         String bankId = accountUpdateRequestDto.getBankId();
         String accountNum = accountUpdateRequestDto.getAccountNum();
+        log.info("조회하려는 계좌번호 {}", accountNum);
 
         // 2. codef api로 계좌 리스트 가져오기
         List<AccountResponseDto> accountList = codefApiRequester.getAccountOne(bankId, connectedId);
@@ -90,6 +91,7 @@ public class CodefServiceImpl implements CodefService {
 
         //3. 동일 계좌 찾기
         for(AccountResponseDto accountResponseDto : accountList) {
+            log.info("accountResponseDto: {}", accountResponseDto);
             if (accountResponseDto.getAccountNum().equals(accountNum)) {
                 AccountVO accountVO = accountMapper.findByAccountNum(accountNum);
                 if (accountVO == null) {
@@ -99,12 +101,15 @@ public class CodefServiceImpl implements CodefService {
                 //5. 잔액 비교 후 다르면 업데이트
                 if(!accountVO.getAccountBalance().equals(accountResponseDto.getAccountBalance())) {
                     accountVO.setAccountBalance(accountResponseDto.getAccountBalance());
-                    accountVO.setUpdateDate(LocalDateTime.now());
-                    accountMapper.updateAccount(accountVO);
+
                     log.info("Account balance updated for accountNum: {}", accountNum);
                 } else {
                     log.info("No balance change for accountNum: {}", accountNum);
                 }
+                accountVO.setFetchedDate(LocalDateTime.now());
+                accountMapper.updateAccount(accountVO);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd' 'HH:mm:ss");
+                accountResponseDto.setFetchedDate(LocalDateTime.now().format(formatter));
                 return accountResponseDto;
             }
         }
@@ -194,6 +199,7 @@ public class CodefServiceImpl implements CodefService {
         accountVO.setBankId(accountResponseDto.getBankId());
         accountVO.setAccountName(accountResponseDto.getAccountName());
         accountVO.setAccountBalance(accountResponseDto.getAccountBalance());
+        accountVO.setFetchedDate(LocalDateTime.now());
         return accountVO;
     }
 
