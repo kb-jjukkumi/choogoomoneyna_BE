@@ -21,7 +21,7 @@ public interface RankingUserService {
      *
      * @return {@link RankingVO} 객체 리스트를 반환하며, 데이터가 없는 경우 빈 리스트를 반환합니다.
      */
-    List<RankingUserVO> findLatestRankingUserPerUser();
+    List<RankingUserVO> findTop50LatestRankingUserPerUser();
 
     /**
      * 각 사용자의 두 번째로 최신 랭킹에 기반하여 상위 3명의 사용자를 조회합니다.
