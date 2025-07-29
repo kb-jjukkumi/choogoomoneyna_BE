@@ -64,22 +64,34 @@
 
     <!-- 여러 유저의 현재 랭킹 일괄 업데이트 -->
     <update id="batchUpdateCurrentRanking" parameterType="java.util.List">
-        UPDATE rankings
-        SET current_ranking = CASE user_id
-        <foreach collection="rankingUpdateList" item="rank">
-            WHEN #{rank.userId} THEN #{rank.currentRanking}
-        </foreach>
-        END,
-        update_date = CASE user_id
-        <foreach collection="rankingUpdateList" item="rank">
-            WHEN #{rank.userId} THEN #{rank.updateDate}
-        </foreach>
-        END
-        WHERE user_id IN
-        <foreach collection="rankingUpdateList" item="rank" open="(" separator="," close=")">
-            #{rank.userId}
-        </foreach>
+        UPDATE rankings r
+        SET
+            current_ranking = (
+                CASE
+                <foreach collection="rankingUpdateList" item="rank">
+                    WHEN r.user_id = #{rank.userId} THEN #{rank.currentRanking}
+                </foreach>
+                END
+            ),
+            update_date = (
+                CASE
+                <foreach collection="rankingUpdateList" item="rank">
+                    WHEN r.user_id = #{rank.userId} THEN #{rank.updateDate}
+                </foreach>
+                END
+            )
+        WHERE EXISTS (
+            SELECT 1
+            FROM (
+                SELECT user_id, MAX(reg_date) AS max_reg_date
+                FROM rankings
+                GROUP BY user_id
+            ) latest
+            WHERE r.user_id = latest.user_id
+                AND r.reg_date = latest.max_reg_date
+        )
     </update>
+
 
     <!-- 특정 유저의 랭킹 전체 조회 -->
     <select id="findAllRankingByUserId" parameterType="long"
