@@ -27,9 +27,19 @@ public class RankingController {
         return ResponseEntity.ok("Ranking has been updated");
     }
 
-    @GetMapping("/list")
+    @GetMapping("/list/top50")
     public ResponseEntity<?> getRankingList() {
-        List<RankingResponseDTO> rankingList = rankingUserService.findLatestRankingUserPerUser()
+        List<RankingResponseDTO> rankingList = rankingUserService.findTop50LatestRankingUserPerUser()
+                .stream()
+                .map(RankingConverter::toRankingResponseDTO)
+                .toList();
+
+        return ResponseEntity.ok(rankingList);
+    }
+
+    @GetMapping("/list/previous/top3")
+    public ResponseEntity<?> getLastRankingListTop3() {
+        List<RankingResponseDTO> rankingList = rankingUserService.findTop3BySecondLatestRankingByRegDate()
                 .stream()
                 .map(RankingConverter::toRankingResponseDTO)
                 .toList();

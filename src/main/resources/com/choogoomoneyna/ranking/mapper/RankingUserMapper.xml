@@ -26,7 +26,7 @@
     </select>
 
     <!-- 인당 가장 최근 것만 가져오기 -->
-    <select id="findLatestRankingUserPerUser" resultMap="RankingUserResultMap">
+    <select id="findTop50LatestRankingUserPerUser" resultMap="RankingUserResultMap">
         SELECT r.user_id AS user_id,
                u.nickname AS nickname,
                r.current_ranking AS ranking,
@@ -39,7 +39,31 @@
         ) latest ON r.user_id = latest.user_id AND r.update_date = latest.max_update
                  LEFT JOIN users u ON r.user_id = u.user_id
                  LEFT JOIN scores s ON r.user_id = s.user_id
+        ORDER BY r.current_ranking ASC
+        LIMIT 50
     </select>
+
+    <select id="findTop3BySecondLatestRankingByRegDate" resultType="com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingUserVO">
+      <![CDATA[
+        WITH second_latest AS (
+            SELECT MAX(reg_date) AS reg_date
+                FROM rankings
+                WHERE reg_date < (
+                    SELECT MAX(reg_date) FROM rankings
+                )
+            )
+            SELECT r.user_id AS user_id,
+                   u.nickname AS nickname,
+                   r.current_ranking AS ranking,
+                   s.score_value AS score
+            FROM rankings r
+                JOIN second_latest sl ON r.reg_date = sl.reg_date
+                LEFT JOIN users u ON r.user_id = u.user_id
+                LEFT JOIN scores s ON r.user_id = s.user_id
+            ORDER BY r.current_ranking ASC
+            LIMIT 3
+        ]]>
+</select>
 
 
 </mapper>
