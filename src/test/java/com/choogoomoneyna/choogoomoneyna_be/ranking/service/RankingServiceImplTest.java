@@ -26,6 +26,9 @@ public class RankingServiceImplTest {
     @InjectMocks
     private RankingServiceImpl rankingService; // 목 객체들 주입된 구현체
 
+    @InjectMocks
+    private RankingUpdateServiceImpl rankingUpdateService;
+
     @Mock
     private ScoreService scoreService;
 
@@ -48,15 +51,12 @@ public class RankingServiceImplTest {
         given(scoreService.getAllScores()).willReturn(userScores);
 
         // when
-        rankingService.updateRanking();
+        rankingUpdateService.updateRanking();
 
         // then
-        // 1) rolloverWeeklyRankings()가 1회 호출
-        verify(rankingMapper, times(1)).rolloverWeeklyRankings();
-
         // 2) batchUpdateCurrentRanks()가 1회 호출되고, 랭킹 계산이 올바른지 ArgumentCaptor로 확인
         ArgumentCaptor<List<RankingUpdateVO>> captor = ArgumentCaptor.forClass(List.class);
-        verify(rankingMapper, times(1)).batchUpdateCurrentRanks(captor.capture());
+        verify(rankingMapper, times(1)).batchUpdateCurrentRanking(captor.capture());
 
         List<RankingUpdateVO> capturedList = captor.getValue();
         assertEquals(5, capturedList.size());

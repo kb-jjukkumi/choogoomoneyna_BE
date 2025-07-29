@@ -5,15 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RankingUpdateVO {
-    private Long rankingId;
+public class RankingUserVO {
     private Long userId;
-    private Integer currentRanking;
-    private Date updateDate;
+    private String nickname;
+    private Integer ranking;
+    private Integer score;
 }

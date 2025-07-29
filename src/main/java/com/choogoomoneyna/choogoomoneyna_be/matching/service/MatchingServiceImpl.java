@@ -8,6 +8,7 @@ import com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingVO;
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.RoundInfoVO;
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.UserMatchingHistoryVO;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.service.RankingService;
+import com.choogoomoneyna.choogoomoneyna_be.ranking.service.RankingUpdateService;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
 import com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
@@ -32,6 +33,7 @@ public class MatchingServiceImpl implements MatchingService {
     private final UserService userService;
     private final UserMatchingHistoryService userMatchingHistoryService;
     private final RankingService rankingService;
+    private final RankingUpdateService rankingUpdateService;
 
     private int roundNumber;
 
@@ -278,7 +280,7 @@ public class MatchingServiceImpl implements MatchingService {
         }
 
         // ranking table 업데이트
-        rankingService.updateRanking();
+        rankingUpdateService.updateRanking();
 
         // 매칭 상태가 Progress인 column을 전부 Completed로 변경
         matchingMapper.updateAllProgressMatchings();

@@ -13,7 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +33,13 @@ public class MockService {
 
     public void createMockUser(int count) {
         log.info("service layer ok");
+
+        List<Integer> shuffledRankings = IntStream.rangeClosed(8001, count)
+                .boxed()
+                .collect(Collectors.toList());
+        Collections.shuffle(shuffledRankings);
+        int rankingIndex = 0;
+
         for (int i = 8001; i <= count; i++) {
             log.info("service layer for ok");
             UserVO user = new UserVO();
@@ -47,7 +58,10 @@ public class MockService {
                 scoreService.createScore(userScoreVO);
                 log.info("score table added{} ", i);
                 //랭킹테이블
-                RankingVO rankingVO = new RankingVO(user.getId(),null,null);
+
+                int currentRanking = shuffledRankings.get(rankingIndex++);
+                RankingVO rankingVO = new RankingVO(null, user.getId(), currentRanking, null, null);
+
                 rankingService.createRanking(rankingVO);
                 log.info("ranking table added{} ", i);
             } catch (Exception e) {

@@ -6,7 +6,8 @@
     <file url="file://$PROJECT_DIR$/src/main/resources/com/choogoomoneyna/matching/mapper/RoundInfoMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/com/choogoomoneyna/matching/mapper/UserMatchingHistoryMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/com/choogoomoneyna/mssion/mapper/MissionMapper.xml" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/src/main/resources/com/choogoomoneyna/ranking/mapper/rankingMapper.xml" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/com/choogoomoneyna/ranking/mapper/RankingMapper.xml" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/com/choogoomoneyna/ranking/mapper/RankingUserMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/com/choogoomoneyna/score/mapper/ScoreMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/com/choogoomoneyna/user/mapper/UserMapper.xml" dialect="MySQL" />
   </component>
