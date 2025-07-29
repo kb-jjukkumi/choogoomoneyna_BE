@@ -21,12 +21,9 @@
         LIMIT 1
     </select>
 
-    <!-- 회차 번호 단일 조회 -->
-    <select id="getRoundNumber" resultType="int" parameterType="int">
-        SELECT round_number
-        FROM round_info
-        WHERE round_number = #{roundNumber}
-        LIMIT 1
+    <!-- 현재 회차 번호 조회 -->
+    <select id="getRoundNumber" resultType="int">
+        SELECT MAX(round_number) FROM round_info
     </select>
 
     <!-- 시작일 조회 -->

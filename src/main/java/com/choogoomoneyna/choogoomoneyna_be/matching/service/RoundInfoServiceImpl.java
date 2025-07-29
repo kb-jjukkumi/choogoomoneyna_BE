@@ -24,8 +24,8 @@ public class RoundInfoServiceImpl implements RoundInfoService {
     }
 
     @Override
-    public Integer getRoundNumber(Integer roundNumber) {
-        return roundInfoMapper.getRoundNumber(roundNumber);
+    public Integer getRoundNumber() {
+        return roundInfoMapper.getRoundNumber();
     }
 
     @Override

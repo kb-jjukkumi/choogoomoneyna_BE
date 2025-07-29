@@ -25,7 +25,7 @@ public interface RoundInfoService {
      *
      * @return 현재 라운드 번호
      */
-    Integer getRoundNumber(Integer roundNumber);
+    Integer getRoundNumber();
 
     /**
      * 현재 라운드의 시작 날짜를 조회합니다
