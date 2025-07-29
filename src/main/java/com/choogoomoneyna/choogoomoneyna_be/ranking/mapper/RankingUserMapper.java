@@ -11,4 +11,6 @@ public interface RankingUserMapper {
     List<RankingUserVO> getAllRankingUser();
 
     List<RankingUserVO> findLatestRankingUserPerUser();
+
+    List<RankingUserVO> findTop3BySecondLatestRankingByRegDate();
 }

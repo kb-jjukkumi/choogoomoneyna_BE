@@ -22,4 +22,9 @@ public class RankingUserServiceImpl implements RankingUserService {
     public List<RankingUserVO> findLatestRankingUserPerUser() {
         return rankingUserMapper.findLatestRankingUserPerUser();
     }
+
+    @Override
+    public List<RankingUserVO> findTop3BySecondLatestRankingByRegDate() {
+        return rankingUserMapper.findTop3BySecondLatestRankingByRegDate();
+    }
 }
