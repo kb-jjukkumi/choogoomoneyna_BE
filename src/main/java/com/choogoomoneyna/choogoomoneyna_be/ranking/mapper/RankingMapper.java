@@ -12,6 +12,8 @@ public interface RankingMapper {
 
     void insertRanking(RankingVO rankingVO);
 
+    List<RankingVO> getAllRanking();
+
     void batchInsertRankings(@Param("rankingVOList") List<RankingVO> rankingVOList);
 
     void updateCurrentRankingByUserId(@Param("userId") Long userId,

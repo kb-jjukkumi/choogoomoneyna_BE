@@ -21,6 +21,16 @@
         VALUES (#{userId}, #{currentRanking}, NOW(), NOW())
     </insert>
 
+    <select id="getAllRanking" resultType="com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO">
+        SELECT
+            ranking_id,
+            user_id,
+            current_ranking,
+            reg_date,
+            update_date
+        FROM rankings
+    </select>
+
     <!-- 배치 랭킹 삽입 -->
     <insert id="batchInsertRankings" parameterType="java.util.List">
         INSERT INTO rankings (user_id, current_ranking, reg_date, update_date)
