@@ -10,14 +10,22 @@
     </select>
 
     <select id="findByUserId" resultType="com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.AccountResponseDto">
-        SELECT * FROM accounts WHERE user_id = #{userId}
+        SELECT
+            account_num,
+            bank_id,
+            account_name,
+            account_balance,
+            DATE_FORMAT(fetched_date, '%Y-%m-%d %H:%i:%s') AS fetched_date
+        FROM accounts
+        WHERE user_id = #{userId}
     </select>
 
+
     <insert id="insertAccount" parameterType="list">
-        INSERT INTO accounts (account_num, user_id, bank_id, account_name, account_balance)
+        INSERT INTO accounts (account_num, user_id, bank_id, account_name, account_balance, fetched_date)
         VALUES
         <foreach collection="list" item="account" separator=",">
-            (#{account.accountNum}, #{account.userId}, #{account.bankId}, #{account.accountName}, #{account.accountBalance})
+            (#{account.accountNum}, #{account.userId}, #{account.bankId}, #{account.accountName}, #{account.accountBalance}, #{account.fetchedDate})
         </foreach>
     </insert>
 
@@ -25,7 +33,7 @@
         UPDATE accounts
         SET
             account_balance = #{accountBalance},
-            update_date = NOW()
+            fetched_date = NOW()
         WHERE
             account_num = #{accountNum}
     </update>

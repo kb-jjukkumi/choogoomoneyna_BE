@@ -19,5 +19,5 @@ public class AccountVO {
     private String bankId;
     private String accountName;
     private String accountBalance;
-    private LocalDateTime updateDate;
+    private LocalDateTime fetchedDate;
 }
