@@ -7,60 +7,69 @@
 
     <!-- ResultMap: DB 결과를 RankingVO에 매핑 -->
     <resultMap id="RankingResultMap" type="com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO">
-        <id property="userId" column="user_id" />
-        <result property="previousRanking" column="previous_ranking" />
-        <result property="currentRanking" column="current_ranking" />
+        <id property="rankingId" column="ranking_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="currentRanking" column="current_ranking"/>
+        <result property="regDate" column="reg_date"/>
+        <result property="updateDate" column="update_date"/>
     </resultMap>
 
-    <!-- 랭킹 정보 삽입 -->
-    <insert id="insertRanking" parameterType="com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO">
-        INSERT INTO rankings (user_id, previous_ranking, current_ranking)
-        VALUES (#{userId}, #{previousRanking}, #{currentRanking})
+    <!-- 단일 랭킹 삽입 -->
+    <insert id="insertRanking" useGeneratedKeys="true" keyProperty="rankingId"
+            parameterType="com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO">
+        INSERT INTO rankings (user_id, current_ranking, reg_date, update_date)
+        VALUES (#{userId}, #{currentRanking}, NOW(), NOW())
+    </insert>
+
+    <!-- 배치 랭킹 삽입 -->
+    <insert id="batchInsertRankings" parameterType="java.util.List">
+        INSERT INTO rankings (user_id, current_ranking, reg_date, update_date)
+        VALUES
+        <foreach collection="rankingVOList" item="rank" separator=",">
+            (#{rank.userId}, #{rank.currentRanking}, NOW(), NOW())
+        </foreach>
     </insert>
 
     <!-- 특정 유저의 현재 랭킹 변경 -->
     <update id="updateCurrentRankingByUserId">
         UPDATE rankings
-        SET current_ranking = #{currentRanking}
+        SET current_ranking = #{currentRanking},
+            update_date = NOW()
         WHERE user_id = #{userId}
     </update>
 
-    <!-- 특정 유저의 랭킹 정보 조회 -->
-    <select id="findRankingByUserId" parameterType="long"
+    <!-- 여러 유저의 현재 랭킹 일괄 업데이트 -->
+    <update id="batchUpdateCurrentRanking" parameterType="java.util.List">
+        UPDATE rankings
+        SET current_ranking = CASE user_id
+        <foreach collection="rankingUpdateList" item="rank">
+            WHEN #{rank.userId} THEN #{rank.currentRanking}
+        </foreach>
+        END,
+        update_date = CASE user_id
+        <foreach collection="rankingUpdateList" item="rank">
+            WHEN #{rank.userId} THEN #{rank.updateDate}
+        </foreach>
+        END
+        WHERE user_id IN
+        <foreach collection="rankingUpdateList" item="rank" open="(" separator="," close=")">
+            #{rank.userId}
+        </foreach>
+    </update>
+
+    <!-- 특정 유저의 랭킹 전체 조회 -->
+    <select id="findAllRankingByUserId" parameterType="long"
             resultMap="RankingResultMap">
-        SELECT user_id, previous_ranking, current_ranking
+        SELECT ranking_id, user_id, current_ranking, reg_date, update_date
         FROM rankings
         WHERE user_id = #{userId}
     </select>
 
     <!-- 특정 유저의 현재 랭킹만 조회 -->
-    <select id="getCurrentRanking" parameterType="long" resultType="int">
+    <select id="findCurrentRankingByUserId" parameterType="long" resultType="int">
         SELECT current_ranking
         FROM rankings
         WHERE user_id = #{userId}
     </select>
-
-    <!-- 이번 주 랭킹을 저번 주 랭킹으로 이월 -->
-    <update id="rolloverWeeklyRankings">
-        UPDATE rankings
-        SET previous_ranking = current_ranking
-    </update>
-
-    <update id="batchUpdateCurrentRanks">
-        UPDATE rankings
-        SET current_ranking = CASE user_id
-        <foreach collection="rankingList" item="rank">
-            WHEN #{rank.userId} THEN #{rank.currentRanking}
-        </foreach>
-        ELSE current_ranking
-        END
-        WHERE user_id IN
-        <foreach collection="rankingList" item="rank" open="(" separator="," close=")">
-            #{rank.userId}
-        </foreach>
-    </update>
-
-
-
 
 </mapper>
