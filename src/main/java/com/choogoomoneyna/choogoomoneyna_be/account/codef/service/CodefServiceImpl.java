@@ -169,11 +169,17 @@ public class CodefServiceImpl implements CodefService {
         }
 
         // 4. TransactionVO → TransactionResponseDto 변환
+
         List<TransactionResponseDto.trItem> dtoList = transactionVOList.stream()
                 .map(tx -> {
+                    // 1. 포맷 정의
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    // 2. 포맷 적용
+                    String formattedTime = tx.getTrTime().format(formatter);
+
                     TransactionResponseDto.trItem dto = new TransactionResponseDto.trItem();
                     dto.setTransactionId(tx.getTransactionId());
-                    dto.setTrTime(tx.getTrTime().toString());
+                    dto.setTrTime(formattedTime);
                     dto.setTrAccountIn(tx.getTrAccountIn());
                     dto.setTrAccountOut(tx.getTrAccountOut());
                     dto.setTrAfterBalance(tx.getTrAfterBalance());
