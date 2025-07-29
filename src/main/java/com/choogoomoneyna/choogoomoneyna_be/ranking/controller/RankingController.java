@@ -36,4 +36,14 @@ public class RankingController {
 
         return ResponseEntity.ok(rankingList);
     }
+
+    @GetMapping("/previous/top3")
+    public ResponseEntity<?> getLastRankingListTop3() {
+        List<RankingResponseDTO> rankingList = rankingUserService.findTop3BySecondLatestRankingByRegDate()
+                .stream()
+                .map(RankingConverter::toRankingResponseDTO)
+                .toList();
+
+        return ResponseEntity.ok(rankingList);
+    }
 }
