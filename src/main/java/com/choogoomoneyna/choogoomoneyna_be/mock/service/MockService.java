@@ -60,7 +60,7 @@ public class MockService {
                 //랭킹테이블
 
                 int currentRanking = shuffledRankings.get(rankingIndex++);
-                RankingVO rankingVO = new RankingVO(null, user.getId(), currentRanking, null, null);
+                RankingVO rankingVO = new RankingVO(user.getId(), currentRanking, null, null);
 
                 rankingService.createRanking(rankingVO);
                 log.info("ranking table added{} ", i);

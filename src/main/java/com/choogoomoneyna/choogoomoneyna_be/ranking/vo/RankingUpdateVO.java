@@ -12,7 +12,6 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class RankingUpdateVO {
-    private Long rankingId;
     private Long userId;
     private Integer currentRanking;
     private Date updateDate;
