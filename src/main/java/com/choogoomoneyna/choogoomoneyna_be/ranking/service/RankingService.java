@@ -24,6 +24,14 @@ public interface RankingService {
     List<RankingVO> getAllRanking();
 
     /**
+     * 각 사용자의 최신 랭킹 항목을 조회합니다.
+     * 각 사용자당 가장 최근의 랭킹만 포함됩니다.
+     *
+     * @return {@link RankingVO} 객체 리스트를 반환하며, 데이터가 없는 경우 빈 리스트를 반환합니다.
+     */
+    List<RankingVO> findLatestRankingPerUser();
+
+    /**
      * 시스템에 여러 랭킹 항목을 일괄 삽입합니다.
      *
      * @param rankingVOList 사용자 ID, 랭킹 정보, 타임스탬프 등이 포함된

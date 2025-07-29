@@ -21,6 +21,7 @@
         VALUES (#{userId}, #{currentRanking}, NOW(), NOW())
     </insert>
 
+    <!-- 전체 랭킹 가져오기 -->
     <select id="getAllRanking" resultType="com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO">
         SELECT
             ranking_id,
@@ -30,6 +31,19 @@
             update_date
         FROM rankings
     </select>
+
+    <!-- 인당 가장 최근 것만 가져오기 -->
+    <select id="findLatestRankingPerUser" resultType="com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO">
+        SELECT r.*
+        FROM rankings r
+                 INNER JOIN (
+            SELECT user_id, MAX(update_date) AS max_update
+            FROM rankings
+            GROUP BY user_id
+        ) latest
+        ON r.user_id = latest.user_id AND r.update_date = latest.max_update
+    </select>
+
 
     <!-- 배치 랭킹 삽입 -->
     <insert id="batchInsertRankings" parameterType="java.util.List">

@@ -32,6 +32,11 @@ public class RankingServiceImpl implements RankingService {
     }
 
     @Override
+    public List<RankingVO> findLatestRankingPerUser() {
+        return rankingMapper.findLatestRankingPerUser();
+    }
+
+    @Override
     public void batchInsertRankings(List<RankingVO> rankingVOList) {
         rankingMapper.batchInsertRankings(rankingVOList);
     }
