@@ -11,5 +11,5 @@ public interface CodefService {
 
     AccountResponseDto updateAccountOne(Long userId, AccountUpdateRequestDto accountUpdateRequestDto) throws Exception;
 
-    TransactionResponseDto addTransaction(Long userId, TransactionRequestDto transactionRequestDto) throws Exception;
+    void addTransaction(Long userId, TransactionRequestDto transactionRequestDto) throws Exception;
 }

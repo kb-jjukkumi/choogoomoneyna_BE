@@ -3,7 +3,9 @@ package com.choogoomoneyna.choogoomoneyna_be.account.codef.service;
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.*;
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.AccountVO;
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.TransactionVO;
+import com.choogoomoneyna.choogoomoneyna_be.account.db.dto.TransactionItemDto;
 import com.choogoomoneyna.choogoomoneyna_be.account.db.mapper.AccountMapper;
+import com.choogoomoneyna.choogoomoneyna_be.account.db.service.TransactionConverter;
 import com.choogoomoneyna.choogoomoneyna_be.user.mapper.UserMapper;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +14,9 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,7 +29,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CodefServiceImpl implements CodefService {
 
-    private final SqlSessionTemplate sqlSessionTemplate;
     private final CodefApiRequester codefApiRequester;
     private final UserMapper userMapper;
     private final AccountMapper accountMapper;
@@ -117,15 +120,25 @@ public class CodefServiceImpl implements CodefService {
     }
 
     @Override
-    public TransactionResponseDto addTransaction(Long userId, TransactionRequestDto transactionRequestDto) throws Exception {
+    public void addTransaction(Long userId, TransactionRequestDto transactionRequestDto) throws Exception {
 
         //1. 요청 dto에 connectedId 추가
         UserVO userVO = userMapper.findById(userId);
         String connectedId = userVO.getConnectedId();
         log.info("user info {}" , connectedId);
+
+        String accountNum = transactionRequestDto.getAccount();
         transactionRequestDto.setConnectedId(connectedId);
         transactionRequestDto.setOrderBy("0");
         log.info(transactionRequestDto.toString());
+
+        //1-1. 가장 최근 거래 시간 가져와서 startDate 설정
+        LocalDateTime latestTrTime = accountMapper.findLatestTransactionDateByAccount(accountNum);
+        if(latestTrTime != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+            String startDate = latestTrTime.toLocalDate().format(formatter);
+            transactionRequestDto.setStartDate(startDate);
+        }
 
         //2. 거래내역 조회
          CodefTransactionResponseDto codefTransactionResponseDto = codefApiRequester.getTransactionList(transactionRequestDto);
@@ -133,69 +146,28 @@ public class CodefServiceImpl implements CodefService {
             log.info("None transaction list added.");
         }
 
-        String accountNum = transactionRequestDto.getAccount();
-
         List<CodefTransactionResponseDto.HistoryItem> trItemList = codefTransactionResponseDto.getResTrHistoryList();
         List<TransactionVO> transactionVOList = mapToTransactionList(accountNum, trItemList);
 
-        // 3. 최근 이틀치 거래 내역 조회 (최적화된 쿼리 수행)
-        LocalDateTime endDate = LocalDateTime.now();
-        LocalDateTime startDate = endDate.minusDays(2);
-        List<TransactionVO> existingTransactions = accountMapper.findTransactionsByAccountNumAndDateRange(
-                accountNum, startDate, endDate);
+        //3. 기존거래와 중복 저장 방지
+        List<TransactionVO> existingTransactions = accountMapper.findAllTransactionsVo(accountNum);
 
-        if (existingTransactions.isEmpty()) {
-            // 기존 거래가 없으면 모든 거래를 저장
-            accountMapper.insertTransaction(transactionVOList);
-            log.info("모든 거래 내역이 저장되었습니다.");
-        }
-
-        // 4. 기존 거래 내역을 HashSet에 저장 (중복 체크용 키 생성)
         Set<String> existingTransactionKeys = existingTransactions.stream()
                 .map(tx -> tx.getTrTime() + "_" + tx.getTrAccountIn() + "_" + tx.getTrAccountOut())
                 .collect(Collectors.toSet());
 
-        // 5. 중복되지 않는 거래만 필터링
         List<TransactionVO> transactionsToSave = transactionVOList.stream()
                 .filter(tx -> !existingTransactionKeys.contains(tx.getTrTime() + "_" + tx.getTrAccountIn() + "_" + tx.getTrAccountOut()))
                 .toList();
 
-        // 6. 새로운 거래 내역이 있다면 저장
+        // 4. 저장
         if (!transactionsToSave.isEmpty()) {
             accountMapper.insertTransaction(transactionsToSave);
-            log.info("new transaction added");
+            log.info("new transaction added: {}건", transactionsToSave.size());
         } else {
             log.info("no new transaction to add");
         }
 
-        // 4. TransactionVO → TransactionResponseDto 변환
-
-        List<TransactionResponseDto.trItem> dtoList = transactionVOList.stream()
-                .map(tx -> {
-                    // 1. 포맷 정의
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                    // 2. 포맷 적용
-                    String formattedTime = tx.getTrTime().format(formatter);
-
-                    TransactionResponseDto.trItem dto = new TransactionResponseDto.trItem();
-                    dto.setTransactionId(tx.getTransactionId());
-                    dto.setTrTime(formattedTime);
-                    dto.setTrAccountIn(tx.getTrAccountIn());
-                    dto.setTrAccountOut(tx.getTrAccountOut());
-                    dto.setTrAfterBalance(tx.getTrAfterBalance());
-                    dto.setTransactionType(tx.getTransactionType());
-                    dto.setTrDesc1(tx.getTrDesc1());
-                    dto.setTrDesc2(tx.getTrDesc2());
-                    dto.setTrDesc3(tx.getTrDesc3());
-                    dto.setTrDesc4(tx.getTrDesc4());
-                    return dto;
-                })
-                .toList();
-
-        TransactionResponseDto responseDto = new TransactionResponseDto();
-        responseDto.setAccountNum(accountNum);
-        responseDto.setTransactionList(dtoList);
-        return responseDto;
     }
 
     private AccountVO mapToAccountVO(Long userId, AccountResponseDto accountResponseDto) {
