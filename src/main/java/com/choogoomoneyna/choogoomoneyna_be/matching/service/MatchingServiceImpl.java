@@ -180,21 +180,29 @@ public class MatchingServiceImpl implements MatchingService {
         List<UserVO> totalUsers = userService.findAllUsers();
         List<UserScoreVO> scores = scoreService.findCurrentAllScores(roundNumber-1);
 
-        // score Table 에 추가
+        // ranking 과 score 테이블에도 이번 라운드에 대한 내용 생성
+        List<UserScoreVO> newScores = new ArrayList<>();
+        List<RankingVO> newRankings = new ArrayList<>();
         for (UserScoreVO score : scores) {
-            scoreService.createScore(UserScoreVO.builder()
+            newScores.add(UserScoreVO.builder()
                     .roundNumber(roundNumber)
                     .userId(score.getUserId())
                     .scoreValue(score.getScoreValue())
                     .build());
 
-            rankingService.createRanking(RankingVO.builder()
+            newRankings.add(RankingVO.builder()
                     .roundNumber(roundNumber)
                     .userId(score.getUserId())
                     .build());
 
-            rankingUpdateService.updateRanking();
         }
+
+        // score 테이블에 삽입
+        scoreService.batchCreateScores(newScores);
+
+        // ranking 테이블에 삽입 및 정렬
+        rankingService.batchCreateRankings(newRankings);
+        rankingUpdateService.updateRanking();
 
         Map<Long, Integer> scoreMap = scores.stream()
                 .collect(Collectors.toMap(UserScoreVO::getUserId, UserScoreVO::getScoreValue));
