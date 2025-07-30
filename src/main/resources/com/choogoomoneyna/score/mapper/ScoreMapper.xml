@@ -68,9 +68,9 @@
     </delete>
 
     <!-- 특정 사용자의 레벨업 상태 업데이트 -->
-    <update id="updateIsLevelUpByUserId" parameterType="long">
+    <update id="updateIsLevelUpByUserId" parameterType="map">
         UPDATE scores
-        SET is_level_up = TRUE,
+        SET is_level_up = #{isLevelUp},
             update_date = NOW()
         WHERE user_id = #{userId}
     </update>

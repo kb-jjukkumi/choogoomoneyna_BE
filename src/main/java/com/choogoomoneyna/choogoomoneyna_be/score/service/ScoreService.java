@@ -20,5 +20,5 @@ public interface ScoreService {
 
     void deleteScoreByUserId(Long userId);
 
-    void updateIsLevelUpByUserId(Long userId);
+    void updateIsLevelUpByUserId(Long userId, boolean isLevelUp);
 }

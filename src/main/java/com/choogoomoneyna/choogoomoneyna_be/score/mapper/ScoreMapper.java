@@ -25,5 +25,5 @@ public interface ScoreMapper {
 
     void deleteByUserId(Long userId);
 
-    void updateIsLevelUpByUserId(Long userId);
+    void updateIsLevelUpByUserId(@Param("userId") Long userId, @Param("isLevelUp") Boolean isLevelUp);
 }

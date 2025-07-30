@@ -49,7 +49,7 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public void updateIsLevelUpByUserId(Long userId) {
-        scoreMapper.updateIsLevelUpByUserId(userId);
+    public void updateIsLevelUpByUserId(Long userId, boolean isLevelUp) {
+        scoreMapper.updateIsLevelUpByUserId(userId, isLevelUp);
     }
 }
