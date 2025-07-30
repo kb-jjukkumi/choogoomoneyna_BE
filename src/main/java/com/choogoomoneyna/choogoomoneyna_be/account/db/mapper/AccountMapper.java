@@ -31,4 +31,6 @@ public interface AccountMapper {
 
     List<TransactionVO> findAllTransactionsVo(String account);
 
+    LocalDateTime findLatestTransactionDateByAccount(String accountNum);
+
 }
