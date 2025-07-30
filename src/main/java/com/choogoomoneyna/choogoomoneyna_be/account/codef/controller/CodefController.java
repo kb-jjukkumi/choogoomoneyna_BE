@@ -67,10 +67,8 @@ public class CodefController {
                                             @RequestBody TransactionRequestDto transactionRequestDto) {
         try {
             Long userId = userDetails.getId();
-
-            //List<TransactionVO> transactionVOList = codefService.addTransaction(userId, transactionRequestDto);
-            TransactionResponseDto transactionResponseDto = codefService.addTransaction(userId, transactionRequestDto);
-            return ResponseEntity.ok(transactionResponseDto);
+            codefService.addTransaction(userId, transactionRequestDto);
+            return ResponseEntity.ok(200);
         } catch (Exception e) {
             log.error("transaction add failed {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("거래 내역 저장 중 오류가 발생했습니다.");

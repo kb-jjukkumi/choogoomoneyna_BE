@@ -68,4 +68,8 @@
         SELECT * FROM transactions WHERE account_num = #{account}
     </select>
 
+    <select id="findLatestTransactionDateByAccount" resultType="java.time.LocalDateTime">
+        SELECT MAX(tr_time) FROM transactions WHERE account_num = #{accountNum}
+    </select>
+
 </mapper>
