@@ -14,7 +14,7 @@ public interface ScoreMapper {
 
     void updateScore(UserScoreVO userScoreVO);
 
-    List<UserScoreVO> findCurrentAllScores();
+    List<UserScoreVO> findCurrentAllScores(int roundNumber);
 
     List<UserScoreVO> findTopNCurrentScoresByRoundNumber(
             @Param("roundNumber") int roundNumber,
