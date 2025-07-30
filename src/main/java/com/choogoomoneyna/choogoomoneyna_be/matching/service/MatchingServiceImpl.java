@@ -140,20 +140,21 @@ public class MatchingServiceImpl implements MatchingService {
     }
 
     /**
-     * 데이터베이스의 라운드 정보를 업데이트합니다. 새로운 라운드를 생성하고 라운드 번호를 증가시키며
-     * 시작일과 종료일을 업데이트합니다.
-     *
+     * 데이터베이스의 라운드 정보를 업데이트하고 새로운 라운드를 생성합니다.
+     * <br><br>
      * <b>처리 과정:</b>
-     * 1. roundInfoService를 사용하여 최신 라운드 정보를 가져옵니다.
-     * 2. 현재 라운드 번호에 1을 더해 다음 라운드 번호를 계산합니다.
-     * 3. 최신 라운드의 시작일과 종료일에 7일을 더해 다음 라운드의 시작일과 종료일을 결정합니다.
-     * 4. roundInfoService의 createRoundInfo 메소드를 호출하여 계산된 값으로 
-     *    데이터베이스에 새로운 라운드 항목을 생성합니다.
-     *
-     * <b>사용된 의존성:</b>
-     * - roundInfoService: 라운드 정보 데이터와 상호작용하는 서비스 계층
-     * - RoundInfoVO: 라운드의 세부 정보를 포함하는 값 객체
-     *
+     * <ol>
+     *     <li>roundInfoService를 통해 최신 라운드 정보 조회</li>
+     *     <li>다음 라운드 번호 계산 (현재 라운드 번호 + 1)</li>
+     *     <li>다음 라운드의 시작일/종료일을 7일 뒤로 설정</li>
+     *     <li>새로운 라운드 정보를 DB에 생성</li>
+     * </ol>
+     * <br>
+     * <b>사용 컴포넌트:</b>
+     * <ul>
+     *     <li>roundInfoService: 라운드 정보 관리 서비스</li>
+     *     <li>RoundInfoVO: 라운드 정보 값 객체</li>
+     * </ul>
      */
     private void prepareNewRoundAndUpdateDates() {
         RoundInfoVO roundInfoVO = roundInfoService.getLatestRoundInfo();
