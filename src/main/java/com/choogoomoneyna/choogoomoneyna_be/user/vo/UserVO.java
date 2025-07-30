@@ -22,6 +22,5 @@ public class UserVO {
     private String choogooMi;        // Enum → String
     private String loginType;        // Enum -> Strring
     private String connectedId;
-    private int userLevel;
 }
 
