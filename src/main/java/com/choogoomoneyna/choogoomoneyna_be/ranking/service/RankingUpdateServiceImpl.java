@@ -1,5 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.ranking.service;
 
+import com.choogoomoneyna.choogoomoneyna_be.matching.service.RoundInfoService;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingUpdateVO;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
@@ -14,42 +15,41 @@ import java.util.*;
 @RequiredArgsConstructor
 public class RankingUpdateServiceImpl implements RankingUpdateService {
 
+    private final RoundInfoService roundInfoService;
     private final RankingService rankingService;
     private final ScoreService scoreService;
 
     @Transactional
     @Override
     public void updateRanking() {
-        List<UserScoreVO> sortedUserScores = new ArrayList<>(scoreService.getAllScores());
-        sortedUserScores.sort(Comparator.comparingInt(UserScoreVO::getScore).reversed());
+        int roundNumber = roundInfoService.getRoundNumber();
 
-        Map<Long, RankingUpdateVO> latestUpdateMap = new HashMap<>();
+        List<UserScoreVO> sortedUserScores = new ArrayList<>(scoreService.findCurrentAllScores(roundNumber));
+        sortedUserScores.sort(Comparator.comparingInt(UserScoreVO::getScoreValue).reversed());
+
+        List<RankingUpdateVO> updateRankingList = new ArrayList<>();
         int befScore = Integer.MAX_VALUE;
         int rank = 0;
 
         for (int idx = 0; idx < sortedUserScores.size(); idx++) {
             UserScoreVO userScore = sortedUserScores.get(idx);
-            if (befScore > userScore.getScore()) {
+            if (befScore > userScore.getScoreValue()) {
                 rank = idx + 1;
-                befScore = userScore.getScore();
+                befScore = userScore.getScoreValue();
             }
 
             RankingUpdateVO vo = RankingUpdateVO.builder()
+                    .roundNumber(roundNumber)
                     .userId(userScore.getUserId())
                     .currentRanking(rank)
                     .updateDate(new Date()) // 현재 시간으로 설정
                     .build();
 
-            // userId별 최신 updateDate만 유지
-            latestUpdateMap.merge(vo.getUserId(), vo, (existing, incoming) ->
-                    existing.getUpdateDate().after(incoming.getUpdateDate()) ? existing : incoming
-            );
+            updateRankingList.add(vo);
         }
 
-        List<RankingUpdateVO> latestUpdateList = new ArrayList<>(latestUpdateMap.values());
-
-        if (!latestUpdateList.isEmpty()) {
-            rankingService.batchUpdateCurrentRanking(latestUpdateList);
+        if (!updateRankingList.isEmpty()) {
+            rankingService.batchUpdateCurrentRanking(updateRankingList);
         }
     }
 

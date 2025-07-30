@@ -1,6 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.ranking.controller;
 
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.CustomUserDetails;
+import com.choogoomoneyna.choogoomoneyna_be.matching.service.RoundInfoService;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.dto.response.RankingHistoryDTO;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.dto.response.RankingResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.service.RankingConverter;
@@ -25,6 +26,7 @@ public class RankingController {
     private final RankingUserService rankingUserService;
     private final RankingUpdateServiceImpl rankingUpdateService;
     private final RankingService rankingService;
+    private final RoundInfoService roundInfoService;
 
     @PutMapping("/update")
     public ResponseEntity<?> updateRanking() {
@@ -34,7 +36,8 @@ public class RankingController {
 
     @GetMapping("/list/top50")
     public ResponseEntity<?> getRankingList() {
-        List<RankingResponseDTO> rankingList = rankingUserService.findTop50LatestRankingUserPerUser()
+        List<RankingResponseDTO> rankingList =
+                rankingUserService.findTopNRankingUserByRoundNumber(roundInfoService.getRoundNumber(), 50)
                 .stream()
                 .map(RankingConverter::toRankingResponseDTO)
                 .toList();
@@ -44,7 +47,8 @@ public class RankingController {
 
     @GetMapping("/list/previous/top3")
     public ResponseEntity<?> getLastRankingListTop3() {
-        List<RankingResponseDTO> rankingList = rankingUserService.findTop3BySecondLatestRankingByRegDate()
+        List<RankingResponseDTO> rankingList =
+                rankingUserService.findTopNRankingUserByRoundNumber(roundInfoService.getRoundNumber()-1, 3)
                 .stream()
                 .map(RankingConverter::toRankingResponseDTO)
                 .toList();

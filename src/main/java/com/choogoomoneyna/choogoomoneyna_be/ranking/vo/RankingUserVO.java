@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class RankingUserVO {
+    private Integer roundNumber;
     private Long userId;
     private String nickname;
     private Integer ranking;

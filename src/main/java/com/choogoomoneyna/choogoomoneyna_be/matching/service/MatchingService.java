@@ -11,7 +11,7 @@ public interface MatchingService {
      * 모든 사용자의 매칭을 시작합니다
      * 모든 사용자들을 둘씩 매칭 시킨 후 db 에 저장합니다
      */
-    public void startAllMatching();
+    void startAllMatching();
 
     /**
      * 특정 사용자의 매칭을 시작합니다
@@ -20,12 +20,12 @@ public interface MatchingService {
      * 
      * @param userId 매칭될 사용자의 ID
      */
-    public void startMatching(Long userId);
+    void startMatching(Long userId);
 
     /**
      * 모든 사용자의 매칭을 종료합니다
      */
-    public void finishAllMatching();
+    void finishAllMatching();
 
     /**
      * 매칭 상태를 업데이트합니다
@@ -33,7 +33,7 @@ public interface MatchingService {
      * @param matchingId     업데이트할 매칭의 ID
      * @param matchingStatus 설정할 매칭 상태
      */
-    public void updateMatchingStatus(Long matchingId, String matchingStatus);
+    void updateMatchingStatus(Long matchingId, String matchingStatus);
 
     /**
      * 매칭 상태를 조회합니다
@@ -41,7 +41,7 @@ public interface MatchingService {
      * @param matchingId 조회할 매칭의 ID
      * @return 매칭 상태
      */
-    public String findMatchingStatus(Long matchingId);
+    String findMatchingStatus(Long matchingId);
 
     /**
      * 특정 사용자의 최근 매칭 기록을 조회합니다
@@ -50,7 +50,7 @@ public interface MatchingService {
      * @param limit 매칭 기록을 가져올 개수
      * @return 해당 사용자의 모든 매칭 정보 목록
      */
-    public List<MatchingVO> findRecentNMatchingsByUserId(Long userId, int limit);
+    List<MatchingVO> findRecentNMatchingsByUserId(Long userId, int limit);
 
     /**
      * 특정 사용자의 모든 매칭 기록을 조회합니다
@@ -58,7 +58,7 @@ public interface MatchingService {
      * @param userId 조회할 사용자의 ID
      * @return 해당 사용자의 모든 매칭 정보 목록
      */
-    public List<MatchingVO> findAllMatchingsByUserId(Long userId);
+    List<MatchingVO> findAllMatchingsByUserId(Long userId);
 
     /**
      * 현재 진행 중인 매칭 중에서 특정 사용자가 참여하고 있는 매칭의 ID를 조회합니다
@@ -66,7 +66,7 @@ public interface MatchingService {
      * @param userId 조회할 사용자의 ID
      * @return 해당 사용자의 진행 중인 매칭 ID
      */
-    public Long getProgressMatchingIdByUserId(Long userId);
+    Long getProgressMatchingIdByUserId(Long userId);
 
     /**
      * 매칭된 상대방 사용자의 ID를 조회합니다
@@ -74,5 +74,5 @@ public interface MatchingService {
      * @param userId 조회할 사용자의 ID
      * @return 매칭된 상대방의 사용자 ID
      */
-    public Long getComponentUserIdByUserId(Long userId);
+    Long getComponentUserIdByUserId(Long userId);
 }

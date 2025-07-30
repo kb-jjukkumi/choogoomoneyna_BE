@@ -8,13 +8,15 @@ public interface ScoreService {
 
     void createScore(UserScoreVO userScoreVO);
 
-    int getScore(Long userId);
+    void batchCreateScores(List<UserScoreVO> userScoreVOList);
+
+    int getScoreByUserIdAndRoundNumber(Long userId, Integer roundNumber);
 
     void updateScore(UserScoreVO userScoreVO);
 
-    List<UserScoreVO> getAllScores();
+    List<UserScoreVO> findCurrentAllScores(int roundNumber);
 
-    List<UserScoreVO> getTopNScores(int limit);
+    List<UserScoreVO> findTopNCurrentScoresByRoundNumber(Integer roundNumber, int limit);
 
     void deleteScoreByUserId(Long userId);
 }

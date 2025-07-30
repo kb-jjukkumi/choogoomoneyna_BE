@@ -9,6 +9,7 @@ import com.choogoomoneyna.choogoomoneyna_be.matching.vo.RoundInfoVO;
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.UserMatchingHistoryVO;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.service.RankingService;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.service.RankingUpdateService;
+import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
 import com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
@@ -118,10 +119,10 @@ public class MatchingServiceImpl implements MatchingService {
             assignMatchMission(user1.getId(), user1.getId(), choogooMi);
         }
     }
-    
+
     private List<UserVO> groupByChoogooMi(List<UserVO> users, ChoogooMi choogooMi) {
         return users.stream()
-                .filter(user -> user.getChoogooMi().equals(choogooMi.name()))
+                .filter(user -> choogooMi.name().equals(user.getChoogooMi()))
                 .collect(Collectors.toList());
     }
 
@@ -139,20 +140,21 @@ public class MatchingServiceImpl implements MatchingService {
     }
 
     /**
-     * 데이터베이스의 라운드 정보를 업데이트합니다. 새로운 라운드를 생성하고 라운드 번호를 증가시키며
-     * 시작일과 종료일을 업데이트합니다.
-     *
+     * 데이터베이스의 라운드 정보를 업데이트하고 새로운 라운드를 생성합니다.
+     * <br><br>
      * <b>처리 과정:</b>
-     * 1. roundInfoService를 사용하여 최신 라운드 정보를 가져옵니다.
-     * 2. 현재 라운드 번호에 1을 더해 다음 라운드 번호를 계산합니다.
-     * 3. 최신 라운드의 시작일과 종료일에 7일을 더해 다음 라운드의 시작일과 종료일을 결정합니다.
-     * 4. roundInfoService의 createRoundInfo 메소드를 호출하여 계산된 값으로 
-     *    데이터베이스에 새로운 라운드 항목을 생성합니다.
-     *
-     * <b>사용된 의존성:</b>
-     * - roundInfoService: 라운드 정보 데이터와 상호작용하는 서비스 계층
-     * - RoundInfoVO: 라운드의 세부 정보를 포함하는 값 객체
-     *
+     * <ol>
+     *     <li>roundInfoService를 통해 최신 라운드 정보 조회</li>
+     *     <li>다음 라운드 번호 계산 (현재 라운드 번호 + 1)</li>
+     *     <li>다음 라운드의 시작일/종료일을 7일 뒤로 설정</li>
+     *     <li>새로운 라운드 정보를 DB에 생성</li>
+     * </ol>
+     * <br>
+     * <b>사용 컴포넌트:</b>
+     * <ul>
+     *     <li>roundInfoService: 라운드 정보 관리 서비스</li>
+     *     <li>RoundInfoVO: 라운드 정보 값 객체</li>
+     * </ul>
      */
     private void prepareNewRoundAndUpdateDates() {
         RoundInfoVO roundInfoVO = roundInfoService.getLatestRoundInfo();
@@ -176,10 +178,34 @@ public class MatchingServiceImpl implements MatchingService {
         prepareNewRoundAndUpdateDates();
 
         List<UserVO> totalUsers = userService.findAllUsers();
-        List<UserScoreVO> scores = scoreService.getAllScores();
+        List<UserScoreVO> scores = scoreService.findCurrentAllScores(roundNumber-1);
+
+        // ranking 과 score 테이블에도 이번 라운드에 대한 내용 생성
+        List<UserScoreVO> newScores = new ArrayList<>();
+        List<RankingVO> newRankings = new ArrayList<>();
+        for (UserScoreVO score : scores) {
+            newScores.add(UserScoreVO.builder()
+                    .roundNumber(roundNumber)
+                    .userId(score.getUserId())
+                    .scoreValue(score.getScoreValue())
+                    .build());
+
+            newRankings.add(RankingVO.builder()
+                    .roundNumber(roundNumber)
+                    .userId(score.getUserId())
+                    .build());
+
+        }
+
+        // score 테이블에 삽입
+        scoreService.batchCreateScores(newScores);
+
+        // ranking 테이블에 삽입 및 정렬
+        rankingService.batchCreateRankings(newRankings);
+        rankingUpdateService.updateRanking();
 
         Map<Long, Integer> scoreMap = scores.stream()
-                .collect(Collectors.toMap(UserScoreVO::getUserId, UserScoreVO::getScore));
+                .collect(Collectors.toMap(UserScoreVO::getUserId, UserScoreVO::getScoreValue));
 
         // User를 점수에 따라 내림차순 정렬
         for (ChoogooMi choogooMi : ChoogooMi.values()) {
@@ -230,24 +256,26 @@ public class MatchingServiceImpl implements MatchingService {
     public void finishAllMatching() {
         // 승리 점수
         int unitScore = 50;
-        
+
+        // 매칭 라운드
+        int roundNumber = roundInfoService.getLatestRoundInfo().getRoundNumber();
+
         // 진행 중인 매칭 전체 가져오기
         List<MatchingVO> progressMatchings = matchingMapper.findAllProgressMatchings();
 
         for (MatchingVO progressMatching : progressMatchings) {
             long matchingId = progressMatching.getId();
-            int roundNumber = progressMatching.getRoundNumber();
 
             long user1Id = progressMatching.getUser1Id();
             long user2Id = progressMatching.getUser2Id();
 
             int user1Score = matchingMissionResultService.getAllScoreByUserIdAndMatchingId(user1Id, matchingId);
             int user2Score = matchingMissionResultService.getAllScoreByUserIdAndMatchingId(user2Id, matchingId);
-            
+
             if (user1Score > user2Score) {
                 insertUserMatchingHistoryMatchResult(user1Id, matchingId, roundNumber, MatchingResult.WIN);
                 insertUserMatchingHistoryMatchResult(user2Id, matchingId, roundNumber, MatchingResult.LOSE);
-                
+
                 user1Score += unitScore;
             } else if (user1Score < user2Score) {
                 insertUserMatchingHistoryMatchResult(user1Id, matchingId, roundNumber, MatchingResult.LOSE);
@@ -262,19 +290,19 @@ public class MatchingServiceImpl implements MatchingService {
                 user2Score += unitScore / 2;
             }
 
-            int updateScore1 = scoreService.getScore(user1Id) + user1Score;
+            int updateScore1 = scoreService.getScoreByUserIdAndRoundNumber(user1Id, roundNumber) + user1Score;
             scoreService.updateScore(
                     UserScoreVO.builder()
                             .userId(user1Id)
-                            .score(updateScore1)
+                            .scoreValue(updateScore1)
                             .build()
             );
 
-            int updateScore2 = scoreService.getScore(user2Id) + user2Score;
+            int updateScore2 = scoreService.getScoreByUserIdAndRoundNumber(user2Id, roundNumber) + user2Score;
             scoreService.updateScore(
                     UserScoreVO.builder()
                             .userId(user2Id)
-                            .score(updateScore2)
+                            .scoreValue(updateScore2)
                             .build()
             );
         }

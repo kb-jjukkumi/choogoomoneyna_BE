@@ -14,7 +14,7 @@ public interface RoundInfoMapper {
 
     RoundInfoVO findRoundInfoByRoundNumber(Integer roundNumber);
 
-    Integer getRoundNumber(Integer roundNumber);
+    Integer getRoundNumber();
 
     Date getStartDate(Integer roundNumber);
 

@@ -13,7 +13,7 @@
         <result property="score" column="score" />
     </resultMap>
 
-    <!-- 전체 랭킹 가져오기 (RankingUserVO 반환용) -->
+    <!-- 전체 랭킹 가져오기 -->
     <select id="getAllRankingUser" resultMap="RankingUserResultMap">
         SELECT
             r.user_id AS user_id,
@@ -25,45 +25,20 @@
                  LEFT JOIN scores s ON r.user_id = s.user_id
     </select>
 
-    <!-- 인당 가장 최근 것만 가져오기 -->
-    <select id="findTop50LatestRankingUserPerUser" resultMap="RankingUserResultMap">
-        SELECT r.user_id AS user_id,
-               u.nickname AS nickname,
-               r.current_ranking AS ranking,
-               s.score_value AS score
+    <!-- 특정 라운드의 Top N 랭킹 -->
+    <select id="findTopNRankingUserByRoundNumber" resultMap="RankingUserResultMap" parameterType="map">
+        SELECT
+            r.user_id AS user_id,
+            u.nickname AS nickname,
+            r.current_ranking AS ranking,
+            s.score_value AS score
         FROM rankings r
-                 INNER JOIN (
-            SELECT user_id, MAX(update_date) AS max_update
-            FROM rankings
-            GROUP BY user_id
-        ) latest ON r.user_id = latest.user_id AND r.update_date = latest.max_update
                  LEFT JOIN users u ON r.user_id = u.user_id
                  LEFT JOIN scores s ON r.user_id = s.user_id
+        WHERE r.round_number = #{roundNumber}
         ORDER BY r.current_ranking ASC
-        LIMIT 50
+        LIMIT #{limit}
     </select>
-
-    <select id="findTop3BySecondLatestRankingByRegDate" resultType="com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingUserVO">
-      <![CDATA[
-        WITH second_latest AS (
-            SELECT MAX(reg_date) AS reg_date
-                FROM rankings
-                WHERE reg_date < (
-                    SELECT MAX(reg_date) FROM rankings
-                )
-            )
-            SELECT r.user_id AS user_id,
-                   u.nickname AS nickname,
-                   r.current_ranking AS ranking,
-                   s.score_value AS score
-            FROM rankings r
-                JOIN second_latest sl ON r.reg_date = sl.reg_date
-                LEFT JOIN users u ON r.user_id = u.user_id
-                LEFT JOIN scores s ON r.user_id = s.user_id
-            ORDER BY r.current_ranking ASC
-            LIMIT 3
-        ]]>
-</select>
 
 
 </mapper>

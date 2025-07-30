@@ -22,6 +22,11 @@ public class RankingServiceImpl implements RankingService {
     }
 
     @Override
+    public void batchCreateRankings(List<RankingVO> rankingVOList) {
+
+    }
+
+    @Override
     public List<RankingVO> getAllRankings() {
         return rankingMapper.getAllRankings();
     }

@@ -1,6 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.exception.EmailAlreadyExistsException;
+import com.choogoomoneyna.choogoomoneyna_be.matching.service.RoundInfoService;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.service.RankingService;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
@@ -26,6 +27,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final RankingService rankingService;
     private final ScoreService scoreService;
+    private final RoundInfoService roundInfoService;
 
     @Override
     @Transactional
@@ -36,17 +38,21 @@ public class AuthServiceImpl implements AuthService {
         }
         String encryptedPassword = passwordEncoder.encode(dto.getPassword());
 
+        int roundNumber = roundInfoService.getRoundNumber();
+
         UserVO userVO = UserConverter.joinRequestDtoToVo(dto, LoginType.LOCAL, encryptedPassword);
         userService.insertUser(userVO);
         Long userId = userService.findByEmailAndLoginType(dto.getEmail(), LoginType.LOCAL).getId();
 
         rankingService.createRanking(RankingVO.builder()
+                .roundNumber(roundNumber)
                 .userId(userId)
                 .build());
 
         scoreService.createScore(UserScoreVO.builder()
+                .roundNumber(roundNumber)
                 .userId(userId)
-                .score(0)
+                .scoreValue(0)
                 .build());
         log.info("User registered: {}", userVO);
     }

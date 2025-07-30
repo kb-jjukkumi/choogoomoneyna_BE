@@ -45,7 +45,6 @@ class UserServiceImplTest {
                 .password("<PASSWORD>")
                 .nickname("leehk")
                 .profileImage(null)
-                .choogooMi(ChoogooMi.A)
                 .build();
 
         String encryptedPassword = "ENCODED_PASSWORD";

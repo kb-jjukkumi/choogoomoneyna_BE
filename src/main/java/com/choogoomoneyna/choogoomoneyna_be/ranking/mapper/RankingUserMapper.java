@@ -2,6 +2,7 @@ package com.choogoomoneyna.choogoomoneyna_be.ranking.mapper;
 
 import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingUserVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -10,7 +11,8 @@ public interface RankingUserMapper {
 
     List<RankingUserVO> getAllRankingUser();
 
-    List<RankingUserVO> findTop50LatestRankingUserPerUser();
-
-    List<RankingUserVO> findTop3BySecondLatestRankingByRegDate();
+    List<RankingUserVO> findTopNRankingUserByRoundNumber(
+            @Param("roundNumber") int roundNumber,
+            @Param("limit") int limit
+    );
 }

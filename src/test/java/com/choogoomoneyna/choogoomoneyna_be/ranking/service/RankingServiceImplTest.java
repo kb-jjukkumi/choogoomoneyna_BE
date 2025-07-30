@@ -41,14 +41,14 @@ public class RankingServiceImplTest {
     void updateRanking() {
         // given
         List<UserScoreVO> userScores = List.of(
-                new UserScoreVO(1L, 100),
-                new UserScoreVO(2L, 100),
-                new UserScoreVO(3L, 70),
-                new UserScoreVO(4L, 70),
-                new UserScoreVO(5L, 90)
+                new UserScoreVO(1, 1L, 100, null, null),
+                new UserScoreVO(1, 2L, 100, null, null),
+                new UserScoreVO(1, 3L, 98, null, null),
+                new UserScoreVO(1, 4L, 97, null, null),
+                new UserScoreVO(1, 5L, 97, null, null)
         );
 
-        given(scoreService.getAllScores()).willReturn(userScores);
+        given(scoreService.findCurrentAllScores(1)).willReturn(userScores);
 
         // when
         rankingUpdateService.updateRanking();

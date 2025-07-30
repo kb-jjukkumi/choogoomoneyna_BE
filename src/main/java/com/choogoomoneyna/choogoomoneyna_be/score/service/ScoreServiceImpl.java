@@ -19,8 +19,13 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public int getScore(Long userId) {
-        return scoreMapper.getScore(userId);
+    public void batchCreateScores(List<UserScoreVO> userScoreVOList) {
+        scoreMapper.batchInsertScores(userScoreVOList);
+    }
+
+    @Override
+    public int getScoreByUserIdAndRoundNumber(Long userId, Integer roundNumber) {
+        return scoreMapper.getScoreByUserIdAndRoundNumber(userId, roundNumber);
     }
 
     @Override
@@ -29,13 +34,13 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public List<UserScoreVO> getAllScores() {
-        return scoreMapper.findAllScores();
+    public List<UserScoreVO> findCurrentAllScores(int roundNumber) {
+        return scoreMapper.findCurrentAllScores(roundNumber);
     }
 
     @Override
-    public List<UserScoreVO> getTopNScores(int limit) {
-        return scoreMapper.findTopNScores(limit);
+    public List<UserScoreVO> findTopNCurrentScoresByRoundNumber(Integer roundNumber, int limit) {
+        return scoreMapper.findTopNCurrentScoresByRoundNumber(roundNumber, limit);
     }
 
     @Override

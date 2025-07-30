@@ -1,5 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.mock.service;
 
+import com.choogoomoneyna.choogoomoneyna_be.matching.service.RoundInfoService;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.service.RankingService;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
@@ -16,8 +17,11 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.concurrent.ThreadLocalRandom;
+
 
 @Service
 @RequiredArgsConstructor
@@ -28,11 +32,14 @@ public class MockService {
     private final PasswordEncoder passwordEncoder;
     private final ScoreService scoreService;
     private final RankingService rankingService;
+    private final RoundInfoService roundInfoService;
 
     private final Faker faker = new Faker( new Locale("ko"));
 
     public void createMockUser(int count) {
         log.info("service layer ok");
+
+        int roundNumber = Optional.ofNullable(roundInfoService.getRoundNumber()).orElse(1);
 
         List<Integer> shuffledRankings = IntStream.rangeClosed(8001, count)
                 .boxed()
@@ -54,13 +61,20 @@ public class MockService {
                 log.info("✅ Created user {}", key);
                 user.setId(userMapper.findByEmail(user.getEmail()).getId());
                 //점수테이블
-                UserScoreVO userScoreVO = new UserScoreVO(user.getId(), 0);
+                UserScoreVO userScoreVO = UserScoreVO.builder()
+                        .roundNumber(roundNumber)
+                        .userId(user.getId())
+                        .scoreValue(ThreadLocalRandom.current().nextInt(1, 1001))
+                        .build();
                 scoreService.createScore(userScoreVO);
                 log.info("score table added{} ", i);
                 //랭킹테이블
 
                 int currentRanking = shuffledRankings.get(rankingIndex++);
-                RankingVO rankingVO = new RankingVO(user.getId(), currentRanking, null, null);
+                RankingVO rankingVO = RankingVO.builder()
+                        .userId(user.getId())
+                        .currentRanking(currentRanking)
+                        .build();
 
                 rankingService.createRanking(rankingVO);
                 log.info("ranking table added{} ", i);

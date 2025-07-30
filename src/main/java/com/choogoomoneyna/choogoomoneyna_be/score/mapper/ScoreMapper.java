@@ -2,6 +2,7 @@ package com.choogoomoneyna.choogoomoneyna_be.score.mapper;
 
 import com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -9,13 +10,18 @@ import java.util.List;
 public interface ScoreMapper {
     int insertScore(UserScoreVO userScoreVO);
 
-    int getScore(Long userId);
+    int batchInsertScores(List<UserScoreVO> userScoreVOList);
+
+    int getScoreByUserIdAndRoundNumber(@Param("userId") Long userId, @Param("roundNumber") int roundNumber);
 
     void updateScore(UserScoreVO userScoreVO);
 
-    List<UserScoreVO> findAllScores();
+    List<UserScoreVO> findCurrentAllScores(int roundNumber);
 
-    List<UserScoreVO> findTopNScores(int limit);
+    List<UserScoreVO> findTopNCurrentScoresByRoundNumber(
+            @Param("roundNumber") int roundNumber,
+            @Param("limit") int limit
+    );
 
-    int deleteByUserId(Long userId);
+    void deleteByUserId(Long userId);
 }
