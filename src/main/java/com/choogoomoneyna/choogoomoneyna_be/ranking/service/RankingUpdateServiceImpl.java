@@ -1,5 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.ranking.service;
 
+import com.choogoomoneyna.choogoomoneyna_be.matching.service.RoundInfoService;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingUpdateVO;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
@@ -14,13 +15,14 @@ import java.util.*;
 @RequiredArgsConstructor
 public class RankingUpdateServiceImpl implements RankingUpdateService {
 
+    private final RoundInfoService roundInfoService;
     private final RankingService rankingService;
     private final ScoreService scoreService;
 
     @Transactional
     @Override
     public void updateRanking() {
-        List<UserScoreVO> sortedUserScores = new ArrayList<>(scoreService.findCurrentAllScores());
+        List<UserScoreVO> sortedUserScores = new ArrayList<>(scoreService.findCurrentAllScores(roundInfoService.getRoundNumber()));
         sortedUserScores.sort(Comparator.comparingInt(UserScoreVO::getScoreValue).reversed());
 
         Map<Long, RankingUpdateVO> latestUpdateMap = new HashMap<>();
