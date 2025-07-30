@@ -25,8 +25,6 @@ public class RankingUpdateServiceImpl implements RankingUpdateService {
         int roundNumber = roundInfoService.getRoundNumber();
 
         List<UserScoreVO> sortedUserScores = new ArrayList<>(scoreService.findCurrentAllScores(roundNumber));
-
-        System.out.println(sortedUserScores.size() + " user scores found.");
         sortedUserScores.sort(Comparator.comparingInt(UserScoreVO::getScoreValue).reversed());
 
         List<RankingUpdateVO> updateRankingList = new ArrayList<>();
@@ -48,10 +46,6 @@ public class RankingUpdateServiceImpl implements RankingUpdateService {
                     .build();
 
             updateRankingList.add(vo);
-        }
-
-        for (RankingUpdateVO ranking : updateRankingList) {
-            System.out.println(ranking.getUserId() + " : " + ranking.getCurrentRanking() + " : " + ranking.getUpdateDate());
         }
 
         if (!updateRankingList.isEmpty()) {
