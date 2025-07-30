@@ -22,10 +22,14 @@ public class RankingUpdateServiceImpl implements RankingUpdateService {
     @Transactional
     @Override
     public void updateRanking() {
-        List<UserScoreVO> sortedUserScores = new ArrayList<>(scoreService.findCurrentAllScores(roundInfoService.getRoundNumber()));
+        int roundNumber = roundInfoService.getRoundNumber();
+
+        List<UserScoreVO> sortedUserScores = new ArrayList<>(scoreService.findCurrentAllScores(roundNumber));
+
+        System.out.println(sortedUserScores.size() + " user scores found.");
         sortedUserScores.sort(Comparator.comparingInt(UserScoreVO::getScoreValue).reversed());
 
-        Map<Long, RankingUpdateVO> latestUpdateMap = new HashMap<>();
+        List<RankingUpdateVO> updateRankingList = new ArrayList<>();
         int befScore = Integer.MAX_VALUE;
         int rank = 0;
 
@@ -37,21 +41,21 @@ public class RankingUpdateServiceImpl implements RankingUpdateService {
             }
 
             RankingUpdateVO vo = RankingUpdateVO.builder()
+                    .roundNumber(roundNumber)
                     .userId(userScore.getUserId())
                     .currentRanking(rank)
                     .updateDate(new Date()) // 현재 시간으로 설정
                     .build();
 
-            // userId별 최신 updateDate만 유지
-            latestUpdateMap.merge(vo.getUserId(), vo, (existing, incoming) ->
-                    existing.getUpdateDate().after(incoming.getUpdateDate()) ? existing : incoming
-            );
+            updateRankingList.add(vo);
         }
 
-        List<RankingUpdateVO> latestUpdateList = new ArrayList<>(latestUpdateMap.values());
+        for (RankingUpdateVO ranking : updateRankingList) {
+            System.out.println(ranking.getUserId() + " : " + ranking.getCurrentRanking() + " : " + ranking.getUpdateDate());
+        }
 
-        if (!latestUpdateList.isEmpty()) {
-            rankingService.batchUpdateCurrentRanking(latestUpdateList);
+        if (!updateRankingList.isEmpty()) {
+            rankingService.batchUpdateCurrentRanking(updateRankingList);
         }
     }
 
