@@ -16,6 +16,14 @@ public interface RankingService {
     void createRanking(RankingVO rankingVO);
 
     /**
+     * 시스템에 여러 랭킹 항목을 일괄 생성합니다.
+     *
+     * @param rankingVOList 라운드 번호, 사용자 ID, 현재 랭킹, 등록일,
+     *                      수정일 등의 정보가 포함된 {@link RankingVO} 인스턴스 리스트
+     */
+    void batchCreateRankings(List<RankingVO> rankingVOList);
+
+    /**
      * 시스템의 모든 랭킹 항목을 조회합니다.
      *
      * @return 랭킹 ID, 사용자 ID, 현재 랭킹, 등록일, 수정일이 포함된
