@@ -24,4 +24,6 @@ public interface ScoreMapper {
     );
 
     void deleteByUserId(Long userId);
+
+    void updateIsLevelUpByUserId(Long userId);
 }

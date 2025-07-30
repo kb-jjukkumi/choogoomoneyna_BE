@@ -5,64 +5,74 @@
 
 <mapper namespace="com.choogoomoneyna.choogoomoneyna_be.score.mapper.ScoreMapper">
 
-    <!-- resultMap 정의 -->
+    <!-- 사용자 점수 결과 매핑 정의 -->
     <resultMap id="userScoreResultMap" type="com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO">
         <id property="roundNumber" column="round_number"/>
         <id property="userId" column="user_id"/>
         <result property="scoreValue" column="score_value"/>
+        <result property="isLevelUp" column="is_level_up"/>
         <result property="regDate" column="reg_date"/>
         <result property="updateDate" column="update_date"/>
     </resultMap>
 
-    <!-- 1. 점수 삽입 -->
+    <!-- 단일 사용자 점수 삽입 -->
     <insert id="insertScore" parameterType="com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO">
-        INSERT INTO scores (round_number, user_id, score_value, reg_date, update_date)
-        VALUES (#{roundNumber}, #{userId}, #{scoreValue}, NOW(), NOW())
+        INSERT INTO scores (round_number, user_id, score_value, is_level_up, reg_date, update_date)
+        VALUES (#{roundNumber}, #{userId}, #{scoreValue}, #{isLevelUp}, NOW(), NOW())
     </insert>
 
-    <!-- 1.1 다건 점수 삽입 -->
+    <!-- 여러 사용자의 점수 일괄 삽입 -->
     <insert id="batchInsertScores" parameterType="list">
-        INSERT INTO scores (round_number, user_id, score_value, reg_date, update_date)
+        INSERT INTO scores (round_number, user_id, score_value, is_level_up, reg_date, update_date)
         VALUES
         <foreach collection="list" item="score" separator=",">
-            (#{score.roundNumber}, #{score.userId}, #{score.scoreValue}, NOW(), NOW())
+            (#{score.roundNumber}, #{score.userId}, #{score.scoreValue}, #{score.isLevelUp}, NOW(), NOW())
         </foreach>
     </insert>
 
-    <!-- 2. 점수 조회 (userId, roundNumber) -->
+    <!-- 특정 사용자와 라운드에 대한 점수 조회 -->
     <select id="getScoreByUserIdAndRoundNumber" resultType="int">
         SELECT score_value
         FROM scores
         WHERE user_id = #{userId} AND round_number = #{roundNumber}
     </select>
 
-    <!-- 3. 점수 수정 -->
+    <!-- 사용자 점수 정보 수정 -->
     <update id="updateScore" parameterType="com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO">
         UPDATE scores
-        SET score_value = #{scoreValue}, update_date = NOW()
+        SET score_value = #{scoreValue},
+            is_level_up = #{isLevelUp},
+            update_date = NOW()
         WHERE user_id = #{userId} AND round_number = #{roundNumber}
     </update>
 
-    <!-- 4. 모든 점수 목록 조회 -->
+    <!-- 특정 라운드의 모든 사용자 점수 목록 조회 -->
     <select id="findCurrentAllScores" resultMap="userScoreResultMap" parameterType="int">
-        SELECT round_number, user_id, score_value, reg_date, update_date
+        SELECT round_number, user_id, score_value, is_level_up, reg_date, update_date
         FROM scores
         WHERE round_number = #{roundNumber}
     </select>
 
-
-    <!-- 5. 특정 라운드 상위 N점수 조회 -->
+    <!-- 특정 라운드의 상위 N명의 점수 조회 -->
     <select id="findTopNCurrentScoresByRoundNumber" parameterType="map" resultMap="userScoreResultMap">
-        SELECT round_number, user_id, score_value, reg_date, update_date
+        SELECT round_number, user_id, score_value, is_level_up, reg_date, update_date
         FROM scores
         WHERE round_number = #{roundNumber}
         ORDER BY score_value DESC
         LIMIT #{limit}
     </select>
 
-    <!-- 6. 특정 유저 점수 삭제 -->
+    <!-- 특정 사용자의 모든 점수 기록 삭제 -->
     <delete id="deleteByUserId" parameterType="long">
         DELETE FROM scores WHERE user_id = #{userId}
     </delete>
+
+    <!-- 특정 사용자의 레벨업 상태 업데이트 -->
+    <update id="updateIsLevelUpByUserId" parameterType="long">
+        UPDATE scores
+        SET is_level_up = TRUE,
+            update_date = NOW()
+        WHERE user_id = #{userId}
+    </update>
 
 </mapper>
