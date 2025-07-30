@@ -9,6 +9,7 @@ import com.choogoomoneyna.choogoomoneyna_be.matching.vo.RoundInfoVO;
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.UserMatchingHistoryVO;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.service.RankingService;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.service.RankingUpdateService;
+import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
 import com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
@@ -176,7 +177,23 @@ public class MatchingServiceImpl implements MatchingService {
         prepareNewRoundAndUpdateDates();
 
         List<UserVO> totalUsers = userService.findAllUsers();
-        List<UserScoreVO> scores = scoreService.findCurrentAllScores();
+        List<UserScoreVO> scores = scoreService.findCurrentAllScores(roundNumber-1);
+
+        // score Table 에 추가
+        for (UserScoreVO score : scores) {
+            scoreService.createScore(UserScoreVO.builder()
+                    .roundNumber(roundNumber)
+                    .userId(score.getUserId())
+                    .scoreValue(score.getScoreValue())
+                    .build());
+
+            rankingService.createRanking(RankingVO.builder()
+                    .roundNumber(roundNumber)
+                    .userId(score.getUserId())
+                    .build());
+
+            rankingUpdateService.updateRanking();
+        }
 
         Map<Long, Integer> scoreMap = scores.stream()
                 .collect(Collectors.toMap(UserScoreVO::getUserId, UserScoreVO::getScoreValue));
@@ -228,68 +245,64 @@ public class MatchingServiceImpl implements MatchingService {
     @Override
     @Transactional
     public void finishAllMatching() {
-        try {
-            // 승리 점수
-            int unitScore = 50;
+        // 승리 점수
+        int unitScore = 50;
 
-            // 매칭 라운드
-            int roundNumber = roundInfoService.getLatestRoundInfo().getRoundNumber();
+        // 매칭 라운드
+        int roundNumber = roundInfoService.getLatestRoundInfo().getRoundNumber();
 
-            // 진행 중인 매칭 전체 가져오기
-            List<MatchingVO> progressMatchings = matchingMapper.findAllProgressMatchings();
+        // 진행 중인 매칭 전체 가져오기
+        List<MatchingVO> progressMatchings = matchingMapper.findAllProgressMatchings();
 
-            for (MatchingVO progressMatching : progressMatchings) {
-                long matchingId = progressMatching.getId();
+        for (MatchingVO progressMatching : progressMatchings) {
+            long matchingId = progressMatching.getId();
 
-                long user1Id = progressMatching.getUser1Id();
-                long user2Id = progressMatching.getUser2Id();
+            long user1Id = progressMatching.getUser1Id();
+            long user2Id = progressMatching.getUser2Id();
 
-                int user1Score = matchingMissionResultService.getAllScoreByUserIdAndMatchingId(user1Id, matchingId);
-                int user2Score = matchingMissionResultService.getAllScoreByUserIdAndMatchingId(user2Id, matchingId);
+            int user1Score = matchingMissionResultService.getAllScoreByUserIdAndMatchingId(user1Id, matchingId);
+            int user2Score = matchingMissionResultService.getAllScoreByUserIdAndMatchingId(user2Id, matchingId);
 
-                if (user1Score > user2Score) {
-                    insertUserMatchingHistoryMatchResult(user1Id, matchingId, roundNumber, MatchingResult.WIN);
-                    insertUserMatchingHistoryMatchResult(user2Id, matchingId, roundNumber, MatchingResult.LOSE);
+            if (user1Score > user2Score) {
+                insertUserMatchingHistoryMatchResult(user1Id, matchingId, roundNumber, MatchingResult.WIN);
+                insertUserMatchingHistoryMatchResult(user2Id, matchingId, roundNumber, MatchingResult.LOSE);
 
-                    user1Score += unitScore;
-                } else if (user1Score < user2Score) {
-                    insertUserMatchingHistoryMatchResult(user1Id, matchingId, roundNumber, MatchingResult.LOSE);
-                    insertUserMatchingHistoryMatchResult(user2Id, matchingId, roundNumber, MatchingResult.WIN);
+                user1Score += unitScore;
+            } else if (user1Score < user2Score) {
+                insertUserMatchingHistoryMatchResult(user1Id, matchingId, roundNumber, MatchingResult.LOSE);
+                insertUserMatchingHistoryMatchResult(user2Id, matchingId, roundNumber, MatchingResult.WIN);
 
-                    user2Score += unitScore;
-                } else {
-                    insertUserMatchingHistoryMatchResult(user1Id, matchingId, roundNumber, MatchingResult.DRAW);
-                    insertUserMatchingHistoryMatchResult(user2Id, matchingId, roundNumber, MatchingResult.DRAW);
+                user2Score += unitScore;
+            } else {
+                insertUserMatchingHistoryMatchResult(user1Id, matchingId, roundNumber, MatchingResult.DRAW);
+                insertUserMatchingHistoryMatchResult(user2Id, matchingId, roundNumber, MatchingResult.DRAW);
 
-                    user1Score += unitScore / 2;
-                    user2Score += unitScore / 2;
-                }
-
-                int updateScore1 = scoreService.getScoreByUserIdAndRoundNumber(user1Id, roundNumber) + user1Score;
-                scoreService.updateScore(
-                        UserScoreVO.builder()
-                                .userId(user1Id)
-                                .scoreValue(updateScore1)
-                                .build()
-                );
-
-                int updateScore2 = scoreService.getScoreByUserIdAndRoundNumber(user2Id, roundNumber) + user2Score;
-                scoreService.updateScore(
-                        UserScoreVO.builder()
-                                .userId(user2Id)
-                                .scoreValue(updateScore2)
-                                .build()
-                );
+                user1Score += unitScore / 2;
+                user2Score += unitScore / 2;
             }
 
-            // ranking table 업데이트
-            rankingUpdateService.updateRanking();
+            int updateScore1 = scoreService.getScoreByUserIdAndRoundNumber(user1Id, roundNumber) + user1Score;
+            scoreService.updateScore(
+                    UserScoreVO.builder()
+                            .userId(user1Id)
+                            .scoreValue(updateScore1)
+                            .build()
+            );
 
-            // 매칭 상태가 Progress인 column을 전부 Completed로 변경
-            matchingMapper.updateAllProgressMatchings();
-        } catch (Exception e) {
-            e.printStackTrace();
+            int updateScore2 = scoreService.getScoreByUserIdAndRoundNumber(user2Id, roundNumber) + user2Score;
+            scoreService.updateScore(
+                    UserScoreVO.builder()
+                            .userId(user2Id)
+                            .scoreValue(updateScore2)
+                            .build()
+            );
         }
+
+        // ranking table 업데이트
+        rankingUpdateService.updateRanking();
+
+        // 매칭 상태가 Progress인 column을 전부 Completed로 변경
+        matchingMapper.updateAllProgressMatchings();
     }
 
     @Override
