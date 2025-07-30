@@ -29,8 +29,8 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public List<UserScoreVO> findCurrentAllScores() {
-        return scoreMapper.findCurrentAllScores();
+    public List<UserScoreVO> findCurrentAllScores(int roundNumber) {
+        return scoreMapper.findCurrentAllScores(roundNumber);
     }
 
     @Override

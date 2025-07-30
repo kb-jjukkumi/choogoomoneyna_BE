@@ -12,7 +12,7 @@ public interface ScoreService {
 
     void updateScore(UserScoreVO userScoreVO);
 
-    List<UserScoreVO> findCurrentAllScores();
+    List<UserScoreVO> findCurrentAllScores(int roundNumber);
 
     List<UserScoreVO> findTopNCurrentScoresByRoundNumber(Integer roundNumber, int limit);
 
