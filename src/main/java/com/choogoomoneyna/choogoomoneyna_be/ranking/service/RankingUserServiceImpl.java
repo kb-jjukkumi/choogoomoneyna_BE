@@ -19,12 +19,7 @@ public class RankingUserServiceImpl implements RankingUserService {
     }
 
     @Override
-    public List<RankingUserVO> findTop50LatestRankingUserPerUser() {
-        return rankingUserMapper.findTop50LatestRankingUserPerUser();
-    }
-
-    @Override
-    public List<RankingUserVO> findTop3BySecondLatestRankingByRegDate() {
-        return rankingUserMapper.findTop3BySecondLatestRankingByRegDate();
+    public List<RankingUserVO> findTopNRankingUserByRoundNumber(int roundNumber, int limit) {
+        return rankingUserMapper.findTopNRankingUserByRoundNumber(roundNumber, limit);
     }
 }

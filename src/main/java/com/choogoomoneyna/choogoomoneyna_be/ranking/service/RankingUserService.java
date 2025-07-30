@@ -14,22 +14,15 @@ public interface RankingUserService {
      * {@link RankingVO} 객체 리스트를 반환하며, 랭킹이 없는 경우 빈 리스트를 반환합니다.
      */
     List<RankingUserVO> getAllRankingUser();
-
+    
     /**
-     * 각 사용자의 최신 랭킹 항목을 조회합니다.
-     * 각 사용자당 가장 최근의 랭킹만 포함됩니다.
+     * 특정 라운드 번호에 대해 상위 N명의 랭킹 사용자를 조회합니다.
+     * 결과는 해당 라운드의 사용자 랭킹을 기준으로 정렬됩니다.
      *
-     * @return {@link RankingVO} 객체 리스트를 반환하며, 데이터가 없는 경우 빈 리스트를 반환합니다.
+     * @param roundNumber 랭킹 데이터를 필터링할 라운드 번호
+     * @param limit 조회할 상위 랭킹 사용자의 최대 수
+     * @return 지정된 라운드의 상위 랭킹 사용자들을 나타내는 {@link RankingUserVO} 객체 리스트를 반환합니다.
+     *         데이터가 없는 경우 빈 리스트가 반환됩니다.
      */
-    List<RankingUserVO> findTop50LatestRankingUserPerUser();
-
-    /**
-     * 각 사용자의 두 번째로 최신 랭킹에 기반하여 상위 3명의 사용자를 조회합니다.
-     * 등록일 기준으로 정렬됩니다.
-     * 사용자가 3명 미만인 경우, 조회 가능한 모든 사용자가 포함됩니다.
-     *
-     * @return 두 번째로 최신 랭킹 기준으로 정렬된 상위 3명의 {@link RankingUserVO} 객체 리스트를 반환합니다.
-     * 사용자가 없는 경우 빈 리스트를 반환합니다.
-     */
-    List<RankingUserVO> findTop3BySecondLatestRankingByRegDate();
+    List<RankingUserVO> findTopNRankingUserByRoundNumber(int roundNumber, int limit);
 }
