@@ -53,6 +53,7 @@ public class AuthServiceImpl implements AuthService {
                 .roundNumber(roundNumber)
                 .userId(userId)
                 .scoreValue(0)
+                .isLevelUp(false)
                 .build());
         log.info("User registered: {}", userVO);
     }
