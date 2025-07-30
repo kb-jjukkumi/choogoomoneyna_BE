@@ -20,8 +20,8 @@ public class RankingUpdateServiceImpl implements RankingUpdateService {
     @Transactional
     @Override
     public void updateRanking() {
-        List<UserScoreVO> sortedUserScores = new ArrayList<>(scoreService.getAllScores());
-        sortedUserScores.sort(Comparator.comparingInt(UserScoreVO::getScore).reversed());
+        List<UserScoreVO> sortedUserScores = new ArrayList<>(scoreService.findCurrentAllScores());
+        sortedUserScores.sort(Comparator.comparingInt(UserScoreVO::getScoreValue).reversed());
 
         Map<Long, RankingUpdateVO> latestUpdateMap = new HashMap<>();
         int befScore = Integer.MAX_VALUE;
@@ -29,9 +29,9 @@ public class RankingUpdateServiceImpl implements RankingUpdateService {
 
         for (int idx = 0; idx < sortedUserScores.size(); idx++) {
             UserScoreVO userScore = sortedUserScores.get(idx);
-            if (befScore > userScore.getScore()) {
+            if (befScore > userScore.getScoreValue()) {
                 rank = idx + 1;
-                befScore = userScore.getScore();
+                befScore = userScore.getScoreValue();
             }
 
             RankingUpdateVO vo = RankingUpdateVO.builder()
