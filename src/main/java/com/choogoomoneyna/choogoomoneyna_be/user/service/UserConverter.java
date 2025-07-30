@@ -1,9 +1,11 @@
 package com.choogoomoneyna.choogoomoneyna_be.user.service;
 
+import com.choogoomoneyna.choogoomoneyna_be.user.dto.response.UserMainResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.LoginType;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.UserDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserJoinRequestDTO;
+import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserMainInfoVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 
 public class UserConverter {
@@ -54,6 +56,20 @@ public class UserConverter {
                 .nickname(dto.getNickname())
 //                .profileImageUrl(dto.getProfileImage() != null ? dto.getProfileImage().getOriginalFilename() : null)
                 .loginType(loginType.name())
+                .build();
+    }
+
+    // UserMainVo -> UserMainResponseDTO
+    public static UserMainResponseDTO toUserMainResponseDTO(UserMainInfoVO userMainInfoVo) {
+
+        String choogooMiName = userMainInfoVo.getChoogooMi() != null ? userMainInfoVo.getChoogooMi() : "A";
+
+        return UserMainResponseDTO.builder()
+                .choogooMi(ChoogooMi.valueOf(choogooMiName))
+                .nickname(userMainInfoVo.getNickname())
+                .userScore(userMainInfoVo.getUserScore())
+                .userRanking(userMainInfoVo.getUserRanking())
+                .isLevelUp(userMainInfoVo.getIsLevelUp())
                 .build();
     }
 }
