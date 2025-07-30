@@ -13,6 +13,7 @@ import java.util.Date;
 @Builder
 public class RankingUpdateVO {
     private Long userId;
+    private Integer roundNumber;
     private Integer currentRanking;
     private Date updateDate;
 }
