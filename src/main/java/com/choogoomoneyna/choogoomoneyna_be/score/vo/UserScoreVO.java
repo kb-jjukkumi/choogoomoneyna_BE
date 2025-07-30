@@ -15,4 +15,5 @@ public class UserScoreVO {
     private Integer scoreValue;
     private Date regDate;
     private Date updateDate;
+    private Boolean isLevelUp;
 }
