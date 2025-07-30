@@ -10,6 +10,7 @@ import com.choogoomoneyna.choogoomoneyna_be.matching.vo.UserMatchingHistoryVO;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.service.RankingService;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.service.RankingUpdateService;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO;
+import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreCalculateService;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
 import com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
@@ -29,6 +30,7 @@ public class MatchingServiceImpl implements MatchingService {
 
     private final MatchingMapper matchingMapper;
     private final ScoreService scoreService;
+    private final ScoreCalculateService scoreCalculateService;
     private final RoundInfoService roundInfoService;
     private final MatchingMissionResultService matchingMissionResultService;
     private final UserService userService;
@@ -290,21 +292,8 @@ public class MatchingServiceImpl implements MatchingService {
                 user2Score += unitScore / 2;
             }
 
-            int updateScore1 = scoreService.getScoreByUserIdAndRoundNumber(user1Id, roundNumber) + user1Score;
-            scoreService.updateScore(
-                    UserScoreVO.builder()
-                            .userId(user1Id)
-                            .scoreValue(updateScore1)
-                            .build()
-            );
-
-            int updateScore2 = scoreService.getScoreByUserIdAndRoundNumber(user2Id, roundNumber) + user2Score;
-            scoreService.updateScore(
-                    UserScoreVO.builder()
-                            .userId(user2Id)
-                            .scoreValue(updateScore2)
-                            .build()
-            );
+            scoreCalculateService.calculateScore(user1Id, roundNumber, user1Score);
+            scoreCalculateService.calculateScore(user2Id, roundNumber, user2Score);
         }
 
         // ranking table 업데이트
