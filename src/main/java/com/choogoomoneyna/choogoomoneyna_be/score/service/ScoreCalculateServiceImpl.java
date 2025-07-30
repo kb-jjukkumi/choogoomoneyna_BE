@@ -25,7 +25,7 @@ public class ScoreCalculateServiceImpl implements ScoreCalculateService {
 
         for (int levelUpScore : levelUpScores) {
             if (beforeScore < levelUpScore && levelUpScore <= updateScore) {
-                scoreService.updateIsLevelUpByUserId(userId);
+                scoreService.updateIsLevelUpByUserId(userId, true);
                 break;
             }
         }
