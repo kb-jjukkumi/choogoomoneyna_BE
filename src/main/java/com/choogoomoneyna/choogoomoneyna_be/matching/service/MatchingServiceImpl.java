@@ -191,6 +191,7 @@ public class MatchingServiceImpl implements MatchingService {
                     .roundNumber(roundNumber)
                     .userId(score.getUserId())
                     .scoreValue(score.getScoreValue())
+                    .isLevelUp(score.getIsLevelUp() != null && score.getIsLevelUp())
                     .build());
 
             newRankings.add(RankingVO.builder()
