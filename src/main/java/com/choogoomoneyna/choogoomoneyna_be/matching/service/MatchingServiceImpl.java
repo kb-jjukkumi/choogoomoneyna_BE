@@ -176,6 +176,7 @@ public class MatchingServiceImpl implements MatchingService {
     }
 
     @Override
+    @Transactional
     public void startAllMatching() {
         prepareNewRoundAndUpdateDates();
 
@@ -198,6 +199,9 @@ public class MatchingServiceImpl implements MatchingService {
                     .build());
 
         }
+
+        System.out.println("newScores: " + newScores.size());
+        System.out.println("newRankings: " + newRankings.size());
 
         // score 테이블에 삽입
         scoreService.batchCreateScores(newScores);
