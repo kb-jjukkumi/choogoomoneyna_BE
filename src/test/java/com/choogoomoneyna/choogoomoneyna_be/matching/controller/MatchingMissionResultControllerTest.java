@@ -75,7 +75,7 @@ public class MatchingMissionResultControllerTest {
 
         when(matchingService.getProgressMatchingIdByUserId(userId)).thenReturn(matchId);
         when(missionService.getMissionScore(missionId)).thenReturn(score);
-        when(scoreService.getScore(userId)).thenReturn(70);
+        when(scoreService.getScoreByUserIdAndRoundNumber(userId, 1)).thenReturn(70);
         when(matchingMissionResultService.getMatchingMissionResults(userId, matchId))
                 .thenReturn(new ArrayList<>());
 
