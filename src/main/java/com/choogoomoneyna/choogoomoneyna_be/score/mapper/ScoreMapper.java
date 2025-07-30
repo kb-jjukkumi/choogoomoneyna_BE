@@ -10,6 +10,8 @@ import java.util.List;
 public interface ScoreMapper {
     int insertScore(UserScoreVO userScoreVO);
 
+    int batchInsertScores(List<UserScoreVO> userScoreVOList);
+
     int getScoreByUserIdAndRoundNumber(@Param("userId") Long userId, @Param("roundNumber") int roundNumber);
 
     void updateScore(UserScoreVO userScoreVO);

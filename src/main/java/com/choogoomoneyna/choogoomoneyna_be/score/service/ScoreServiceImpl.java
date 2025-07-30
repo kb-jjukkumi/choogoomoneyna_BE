@@ -19,6 +19,11 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
+    public void batchCreateScores(List<UserScoreVO> userScoreVOList) {
+        scoreMapper.batchInsertScores(userScoreVOList);
+    }
+
+    @Override
     public int getScoreByUserIdAndRoundNumber(Long userId, Integer roundNumber) {
         return scoreMapper.getScoreByUserIdAndRoundNumber(userId, roundNumber);
     }

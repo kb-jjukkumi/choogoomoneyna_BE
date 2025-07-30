@@ -8,6 +8,8 @@ public interface ScoreService {
 
     void createScore(UserScoreVO userScoreVO);
 
+    void batchCreateScores(List<UserScoreVO> userScoreVOList);
+
     int getScoreByUserIdAndRoundNumber(Long userId, Integer roundNumber);
 
     void updateScore(UserScoreVO userScoreVO);

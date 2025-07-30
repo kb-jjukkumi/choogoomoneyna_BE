@@ -20,6 +20,15 @@
         VALUES (#{roundNumber}, #{userId}, #{scoreValue}, NOW(), NOW())
     </insert>
 
+    <!-- 1.1 다건 점수 삽입 -->
+    <insert id="batchInsertScores" parameterType="list">
+        INSERT INTO scores (round_number, user_id, score_value, reg_date, update_date)
+        VALUES
+        <foreach collection="list" item="score" separator=",">
+            (#{score.roundNumber}, #{score.userId}, #{score.scoreValue}, NOW(), NOW())
+        </foreach>
+    </insert>
+
     <!-- 2. 점수 조회 (userId, roundNumber) -->
     <select id="getScoreByUserIdAndRoundNumber" resultType="int">
         SELECT score_value
