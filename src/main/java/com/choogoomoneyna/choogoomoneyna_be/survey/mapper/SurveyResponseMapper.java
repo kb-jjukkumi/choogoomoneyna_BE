@@ -8,9 +8,7 @@ import java.util.List;
 @Mapper
 public interface SurveyResponseMapper {
 
-    void insertSurveyResponse(SurveyResponseVO surveyResponseVO);
-
     void insertBatchSurveyResponse(List<SurveyResponseVO> surveyResponseVOList);
 
-    List<SurveyResponseVO> findSurveyResponseByUserId(Long userId);
+    List<SurveyResponseVO> findLatestSurveyResponseByUserId(Long userId);
 }
