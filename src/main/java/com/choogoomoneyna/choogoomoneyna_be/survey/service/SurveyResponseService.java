@@ -14,8 +14,9 @@ public interface SurveyResponseService {
     void insertSurveyResponse(SurveyResponseVO surveyResponseVO);
 
     /**
+     * 여러 개의 설문 응답을 시스템에 일괄 삽입합니다.
      *
-     * @param surveyResponseVOList
+     * @param surveyResponseVOList 삽입할 설문 응답 데이터가 포함된 SurveyResponseVO 객체 리스트
      */
     void insertBatchSurveyResponse(List<SurveyResponseVO> surveyResponseVOList);
 
