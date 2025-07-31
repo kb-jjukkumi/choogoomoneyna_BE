@@ -1,13 +1,15 @@
-package com.choogoomoneyna.choogoomoneyna_be.report.service;
+package com.choogoomoneyna.choogoomoneyna_be.survey.service;
 
+import com.choogoomoneyna.choogoomoneyna_be.survey.vo.SurveyResponseVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
 
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class SurveyWeight {
+public class SurveyWeightCalculator {
 
     private static final Map<Integer, Map<Integer, Map<ChoogooMi, Integer>>> weightMap = new HashMap<>();
 
@@ -79,19 +81,19 @@ public class SurveyWeight {
         );
     }
 
-    private static Map<ChoogooMi, Integer> calculateScore(Map<Integer, Integer> responses) {
+    private static Map<ChoogooMi, Integer> calculateScore(List<SurveyResponseVO> responses) {
         Map<ChoogooMi, Integer> scores = new EnumMap<>(ChoogooMi.class);
         for (ChoogooMi type : ChoogooMi.values()) {
             scores.put(type, 0);
         }
 
-        for (Map.Entry<Integer, Integer> entry : responses.entrySet()) {
-            int questionId = entry.getKey();
-            int optionValue = entry.getValue();
+        for (SurveyResponseVO response : responses) {
+            int questionId = response.getSurveyQuestionId();
+            int optionId = Integer.parseInt(response.getSurveyOptionId()); // 문자열을 정수로 변환
 
             Map<ChoogooMi, Integer> weights = weightMap
                     .getOrDefault(questionId, Collections.emptyMap())
-                    .get(optionValue);
+                    .get(optionId);
 
             if (weights != null) {
                 for (Map.Entry<ChoogooMi, Integer> w : weights.entrySet()) {
@@ -103,7 +105,7 @@ public class SurveyWeight {
         return scores;
     }
 
-    public static ChoogooMi getTopType(Map<Integer, Integer> responses) {
+    public static ChoogooMi getTopType(List<SurveyResponseVO> responses) {
         return calculateScore(responses).entrySet().stream()
                 .max(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey)
