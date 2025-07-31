@@ -11,5 +11,6 @@
     <file url="file://$PROJECT_DIR$/src/main/resources/com/choogoomoneyna/score/mapper/ScoreMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/com/choogoomoneyna/user/mapper/UserMainInfoMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/com/choogoomoneyna/user/mapper/UserMapper.xml" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/com/choogoomoneyna/user/mapper/UserMatchingResultHistoryMapper.xml" dialect="MySQL" />
   </component>
 </project>

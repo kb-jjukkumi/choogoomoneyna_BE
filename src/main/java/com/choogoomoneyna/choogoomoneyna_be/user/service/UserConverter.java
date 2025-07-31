@@ -1,11 +1,14 @@
 package com.choogoomoneyna.choogoomoneyna_be.user.service;
 
+import com.choogoomoneyna.choogoomoneyna_be.matching.enums.MatchingResult;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.response.UserMainResponseDTO;
+import com.choogoomoneyna.choogoomoneyna_be.user.dto.response.UserMatchingResultHistoryDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.LoginType;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.UserDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserJoinRequestDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserMainInfoVO;
+import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserMatchingResultHistoryVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 
 public class UserConverter {
@@ -70,6 +73,16 @@ public class UserConverter {
                 .userScore(userMainInfoVo.getUserScore())
                 .userRanking(userMainInfoVo.getUserRanking())
                 .isLevelUp(userMainInfoVo.getIsLevelUp())
+                .build();
+    }
+
+    // UserMatchingResultHistoryVO -> UserMatchingResultHistoryDTO
+    public static UserMatchingResultHistoryDTO toUserMatchingResultHistoryDTO(UserMatchingResultHistoryVO userMatchingResultHistoryVO) {
+        return UserMatchingResultHistoryDTO.builder()
+                .roundNumber(userMatchingResultHistoryVO.getRoundNumber())
+                .startDate(userMatchingResultHistoryVO.getStartDate())
+                .endDate(userMatchingResultHistoryVO.getEndDate())
+                .matchingResult(MatchingResult.valueOf(userMatchingResultHistoryVO.getMatchingResult()))
                 .build();
     }
 }

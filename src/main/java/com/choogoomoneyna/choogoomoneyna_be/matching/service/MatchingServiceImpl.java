@@ -49,11 +49,6 @@ public class MatchingServiceImpl implements MatchingService {
         int commonMissionId = CommonMissionType.COMMON.getRandomId();
         List<Integer> choogooMiMissionIds = choogooMi.getMissionType().getRandomIds(2);
 
-        System.out.println("matchingId: " + matchingId);
-        System.out.println("choogooMiMissionIds: " + choogooMiMissionIds);
-        System.out.println("commonMissionId: " + commonMissionId);
-        System.out.println();
-
         matchingMissionResultService.createMatchingMissionResult(user1Id, matchingId, commonMissionId);
         if (!user1Id.equals(user2Id)) {
             matchingMissionResultService.createMatchingMissionResult(user2Id, matchingId, commonMissionId);
