@@ -20,6 +20,16 @@
         VALUES (#{userId}, #{surveyQuestionId}, #{surveyOptionId})
     </insert>
 
+    <!-- 다중 설문 응답 저장 -->
+    <insert id="insertBatchSurveyResponse" parameterType="java.util.List">
+        INSERT INTO survey_responses (user_id, survey_question_id, survey_option_id, reg_date)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.userId}, #{item.surveyQuestionId}, #{item.surveyOptionId}, #{item.regDate})
+        </foreach>
+    </insert>
+
+
     <!-- 사용자 ID로 설문 응답 조회 -->
     <select id="findSurveyResponseByUserId" resultMap="SurveyResponseMap" parameterType="long">
         SELECT survey_response_id, user_id, survey_question_id, survey_option_id, reg_date

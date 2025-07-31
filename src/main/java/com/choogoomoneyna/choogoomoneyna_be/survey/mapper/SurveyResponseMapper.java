@@ -10,5 +10,7 @@ public interface SurveyResponseMapper {
 
     void insertSurveyResponse(SurveyResponseVO surveyResponseVO);
 
+    void insertBatchSurveyResponse(List<SurveyResponseVO> surveyResponseVOList);
+
     List<SurveyResponseVO> findSurveyResponseByUserId(Long userId);
 }
