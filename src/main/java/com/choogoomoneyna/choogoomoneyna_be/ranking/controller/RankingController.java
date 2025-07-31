@@ -2,12 +2,10 @@ package com.choogoomoneyna.choogoomoneyna_be.ranking.controller;
 
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.CustomUserDetails;
 import com.choogoomoneyna.choogoomoneyna_be.matching.service.RoundInfoService;
+import com.choogoomoneyna.choogoomoneyna_be.ranking.dto.response.RankingChangeResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.dto.response.RankingHistoryDTO;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.dto.response.RankingResponseDTO;
-import com.choogoomoneyna.choogoomoneyna_be.ranking.service.RankingConverter;
-import com.choogoomoneyna.choogoomoneyna_be.ranking.service.RankingService;
-import com.choogoomoneyna.choogoomoneyna_be.ranking.service.RankingUpdateServiceImpl;
-import com.choogoomoneyna.choogoomoneyna_be.ranking.service.RankingUserService;
+import com.choogoomoneyna.choogoomoneyna_be.ranking.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,6 +25,7 @@ public class RankingController {
     private final RankingUpdateServiceImpl rankingUpdateService;
     private final RankingService rankingService;
     private final RoundInfoService roundInfoService;
+    private final RankingUserChangeService rankingUserChangeService;
 
     @PutMapping("/update")
     public ResponseEntity<?> updateRanking() {
@@ -36,10 +35,10 @@ public class RankingController {
 
     @GetMapping("/list/top50")
     public ResponseEntity<?> getRankingList() {
-        List<RankingResponseDTO> rankingList =
-                rankingUserService.findTopNRankingUserByRoundNumber(roundInfoService.getRoundNumber(), 50)
+        List<RankingChangeResponseDTO> rankingList =
+                rankingUserChangeService.findTopNRankingUserChangeByRoundNumber(roundInfoService.getRoundNumber(), 50)
                 .stream()
-                .map(RankingConverter::toRankingResponseDTO)
+                .map(RankingConverter::toRankingChangeResponseDTO)
                 .toList();
 
         return ResponseEntity.ok(rankingList);
