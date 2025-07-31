@@ -23,15 +23,37 @@ public class CodefController {
 
     private final CodefService codefService;
 
+//    @PostMapping("/account/add")
+//    public ResponseEntity<?> addAccount(@AuthenticationPrincipal CustomUserDetails userDetails,
+//                                        @RequestBody AccountRequestDto accountRequestDto) {
+//        try {
+//            Long userId = userDetails.getId();
+//            //codef api 호출 후, db에 저장
+//            List<AccountResponseDto> accountList = codefService.addAccount(userId, accountRequestDto);
+//
+//            // 3. 계좌 정보가 없을 때 처리
+//            if (accountList == null || accountList.isEmpty()) {
+//                log.info("None account added.");
+//                return ResponseEntity.status(HttpStatus.OK).body("Already added Accounts");
+//            }
+//            return ResponseEntity.ok(accountList);
+//        } catch (Exception e) {
+//            log.error(e.getMessage());
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+//        }
+//    }
+
+    //mock
     @PostMapping("/account/add")
     public ResponseEntity<?> addAccount(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                        @RequestBody AccountRequestDto accountRequestDto) {
+                                        @RequestBody AccountRequestDto accountRequestDto,
+                                        @RequestHeader(value = "X-MOCK-SCENARIO", required = false) String mockScenario) {
         try {
             Long userId = userDetails.getId();
-
             //codef api 호출 후, db에 저장
-            List<AccountResponseDto> accountList = codefService.addAccount(userId, accountRequestDto);
-
+            log.info("controller header {}", mockScenario);
+            List<AccountResponseDto> accountList = codefService.addAccount(userId, accountRequestDto, mockScenario);
+            log.info("here controller accountList {}", accountList);
             // 3. 계좌 정보가 없을 때 처리
             if (accountList == null || accountList.isEmpty()) {
                 log.info("None account added.");
@@ -42,7 +64,6 @@ public class CodefController {
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
     }
 
     @PostMapping("/account/update")

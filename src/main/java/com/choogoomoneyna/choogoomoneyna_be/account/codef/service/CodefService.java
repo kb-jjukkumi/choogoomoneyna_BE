@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CodefService {
 
-    List<AccountResponseDto> addAccount(Long userId, AccountRequestDto accountRequestDto) throws Exception;
+    List<AccountResponseDto> addAccount(Long userId, AccountRequestDto accountRequestDto, String mockScenario) throws Exception;
 
     AccountResponseDto updateAccountOne(Long userId, AccountUpdateRequestDto accountUpdateRequestDto) throws Exception;
 

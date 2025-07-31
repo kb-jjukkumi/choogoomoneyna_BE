@@ -1,6 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.account.codef.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.*;
+import com.choogoomoneyna.choogoomoneyna_be.account.codef.service.mock.CustomHttpClient;
 import com.choogoomoneyna.choogoomoneyna_be.account.db.mapper.AccountMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,7 +9,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +30,6 @@ public class CodefApiRequester {
     String PUBLIC_KEY;
 
     private final CodefTokenManager codefTokenManager;
-    private final SqlSessionTemplate sqlSessionTemplate;
     private final AccountMapper accountMapper;
 
     //커넥티드 아이디 계정 등록
@@ -68,10 +67,7 @@ public class CodefApiRequester {
 
         // 에러 메시지 추출
         String errorMessage = extractErrorMessage(response);
-//        if (errorMessage != null) {
-//
-//            //throw new Exception(errorMessage);  // 에러가 있으면 예외 발생
-//        }
+
         if (errorMessage != null) {
             if (errorMessage.contains("이미 계정이 등록된 기관")) {
                 log.warn("이미 등록된 기관이므로 addConnectedId는 생략합니다.");
@@ -169,17 +165,30 @@ public class CodefApiRequester {
     }
 
     // 모든 api 요청 전송 메서드
-    protected String sendPostRequest(String requestUrl, String accessToken, String requestBody) throws IOException, InterruptedException {
-        HttpClient client = HttpClient.newHttpClient();
+    protected String sendPostRequest(String requestUrl, String accessToken, String requestBody, String mockScenario) throws IOException, InterruptedException {
 
-        HttpRequest request = HttpRequest.newBuilder()
+        //HttpClient client = HttpClient.newHttpClient();
+
+        //mock
+        CustomHttpClient client = new CustomHttpClient();
+
+        log.info("requester sendPostRequest {}", mockScenario);
+        System.out.println("requester sendPostRequest {}"+ mockScenario);
+
+        HttpRequest.Builder builder = HttpRequest.newBuilder()
                 .uri(URI.create(requestUrl))
                 .header("Authorization", "Bearer " + accessToken)
                 .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .build();
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody));
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        if (mockScenario != null) {
+            builder.header("X-MOCK-SCENARIO", mockScenario);
+        }
+
+        HttpRequest request = builder.build(); // 🔒 반드시 build 이후 request 완성
+
+        //mock
+        HttpResponse<String> response = client.send(request);
 
         if (response.statusCode() == 200) {
             // 응답을 URL 디코딩
@@ -190,8 +199,41 @@ public class CodefApiRequester {
         }
     }
 
+
+    protected String sendPostRequest(String requestUrl, String accessToken, String requestBody) throws IOException, InterruptedException {
+
+        //HttpClient client = HttpClient.newHttpClient();
+
+        //mock
+        CustomHttpClient client = new CustomHttpClient();
+
+        HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
+                .uri(URI.create(requestUrl))
+                .header("Authorization", "Bearer " + accessToken)
+                .header("Content-Type", "application/json");
+
+
+        HttpRequest request = requestBuilder
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+
+        //HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        //mock
+        HttpResponse<String> response = client.send(request);
+
+        if (response.statusCode() == 200) {
+            // 응답을 URL 디코딩
+            String decodedResponse = URLDecoder.decode(response.body(), "UTF-8");
+            return decodedResponse;
+        } else {
+            throw new IOException("HTTP error code: " + response.statusCode());
+        }
+    }
+
+
     // 보유 계좌 조회 메서드
-    public List<AccountResponseDto> getAccountList(AccountRequestDto accountRequestDto, String connectedId) throws Exception {
+    public List<AccountResponseDto> getAccountList(AccountRequestDto accountRequestDto, String connectedId, String mockScenario) throws Exception {
         String requestUrl = "https://development.codef.io/v1/kr/bank/p/account/account-list";
 
         ObjectMapper mapper = new ObjectMapper();
@@ -199,7 +241,8 @@ public class CodefApiRequester {
         requestBody.put("organization", accountRequestDto.getBankId());
         requestBody.put("connectedId", connectedId);
 
-        String response = sendPostRequest(requestUrl, codefTokenManager.getAccessToken(), requestBody.toString());
+        log.info("requester layer getAccountList method {} ",mockScenario);
+        String response = sendPostRequest(requestUrl, codefTokenManager.getAccessToken(), requestBody.toString(), mockScenario);
 
         List<AccountResponseDto> accountList = new ArrayList<>();
         JsonNode jsonResponse = mapper.readTree(response);

@@ -34,7 +34,7 @@ public class CodefServiceImpl implements CodefService {
     private final AccountMapper accountMapper;
 
     @Override
-    public List<AccountResponseDto> addAccount(Long userId, AccountRequestDto accountRequestDto) throws Exception {
+    public List<AccountResponseDto> addAccount(Long userId, AccountRequestDto accountRequestDto, String mockScenario) throws Exception {
 
         //1. 유저 정보 추출
         UserVO userVO = userMapper.findById(userId);
@@ -49,7 +49,8 @@ public class CodefServiceImpl implements CodefService {
         }
 
         // 3. codef api로 계좌 리스트 가져오기
-        List<AccountResponseDto> accountList = codefApiRequester.getAccountList(accountRequestDto, connectedId);
+        log.info("service addAccount method {}",mockScenario);
+        List<AccountResponseDto> accountList = codefApiRequester.getAccountList(accountRequestDto, connectedId, mockScenario);
         System.out.println(accountList);
 
         if (accountList == null || accountList.isEmpty()) {
