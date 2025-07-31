@@ -11,11 +11,13 @@
         <result property="missionId" column="mission_id"/>
         <result property="userId" column="user_id"/>
         <result property="resultScore" column="result_score"/>
+        <result property="regDate" column="reg_date"/>
+        <result property="updateDate" column="update_date"/>
     </resultMap>
 
     <!-- 사용자 ID로 결과 조회 -->
     <select id="findMatchingMissionByUserId" resultMap="MatchingMissionResultMap">
-        SELECT result_id, matching_id, mission_id, user_id, result_score
+        SELECT result_id, matching_id, mission_id, user_id, result_score, reg_date, update_date
         FROM matching_mission_results
         WHERE user_id = #{userId}
     </select>
@@ -51,8 +53,9 @@
     </update>
 
     <!-- 유저, 매치, 미션 아이디를 이용해서 column 가져오기 -->
-    <select id="findMatchingMissionResultByUserIdAndMatchingIdAndMissionId" resultType="com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingMissionResultVO">
-        SELECT result_id, matching_id, mission_id, user_id, result_score
+    <select id="findMatchingMissionResultByUserIdAndMatchingIdAndMissionId"
+            resultType="com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingMissionResultVO">
+        SELECT result_id, matching_id, mission_id, user_id, result_score, reg_date, update_date
         FROM matching_mission_results
         WHERE user_id = #{userId}
           AND matching_id = #{matchingId}
@@ -68,13 +71,15 @@
     </select>
 
     <!-- 유저, 매치 아이디를 이용하여 전체 가져오기 -->
-    <select id="findAllMatchingMissionResultByUserIdAndMatchingId" resultType="com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingMissionResultVO">
-        SELECT result_id, matching_id, mission_id, user_id, result_score
+    <select id="findAllMatchingMissionResultByUserIdAndMatchingId"
+            resultType="com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingMissionResultVO">
+        SELECT result_id, matching_id, mission_id, user_id, result_score, reg_date, update_date
         FROM matching_mission_results
         WHERE user_id = #{userId}
           AND matching_id = #{matchingId}
     </select>
 
+    <!-- 유저, 매치 아이디 기준으로 미션 정보 포함 결과 조회 -->
     <select id="getAllUserMissionByUserIdAndMatchingId"
             resultType="com.choogoomoneyna.choogoomoneyna_be.mission.vo.UserMissionVO">
         SELECT
