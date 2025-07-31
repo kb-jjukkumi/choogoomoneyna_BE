@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.choogoomoneyna.choogoomoneyna_be.ranking.mapper.RankingUserChangeMapper">
+
+    <resultMap id="RankingUserChangeResultMap" type="com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingUserChangeVO">
+        <result property="roundNumber" column="round_number"/>
+        <result property="userId" column="user_id"/>
+        <result property="nickname" column="nickname"/>
+        <result property="ranking" column="current_ranking"/>
+        <result property="beforeRanking" column="before_ranking"/>
+        <result property="score" column="score"/>
+        <result property="choogooMi" column="choogoo_mi"/>
+    </resultMap>
+
+    <select id="findTopNRankingUserChangeByRoundNumber" resultMap="RankingUserChangeResultMap" parameterType="map">
+        SELECT
+            r.round_number,
+            r.user_id,
+            u.nickname,
+            r.current_ranking,
+            prev_r.current_ranking AS before_ranking,
+            s.score_value AS score,
+            u.choogoomi_name AS choogoo_mi
+        FROM rankings r
+                 LEFT JOIN users u ON r.user_id = u.user_id
+                 LEFT JOIN scores s ON r.user_id = s.user_id AND r.round_number = s.round_number
+                 LEFT JOIN rankings prev_r
+                           ON prev_r.user_id = r.user_id AND prev_r.round_number = r.round_number - 1
+        WHERE r.round_number = #{roundNumber}
+        ORDER BY r.current_ranking ASC
+        LIMIT #{limit}
+    </select>
+
+
+</mapper>
