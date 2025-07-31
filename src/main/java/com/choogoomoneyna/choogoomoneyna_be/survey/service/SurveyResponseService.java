@@ -14,6 +14,12 @@ public interface SurveyResponseService {
     void insertSurveyResponse(SurveyResponseVO surveyResponseVO);
 
     /**
+     *
+     * @param surveyResponseVOList
+     */
+    void insertBatchSurveyResponse(List<SurveyResponseVO> surveyResponseVOList);
+
+    /**
      * 제공된 사용자 ID를 기반으로 특정 사용자와 관련된 설문 응답 목록을 조회합니다.
      *
      * @param userId 설문 응답을 조회할 사용자의 고유 식별자

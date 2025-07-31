@@ -19,6 +19,11 @@ public class SurveyResponseServiceImpl implements SurveyResponseService {
     }
 
     @Override
+    public void insertBatchSurveyResponse(List<SurveyResponseVO> surveyResponseVOList) {
+        surveyResponseMapper.insertBatchSurveyResponse(surveyResponseVOList);
+    }
+
+    @Override
     public List<SurveyResponseVO> findSurveyResponseByUserId(Long userId) {
         return surveyResponseMapper.findSurveyResponseByUserId(userId);
     }
