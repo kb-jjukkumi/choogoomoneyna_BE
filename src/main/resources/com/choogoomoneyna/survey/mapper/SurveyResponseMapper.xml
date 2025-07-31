@@ -14,12 +14,6 @@
         <result property="regDate" column="reg_date" />
     </resultMap>
 
-    <!-- 설문 응답 저장 -->
-    <insert id="insertSurveyResponse" parameterType="com.choogoomoneyna.choogoomoneyna_be.survey.vo.SurveyResponseVO" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO survey_responses (user_id, survey_question_id, survey_option_id)
-        VALUES (#{userId}, #{surveyQuestionId}, #{surveyOptionId})
-    </insert>
-
     <!-- 다중 설문 응답 저장 -->
     <insert id="insertBatchSurveyResponse" parameterType="java.util.List">
         INSERT INTO survey_responses (user_id, survey_question_id, survey_option_id, reg_date)
@@ -31,10 +25,15 @@
 
 
     <!-- 사용자 ID로 설문 응답 조회 -->
-    <select id="findSurveyResponseByUserId" resultMap="SurveyResponseMap" parameterType="long">
+    <select id="findLatestSurveyResponseByUserId" resultMap="SurveyResponseMap" parameterType="long">
         SELECT survey_response_id, user_id, survey_question_id, survey_option_id, reg_date
         FROM survey_responses
         WHERE user_id = #{userId}
+          AND reg_date = (
+            SELECT MAX(reg_date)
+            FROM survey_responses
+            WHERE user_id = #{userId}
+        )
     </select>
 
 </mapper>
