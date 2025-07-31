@@ -6,9 +6,10 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class RankingResponseDTO {
+public class RankingChangeResponseDTO {
     private String userNickname;
     private Integer ranking;
+    private Integer beforeRanking;
     private Integer score;
     private ChoogooMi choogooMi;
 }

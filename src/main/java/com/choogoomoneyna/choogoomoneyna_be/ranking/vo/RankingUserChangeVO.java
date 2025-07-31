@@ -7,11 +7,12 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RankingUserVO {
+public class RankingUserChangeVO {
     private Integer roundNumber;
     private Long userId;
     private String nickname;
     private Integer ranking;
+    private Integer beforeRanking;
     private Integer score;
     private String choogooMi;
 }
