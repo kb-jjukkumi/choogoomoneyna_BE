@@ -1,4 +1,4 @@
-package com.choogoomoneyna.choogoomoneyna_be.report.service;
+package com.choogoomoneyna.choogoomoneyna_be.survey.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
 
@@ -7,7 +7,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SurveyWeight {
+public class SurveyWeightCalculator {
 
     private static final Map<Integer, Map<Integer, Map<ChoogooMi, Integer>>> weightMap = new HashMap<>();
 
