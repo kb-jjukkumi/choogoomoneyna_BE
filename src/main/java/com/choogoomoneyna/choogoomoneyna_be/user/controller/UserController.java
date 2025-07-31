@@ -4,13 +4,17 @@ import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.CustomUserDetails;
 import com.choogoomoneyna.choogoomoneyna_be.matching.service.RoundInfoService;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.response.UserMainResponseDTO;
+import com.choogoomoneyna.choogoomoneyna_be.user.dto.response.UserMatchingResultHistoryDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserConverter;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserMainInfoService;
+import com.choogoomoneyna.choogoomoneyna_be.user.service.UserMatchingResultHistoryService;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +25,7 @@ public class UserController {
     private final UserService userService;
     private final UserMainInfoService userMainInfoService;
     private final ScoreService scoreService;
+    private final UserMatchingResultHistoryService userMatchingResultHistoryService;
 
     @GetMapping("/main-profile")
     ResponseEntity<UserMainResponseDTO> getMainProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
@@ -35,5 +40,18 @@ public class UserController {
         scoreService.updateIsLevelUpByUserId(userId, false);
 
         return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping("/matching/result/history")
+    ResponseEntity<List<UserMatchingResultHistoryDTO>> getMatchingResultHistory(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long userId = userDetails.getId();
+
+        List<UserMatchingResultHistoryDTO> userMatchingResultHistoryDTOList
+                = userMatchingResultHistoryService.findUserMatchingResultHistoriesByUserId(userId)
+                .stream()
+                .map(UserConverter::toUserMatchingResultHistoryDTO)
+                .toList();
+
+        return ResponseEntity.ok(userMatchingResultHistoryDTOList);
     }
 }
