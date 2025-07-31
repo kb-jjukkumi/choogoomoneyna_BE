@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.choogoomoneyna.choogoomoneyna_be.survey.mapper.SurveyResponseMapper">
+
+    <!-- SurveyResponseVO 매핑 -->
+    <resultMap id="SurveyResponseMap" type="com.choogoomoneyna.choogoomoneyna_be.survey.vo.SurveyResponseVO">
+        <id property="id" column="survey_response_id" />
+        <result property="userId" column="user_id" />
+        <result property="surveyQuestionId" column="survey_question_id" />
+        <result property="surveyOptionId" column="survey_option_id" />
+        <result property="regDate" column="reg_date" />
+    </resultMap>
+
+    <!-- 설문 응답 저장 -->
+    <insert id="insertSurveyResponse" parameterType="com.choogoomoneyna.choogoomoneyna_be.survey.vo.SurveyResponseVO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO survey_responses (user_id, survey_question_id, survey_option_id)
+        VALUES (#{userId}, #{surveyQuestionId}, #{surveyOptionId})
+    </insert>
+
+    <!-- 사용자 ID로 설문 응답 조회 -->
+    <select id="findSurveyResponseByUserId" resultMap="SurveyResponseMap" parameterType="long">
+        SELECT survey_response_id, user_id, survey_question_id, survey_option_id, reg_date
+        FROM survey_responses
+        WHERE user_id = #{userId}
+    </select>
+
+</mapper>
