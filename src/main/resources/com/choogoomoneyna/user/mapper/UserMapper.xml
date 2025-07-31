@@ -16,7 +16,6 @@
         <result property="choogooMi" column="choogoomi_name"/>
         <result property="loginType" column="user_login_type"/>
         <result property="connectedId" column="connected_id"/>
-        <result property="userLevel" column="user_level"/>
     </resultMap>
 
     <!-- INSERT -->
@@ -24,12 +23,12 @@
         INSERT INTO users (
             email, password, nickname, profile_imageurl,
             reg_date, update_date, choogoomi_name, user_login_type,
-            connected_id, user_level
+            connected_id
         )
         VALUES (
                    #{email}, #{password}, #{nickname}, #{profileImageUrl},
                    NOW(), NOW(), #{choogooMi}, #{loginType},
-                   #{connectedId}, #{userLevel}
+                   #{connectedId}
                )
     </insert>
 
@@ -45,8 +44,7 @@
             update_date,
             choogoomi_name,
             user_login_type,
-            connected_id,
-            user_level
+            connected_id
         FROM users
         WHERE email = #{email}
     </select>
@@ -62,8 +60,7 @@
             update_date,
             choogoomi_name,
             user_login_type,
-            connected_id,
-            user_level
+            connected_id
         FROM users
         WHERE email = #{email} AND user_login_type = #{loginType}
     </select>
@@ -80,8 +77,7 @@
             update_date,
             choogoomi_name,
             user_login_type,
-            connected_id,
-            user_level
+            connected_id
         FROM users
         WHERE nickname = #{nickname}
     </select>
@@ -98,8 +94,7 @@
             update_date,
             choogoomi_name,
             user_login_type,
-            connected_id,
-            user_level
+            connected_id
         FROM users
         WHERE user_id = #{id}
     </select>
@@ -129,7 +124,6 @@
             choogoomi_name = #{choogooMi},
             user_login_type = #{loginType},
             connected_id = #{connectedId},
-            user_level = #{userLevel},
             update_date = NOW()
         WHERE email = #{email}
     </update>
@@ -156,8 +150,7 @@
             update_date,
             choogoomi_name,
             user_login_type,
-            connected_id,
-            user_level
+            connected_id
         FROM users
     </select>
 

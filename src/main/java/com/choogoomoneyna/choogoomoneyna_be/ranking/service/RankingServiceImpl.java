@@ -23,7 +23,7 @@ public class RankingServiceImpl implements RankingService {
 
     @Override
     public void batchCreateRankings(List<RankingVO> rankingVOList) {
-
+        rankingMapper.batchInsertRankings(rankingVOList);
     }
 
     @Override

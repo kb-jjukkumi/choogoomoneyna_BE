@@ -19,4 +19,6 @@ public interface ScoreService {
     List<UserScoreVO> findTopNCurrentScoresByRoundNumber(Integer roundNumber, int limit);
 
     void deleteScoreByUserId(Long userId);
+
+    void updateIsLevelUpByUserId(Long userId, boolean isLevelUp);
 }

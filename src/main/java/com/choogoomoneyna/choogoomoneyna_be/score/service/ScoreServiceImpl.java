@@ -47,4 +47,9 @@ public class ScoreServiceImpl implements ScoreService {
     public void deleteScoreByUserId(Long userId) {
         scoreMapper.deleteByUserId(userId);
     }
+
+    @Override
+    public void updateIsLevelUpByUserId(Long userId, boolean isLevelUp) {
+        scoreMapper.updateIsLevelUpByUserId(userId, isLevelUp);
+    }
 }

@@ -1,228 +1,85 @@
 package com.choogoomoneyna.choogoomoneyna_be.report.service;
 
+import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
+
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
-import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
 
 public class SurveyWeight {
 
-    // 질문별 선택지별 가중치 매핑
-    private final Map<Integer, Map<Integer, Map<ChoogooMi, Integer>>> weightMap = new HashMap<>();
+    private static final Map<Integer, Map<Integer, Map<ChoogooMi, Integer>>> weightMap = new HashMap<>();
 
-    public SurveyWeight() {
-        //타입1(5지선다) 1번
-        Map<Integer, Map<ChoogooMi, Integer>> q1 = new HashMap<>();
-        q1.put(1, Map.of(
-                ChoogooMi.A, 7,
-                ChoogooMi.B, 5,
-                ChoogooMi.C, 3,
-                ChoogooMi.D, 0,
-                ChoogooMi.E, 9
-        ));
-        q1.put(2, Map.of(
-                ChoogooMi.A, 9,
-                ChoogooMi.B, 7,
-                ChoogooMi.C, 5,
-                ChoogooMi.D, 0,
-                ChoogooMi.E, 1
-        ));
-        q1.put(3, Map.of(
-                ChoogooMi.A, 0,
-                ChoogooMi.B, 3,
-                ChoogooMi.C, 1,
-                ChoogooMi.D, 9,
-                ChoogooMi.E, 5
-        ));
-        q1.put(4, Map.of(
-                ChoogooMi.A, 1,
-                ChoogooMi.B, 3,
-                ChoogooMi.C, 0,
-                ChoogooMi.D, 9,
-                ChoogooMi.E, 5
-        ));
-        q1.put(5, Map.of(
-                ChoogooMi.A, 3,
-                ChoogooMi.B, 3,
-                ChoogooMi.C, 3,
-                ChoogooMi.D, 3,
-                ChoogooMi.E, 3
-        ));
-        weightMap.put(1, q1);
+    static {
+        initializeWeights();
+    }
 
-        //타입1 2번
-        Map<Integer, Map<ChoogooMi, Integer>> q2 = new HashMap<>();
-        q2.put(1, Map.of(
-                ChoogooMi.A, 9,
-                ChoogooMi.B, 5,
-                ChoogooMi.C, 3,
-                ChoogooMi.D, 0,
-                ChoogooMi.E, 1
+    private static void initializeWeights() {
+        addQuestionWeights(1, Map.of(
+                1, createWeights(7, 5, 3, 0, 9),
+                2, createWeights(9, 7, 5, 0, 1),
+                3, createWeights(0, 3, 1, 9, 5),
+                4, createWeights(1, 3, 0, 9, 5),
+                5, createWeights(3, 3, 3, 3, 3)
         ));
-        q2.put(2, Map.of(
-                ChoogooMi.A, 9,
-                ChoogooMi.B, 5,
-                ChoogooMi.C, 3,
-                ChoogooMi.D, 0,
-                ChoogooMi.E, 1
-        ));
-        q2.put(3, Map.of(
-                ChoogooMi.A, 5,
-                ChoogooMi.B, 9,
-                ChoogooMi.C, 3,
-                ChoogooMi.D, 1,
-                ChoogooMi.E, 0
-        ));
-        q2.put(4, Map.of(
-                ChoogooMi.A, 0,
-                ChoogooMi.B, 3,
-                ChoogooMi.C, 5,
-                ChoogooMi.D, 9,
-                ChoogooMi.E, 1
-        ));
-        q2.put(5, Map.of(
-                ChoogooMi.A, 0,
-                ChoogooMi.B, 3,
-                ChoogooMi.C, 5,
-                ChoogooMi.D, 9,
-                ChoogooMi.E, 1
-        ));
-        weightMap.put(2, q2);
 
-        //타입1-3번
-        Map<Integer, Map<ChoogooMi, Integer>> q3 = new HashMap<>();
-        q3.put(1, Map.of(
-                ChoogooMi.A, 1,
-                ChoogooMi.B, 5,
-                ChoogooMi.C, 0,
-                ChoogooMi.D, 7,
-                ChoogooMi.E, 3
+        addQuestionWeights(2, Map.of(
+                1, createWeights(9, 5, 3, 0, 1),
+                2, createWeights(9, 5, 3, 0, 1),
+                3, createWeights(5, 9, 3, 1, 0),
+                4, createWeights(0, 3, 5, 9, 1),
+                5, createWeights(0, 3, 5, 9, 1)
         ));
-        q3.put(2, Map.of(
-                ChoogooMi.A, 0,
-                ChoogooMi.B, 5,
-                ChoogooMi.C, 1,
-                ChoogooMi.D, 7,
-                ChoogooMi.E, 3
-        ));
-        q3.put(3, Map.of(
-                ChoogooMi.A, 1,
-                ChoogooMi.B, 5,
-                ChoogooMi.C, 3,
-                ChoogooMi.D, 2,
-                ChoogooMi.E, 7
-        ));
-        q3.put(4, Map.of(
-                ChoogooMi.A, 0,
-                ChoogooMi.B, 3,
-                ChoogooMi.C, 5,
-                ChoogooMi.D, 1,
-                ChoogooMi.E, 7
-        ));
-        q3.put(5, Map.of(
-                ChoogooMi.A, 0,
-                ChoogooMi.B, 1,
-                ChoogooMi.C, 9,
-                ChoogooMi.D, 3,
-                ChoogooMi.E, 5
-        ));
-        weightMap.put(3, q3);
 
-        //타입1-4번
-        Map<Integer, Map<ChoogooMi, Integer>> q4 = new HashMap<>();
-        q4.put(1, Map.of(
-                ChoogooMi.A, 9,
-                ChoogooMi.B, 1,
-                ChoogooMi.C, 3,
-                ChoogooMi.D, 0,
-                ChoogooMi.E, 1
+        addQuestionWeights(3, Map.of(
+                1, createWeights(1, 5, 0, 7, 3),
+                2, createWeights(0, 5, 1, 7, 3),
+                3, createWeights(1, 5, 3, 2, 7),
+                4, createWeights(0, 3, 5, 1, 7),
+                5, createWeights(0, 1, 9, 3, 5)
         ));
-        q4.put(2, Map.of(
-                ChoogooMi.A, 3,
-                ChoogooMi.B, 9,
-                ChoogooMi.C, 3,
-                ChoogooMi.D, 3,
-                ChoogooMi.E, 1
-        ));
-        q4.put(3, Map.of(
-                ChoogooMi.A, 1,
-                ChoogooMi.B, 9,
-                ChoogooMi.C, 1,
-                ChoogooMi.D, 2,
-                ChoogooMi.E, 2
-        ));
-        q4.put(4, Map.of(
-                ChoogooMi.A, 0,
-                ChoogooMi.B, 0,
-                ChoogooMi.C, 0,
-                ChoogooMi.D, 1,
-                ChoogooMi.E, 9
-        ));
-        q4.put(5, Map.of(
-                ChoogooMi.A, 0,
-                ChoogooMi.B, 0,
-                ChoogooMi.C, 1,
-                ChoogooMi.D, 1,
-                ChoogooMi.E, 9
-        ));
-        weightMap.put(4, q4);
 
-        for(int i=5; i<=9; i++) {
-            Map<Integer, Map<ChoogooMi, Integer>> q = new HashMap<>();
-            q.put(1, Map.of(
-                    ChoogooMi.A, 9,
-                    ChoogooMi.B, 7,
-                    ChoogooMi.C, 5,
-                    ChoogooMi.D, 1,
-                    ChoogooMi.E, 1
+        addQuestionWeights(4, Map.of(
+                1, createWeights(9, 1, 3, 0, 1),
+                2, createWeights(3, 9, 3, 3, 1),
+                3, createWeights(1, 9, 1, 2, 2),
+                4, createWeights(0, 0, 0, 1, 9),
+                5, createWeights(0, 0, 1, 1, 9)
+        ));
+
+        for (int i = 5; i <= 9; i++) {
+            addQuestionWeights(i, Map.of(
+                    1, createWeights(9, 7, 5, 1, 1),
+                    2, createWeights(7, 9, 3, 1, 1),
+                    3, createWeights(5, 9, 0, 1, 1),
+                    4, createWeights(0, 1, 0, 0, 3)
             ));
-            q.put(2, Map.of(
-                    ChoogooMi.A, 7,
-                    ChoogooMi.B, 9,
-                    ChoogooMi.C, 3,
-                    ChoogooMi.D, 1,
-                    ChoogooMi.E, 1
-            ));
-            q.put(3, Map.of(
-                    ChoogooMi.A, 5,
-                    ChoogooMi.B, 9,
-                    ChoogooMi.C, 0,
-                    ChoogooMi.D, 1,
-                    ChoogooMi.E, 1
-            ));
-            q.put(4, Map.of(
-                    ChoogooMi.A, 0,
-                    ChoogooMi.B, 1,
-                    ChoogooMi.C, 0,
-                    ChoogooMi.D, 0,
-                    ChoogooMi.E, 3
-            ));
-            weightMap.put(i, q);
         }
 
-        for(int i=10; i<=14; i++) {
-            Map<Integer, Map<ChoogooMi, Integer>> q = new HashMap<>();
-            q.put(1, Map.of(
-                    ChoogooMi.A, 9,
-                    ChoogooMi.B, 7,
-                    ChoogooMi.C, 5,
-                    ChoogooMi.D, 1,
-                    ChoogooMi.E, 1
+        for (int i = 10; i <= 14; i++) {
+            addQuestionWeights(i, Map.of(
+                    1, createWeights(9, 7, 5, 1, 1),
+                    2, createWeights(0, 1, 1, 3, 3)
             ));
-            q.put(2, Map.of(
-                    ChoogooMi.A, 0,
-                    ChoogooMi.B, 1,
-                    ChoogooMi.C, 1,
-                    ChoogooMi.D, 3,
-                    ChoogooMi.E, 3
-            ));
-            weightMap.put(i, q);
         }
     }
 
-    // 사용자 응답 기반 점수 계산
-    public Map<ChoogooMi, Integer> calculateScore(Map<Integer, Integer> responses) {
+    private static void addQuestionWeights(int questionId, Map<Integer, Map<ChoogooMi, Integer>> options) {
+        weightMap.put(questionId, options);
+    }
+
+    private static Map<ChoogooMi, Integer> createWeights(int a, int b, int c, int d, int e) {
+        return Map.of(
+                ChoogooMi.A, a,
+                ChoogooMi.B, b,
+                ChoogooMi.C, c,
+                ChoogooMi.D, d,
+                ChoogooMi.E, e
+        );
+    }
+
+    private static Map<ChoogooMi, Integer> calculateScore(Map<Integer, Integer> responses) {
         Map<ChoogooMi, Integer> scores = new EnumMap<>(ChoogooMi.class);
         for (ChoogooMi type : ChoogooMi.values()) {
             scores.put(type, 0);
@@ -231,7 +88,11 @@ public class SurveyWeight {
         for (Map.Entry<Integer, Integer> entry : responses.entrySet()) {
             int questionId = entry.getKey();
             int optionValue = entry.getValue();
-            Map<ChoogooMi, Integer> weights = weightMap.getOrDefault(questionId, Collections.emptyMap()).get(optionValue);
+
+            Map<ChoogooMi, Integer> weights = weightMap
+                    .getOrDefault(questionId, Collections.emptyMap())
+                    .get(optionValue);
+
             if (weights != null) {
                 for (Map.Entry<ChoogooMi, Integer> w : weights.entrySet()) {
                     scores.put(w.getKey(), scores.get(w.getKey()) + w.getValue());
@@ -242,13 +103,10 @@ public class SurveyWeight {
         return scores;
     }
 
-    // 최고 유형 리턴
-    public ChoogooMi getTopType(Map<Integer, Integer> responses) {
-        Map<ChoogooMi, Integer> scores = calculateScore(responses);
-        return scores.entrySet().stream()
+    public static ChoogooMi getTopType(Map<Integer, Integer> responses) {
+        return calculateScore(responses).entrySet().stream()
                 .max(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey)
                 .orElse(null);
     }
-
 }

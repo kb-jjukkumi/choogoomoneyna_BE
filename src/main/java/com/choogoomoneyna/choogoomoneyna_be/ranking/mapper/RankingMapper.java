@@ -16,12 +16,12 @@ public interface RankingMapper {
 
     List<RankingVO> findLatestRankingPerUser();
 
-    void batchInsertRankings(@Param("rankingVOList") List<RankingVO> rankingVOList);
+    void batchInsertRankings(List<RankingVO> rankingVOList);
 
     void updateCurrentRankingByUserId(@Param("userId") Long userId,
                                       @Param("currentRanking") Integer currentRanking);
 
-    void batchUpdateCurrentRanking(@Param("rankingUpdateList") List<RankingUpdateVO> rankingUpdateList);
+    void batchUpdateCurrentRanking(List<RankingUpdateVO> rankingUpdateList);
 
     List<RankingVO> findAllRankingByUserId(Long userId);
 

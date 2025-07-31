@@ -67,7 +67,7 @@
         SET
         current_ranking = (
         CASE
-        <foreach collection="rankingUpdateList" item="rank">
+        <foreach collection="list" item="rank">
             WHEN r.user_id = #{rank.userId} AND r.round_number = #{rank.roundNumber}
             THEN #{rank.currentRanking}
         </foreach>
@@ -75,17 +75,18 @@
         ),
         update_date = (
         CASE
-        <foreach collection="rankingUpdateList" item="rank">
+        <foreach collection="list" item="rank">
             WHEN r.user_id = #{rank.userId} AND r.round_number = #{rank.roundNumber}
             THEN #{rank.updateDate}
         </foreach>
         END
         )
         WHERE (r.user_id, r.round_number) IN
-        <foreach collection="rankingUpdateList" item="rank" open="(" separator="," close=")">
+        <foreach collection="list" item="rank" open="(" separator="," close=")">
             (#{rank.userId}, #{rank.roundNumber})
         </foreach>
     </update>
+
 
 
     <!-- 특정 유저의 랭킹 전체 조회 -->
