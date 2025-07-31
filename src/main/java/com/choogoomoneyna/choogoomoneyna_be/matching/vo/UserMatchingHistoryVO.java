@@ -2,6 +2,8 @@ package com.choogoomoneyna.choogoomoneyna_be.matching.vo;
 
 import lombok.*;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,4 +15,6 @@ public class UserMatchingHistoryVO {
     private Long matchingId;
     private Integer roundNumber;
     private String matchingResult;
+    private Date regDate;
+    private Date updateDate;
 }
