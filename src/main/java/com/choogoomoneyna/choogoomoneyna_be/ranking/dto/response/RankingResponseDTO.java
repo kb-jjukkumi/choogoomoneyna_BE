@@ -10,5 +10,5 @@ public class RankingResponseDTO {
     private String userNickname;
     private Integer ranking;
     private Integer score;
-    private ChoogooMi ChoogooMi;
+    private ChoogooMi choogooMi;
 }

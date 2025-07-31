@@ -13,5 +13,5 @@ public class RankingUserVO {
     private String nickname;
     private Integer ranking;
     private Integer score;
-    private String ChoogooMi;
+    private String choogooMi;
 }

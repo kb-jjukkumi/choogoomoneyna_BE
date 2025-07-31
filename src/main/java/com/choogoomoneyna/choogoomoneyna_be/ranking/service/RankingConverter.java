@@ -13,7 +13,7 @@ public class RankingConverter {
                 .userNickname(rankingUserVO.getNickname())
                 .score(rankingUserVO.getScore())
                 .ranking(rankingUserVO.getRanking())
-                .ChoogooMi(ChoogooMi.valueOf(rankingUserVO.getChoogooMi()))
+                .choogooMi(ChoogooMi.valueOf(rankingUserVO.getChoogooMi()))
                 .build();
     }
 
