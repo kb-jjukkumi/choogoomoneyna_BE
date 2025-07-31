@@ -7,19 +7,23 @@
 
     <!-- ResultMap: DB 결과를 RankingUserVO에 매핑 -->
     <resultMap id="RankingUserResultMap" type="com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingUserVO">
+        <result property="roundNumber" column="round_number" />
         <result property="userId" column="user_id" />
         <result property="nickname" column="nickname" />
         <result property="ranking" column="ranking" />
         <result property="score" column="score" />
+        <result property="choogooMi" column="choogoomi_name" />
     </resultMap>
 
     <!-- 전체 랭킹 가져오기 -->
     <select id="getAllRankingUser" resultMap="RankingUserResultMap">
         SELECT
+            r.round_number AS round_number,
             r.user_id AS user_id,
             u.nickname AS nickname,
             r.current_ranking AS ranking,
-            s.score_value AS score
+            s.score_value AS score,
+            u.choogoomi_name AS choogoomi_name
         FROM rankings r
                  LEFT JOIN users u ON r.user_id = u.user_id
                  LEFT JOIN scores s ON r.user_id = s.user_id
@@ -28,17 +32,18 @@
     <!-- 특정 라운드의 Top N 랭킹 -->
     <select id="findTopNRankingUserByRoundNumber" resultMap="RankingUserResultMap" parameterType="map">
         SELECT
+            r.round_number AS round_number,
             r.user_id AS user_id,
             u.nickname AS nickname,
             r.current_ranking AS ranking,
-            s.score_value AS score
+            s.score_value AS score,
+            u.choogoomi_name AS choogoomi_name
         FROM rankings r
                  LEFT JOIN users u ON r.user_id = u.user_id
-                 LEFT JOIN scores s ON r.user_id = s.user_id
+                 LEFT JOIN scores s ON r.user_id = s.user_id AND r.round_number = s.round_number
         WHERE r.round_number = #{roundNumber}
         ORDER BY r.current_ranking ASC
         LIMIT #{limit}
     </select>
-
 
 </mapper>
