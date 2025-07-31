@@ -7,15 +7,14 @@
 
     <!-- resultMap -->
     <resultMap id="RoundInfoResultMap" type="com.choogoomoneyna.choogoomoneyna_be.matching.vo.RoundInfoVO">
-        <id property="id" column="round_info_id"/>
-        <result property="roundNumber" column="round_number"/>
+        <id property="roundNumber" column="round_number"/>
         <result property="startDate" column="start_date"/>
         <result property="endDate" column="end_date"/>
     </resultMap>
 
     <!-- 회차 번호로 조회 -->
     <select id="findRoundInfoByRoundNumber" resultMap="RoundInfoResultMap" parameterType="int">
-        SELECT round_info_id, round_number, start_date, end_date
+        SELECT round_number, start_date, end_date
         FROM round_info
         WHERE round_number = #{roundNumber}
         LIMIT 1
@@ -44,15 +43,14 @@
 
     <!-- 최신 회차 전체 정보 조회 -->
     <select id="findLatestRoundInfo" resultMap="RoundInfoResultMap">
-        SELECT round_info_id, round_number, start_date, end_date
+        SELECT round_number, start_date, end_date
         FROM round_info
         ORDER BY round_number DESC
         LIMIT 1
     </select>
 
     <!-- 회차 삽입 -->
-    <insert id="insertRoundInfo" parameterType="com.choogoomoneyna.choogoomoneyna_be.matching.vo.RoundInfoVO"
-            useGeneratedKeys="true" keyProperty="id" keyColumn="round_info_id">
+    <insert id="insertRoundInfo" parameterType="com.choogoomoneyna.choogoomoneyna_be.matching.vo.RoundInfoVO">
         INSERT INTO round_info (round_number, start_date, end_date)
         VALUES (#{roundNumber}, #{startDate}, #{endDate})
     </insert>
