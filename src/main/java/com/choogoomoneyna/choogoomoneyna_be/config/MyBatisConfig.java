@@ -28,6 +28,7 @@ import javax.sql.DataSource;
         "com.choogoomoneyna.choogoomoneyna_be.account.codef.mapper",
         "com.choogoomoneyna.choogoomoneyna_be.account.db.mapper",
         "com.choogoomoneyna.choogoomoneyna_be.ranking.mapper",
+        "com.choogoomoneyna.choogoomoneyna_be.survey.mapper",
 })
 public class MyBatisConfig {
 
