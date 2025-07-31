@@ -4,6 +4,7 @@ import com.choogoomoneyna.choogoomoneyna_be.ranking.dto.response.RankingHistoryD
 import com.choogoomoneyna.choogoomoneyna_be.ranking.dto.response.RankingResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingUserVO;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO;
+import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
 
 public class RankingConverter {
 
@@ -12,6 +13,7 @@ public class RankingConverter {
                 .userNickname(rankingUserVO.getNickname())
                 .score(rankingUserVO.getScore())
                 .ranking(rankingUserVO.getRanking())
+                .ChoogooMi(ChoogooMi.valueOf(rankingUserVO.getChoogooMi()))
                 .build();
     }
 
