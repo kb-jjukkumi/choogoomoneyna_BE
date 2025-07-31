@@ -15,7 +15,7 @@ public class SurveyCalculatorServiceImpl implements SurveyCalculatorService {
 
     @Override
     public ChoogooMi recommendChoogooMi(Long userId) {
-        List<SurveyResponseVO> userSurveyResponseList = surveyResponseService.findSurveyResponseByUserId(userId);
+        List<SurveyResponseVO> userSurveyResponseList = surveyResponseService.findLatestSurveyResponseByUserId(userId);
         return SurveyWeightCalculator.getTopType(userSurveyResponseList);
     }
 }
