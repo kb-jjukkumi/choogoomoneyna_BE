@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.net.BindException;
+import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -41,14 +42,18 @@ public class GlobalExceptionHandler {
                 .body("BindException: " + ex.getMessage());
     }
 
-
-
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public ResponseEntity<?> handleGeneric(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .header("Content-Type", "text/plain;charset=UTF-8")
                 .body("서버 오류가 발생했습니다.");
+    }
+
+    @ExceptionHandler(CustomNotFoundException.class)
+    public ResponseEntity<?> handleNotFound(CustomNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("message", ex.getMessage()));
     }
 }
 
