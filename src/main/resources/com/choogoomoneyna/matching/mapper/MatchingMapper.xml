@@ -72,6 +72,14 @@
         LIMIT 1
     </select>
 
+    <select id="getProgressMatchingIdByUserIdAndRoundNumber" resultType="long" parameterType="map">
+        SELECT matching_id
+        FROM matchings
+        WHERE (user1_id = #{userId} OR user2_id = #{userId})
+          AND round_number = #{roundNumber}
+        LIMIT 1
+    </select>
+
     <select id="getComponentUserIdByUserId" resultType="long" parameterType="long">
         SELECT
             CASE

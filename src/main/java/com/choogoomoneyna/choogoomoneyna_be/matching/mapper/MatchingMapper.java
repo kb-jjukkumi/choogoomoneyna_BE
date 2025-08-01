@@ -26,5 +26,10 @@ public interface MatchingMapper {
 
     Long getProgressMatchingIdByUserId(Long userId);
 
+    Long getProgressMatchingIdByUserIdAndRoundNumber(
+            @Param("userId") Long userId,
+            @Param("roundNumber") Integer roundNumber
+    );
+
     Long getComponentUserIdByUserId(Long userId);
 }
