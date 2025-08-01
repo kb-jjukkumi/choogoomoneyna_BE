@@ -53,25 +53,32 @@ public class CustomHttpClient {
         return new MockHttpResponse(responseBody,200);
     }
 
-    //헤더에 따라 응답 매핑 메서드
-//    private String overrideResponse(String originalJson, String scenario) throws IOException {
-//        JsonNode root = objectMapper.readTree(originalJson);
+//    public HttpResponse<String> send(HttpRequest request) throws IOException, InterruptedException {
+//        Optional<String> mockHeader = request.headers().firstValue("X-MOCK-SCENARIO");
+//        System.out.println("Received mock header in custom send: " + mockHeader);
 //
-//        switch (scenario) {
-//            case "mock-account-success-kb":
-//                if (root.isArray() && root.size() > 0) {
-//                    ObjectNode firstAccount = (ObjectNode) root.get(0);
-//                    firstAccount.put("connectedId", "mock-connected-id-kb");
-//                }
-//                break;
-//            case "mock-account-fail-kb":
-//                ((ObjectNode) root.path("data").withArray("errorList").get(0))
-//                        .put("message", "KB국민은행 자산 연동 실패");
-//                break;
-//            // 필요한 시나리오 더 추가
+//        if (mockHeader.isPresent()) {
+//            // 🎯 1. 목 응답 처리
+//            String scenarioName = mockHeader.get();
+//            InputStream is = getClass().getClassLoader().getResourceAsStream("mock-data/" + scenarioName + ".json");
+//
+//            if (is == null) {
+//                throw new FileNotFoundException("mock-data/" + scenarioName + ".json not found");
+//            }
+//
+//            String responseBody = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+//            responseBody = overrideResponse(responseBody, scenarioName);  // 커넥티드아이디 추가 등 시나리오 대응
+//
+//            return new MockHttpResponse(responseBody, 200);
+//
+//        } else {
+//            // ✅ 2. 실서버로 직접 요청 보내기
+//            HttpClient realClient = HttpClient.newHttpClient();
+//            return realClient.send(request, HttpResponse.BodyHandlers.ofString());
 //        }
-//        return objectMapper.writeValueAsString(root);
 //    }
+
+
     private String overrideResponse(String originalJson, String scenario) throws IOException {
         JsonNode root = objectMapper.readTree(originalJson);
 
