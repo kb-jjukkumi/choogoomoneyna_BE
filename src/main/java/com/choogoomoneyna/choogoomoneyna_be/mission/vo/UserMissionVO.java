@@ -9,6 +9,7 @@ import lombok.*;
 @Builder
 public class UserMissionVO {
     private Long userId;
+    private String nickname;
     private Integer missionId;
     private String missionTitle;
     private String missionContent;
