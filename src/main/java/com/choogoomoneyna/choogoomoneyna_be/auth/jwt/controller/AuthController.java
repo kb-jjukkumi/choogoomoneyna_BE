@@ -1,8 +1,10 @@
 package com.choogoomoneyna.choogoomoneyna_be.auth.jwt.controller;
 
+import com.choogoomoneyna.choogoomoneyna_be.auth.email.service.EmailAuthService;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.JwtTokenProvider;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service.AuthService;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service.RefreshTokenService;
+import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserPasswordResetDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.LoginType;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.JwtTokenResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserJoinRequestDTO;
@@ -30,6 +32,7 @@ public class AuthController {
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
+    private final EmailAuthService emailAuthService;
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@Valid @ModelAttribute UserJoinRequestDTO dto) {
@@ -86,5 +89,19 @@ public class AuthController {
         request.getSession().invalidate();
 
         return ResponseEntity.ok("로그아웃 성공");
+    }
+
+    @PutMapping("/password/reset")
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody UserPasswordResetDTO dto) {
+        // TODO: 인증 코드 저장한 경우 추가 인증하기
+        // String verificationCode = dto.getVerificationCode();
+
+        UserVO user = userService.findByEmailAndLoginType(dto.getEmail(), LoginType.LOCAL);
+        if (user == null) {
+            throw new UsernameNotFoundException("존재하지 않은 이메일입니다.");
+        }
+
+        userService.updatePasswordByUserEmail(dto.getEmail(), dto.getNewPassword());
+        return ResponseEntity.ok("비밀번호 재설정 성공");
     }
 }
