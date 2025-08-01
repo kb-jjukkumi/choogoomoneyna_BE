@@ -19,10 +19,10 @@
     <!-- INSERT 쿼리 -->
     <insert id="insertUserMatchingHistory" parameterType="com.choogoomoneyna.choogoomoneyna_be.matching.vo.UserMatchingHistoryVO">
         INSERT INTO user_matching_histories (
-            user_id, matching_id, round_number, matching_result, reg_date, update_date
+            user_id, matching_id, round_number, matching_result
         )
         VALUES (
-                   #{userId}, #{matchingId}, #{roundNumber}, #{matchingResult}, #{regDate}, #{updateDate}
+                   #{userId}, #{matchingId}, #{roundNumber}, #{matchingResult}
                )
     </insert>
 
