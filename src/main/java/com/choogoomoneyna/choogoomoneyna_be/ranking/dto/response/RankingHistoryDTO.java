@@ -4,12 +4,11 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Builder
 public class RankingHistoryDTO {
-    private Date regDate;
+    private Date startDate;
     private Integer ranking;
     private Integer score;
 }

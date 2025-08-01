@@ -31,7 +31,7 @@ public class RankingConverter {
 
     public static RankingHistoryDTO toRankingHistoryDTO(RankingVO rankingVO) {
         return RankingHistoryDTO.builder()
-                .regDate(rankingVO.getRegDate())
+                .startDate(rankingVO.getRegDate())
                 .ranking(rankingVO.getCurrentRanking())
                 .build();
     }
