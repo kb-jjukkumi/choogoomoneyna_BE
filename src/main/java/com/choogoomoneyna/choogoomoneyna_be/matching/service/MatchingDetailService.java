@@ -4,6 +4,6 @@ import com.choogoomoneyna.choogoomoneyna_be.matching.dto.Response.MatchingMainRe
 
 public interface MatchingDetailService {
 
-    public MatchingMainResponseDTO getMatchingDetail(Long userId, Integer roundNumber);
+    MatchingMainResponseDTO getMatchingDetail(Long userId, Integer roundNumber);
 
 }
