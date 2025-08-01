@@ -1,0 +1,15 @@
+{
+  "result": {
+    "code": "CF-00000",
+    "message": "정상 처리되었습니다."
+  },
+  "data": {
+    "resDepositTrust": [
+      {
+        "resAccount": "123456789011234",
+        "resAccountName": "KB마이핏통장",
+        "resAccountBalance": "200000"
+      }
+    ]
+  }
+}

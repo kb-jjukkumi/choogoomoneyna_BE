@@ -1,0 +1,15 @@
+{
+  "result": {
+    "code": "CF-00000",
+    "message": "정상 처리되었습니다."
+  },
+  "data": {
+    "resDepositTrust": [
+      {
+        "resAccount": "8123456789123",
+        "resAccountName": "하나머니통장",
+        "resAccountBalance": "180000"
+      }
+    ]
+  }
+}

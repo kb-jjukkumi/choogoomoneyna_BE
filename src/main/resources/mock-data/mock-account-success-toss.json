@@ -1,0 +1,15 @@
+{
+  "result": {
+    "code": "CF-00000",
+    "message": "정상 처리되었습니다."
+  },
+  "data": {
+    "resDepositTrust": [
+      {
+        "resAccount": "1001123456789",
+        "resAccountName": "토스뱅크통장",
+        "resAccountBalance": "420000"
+      }
+    ]
+  }
+}
