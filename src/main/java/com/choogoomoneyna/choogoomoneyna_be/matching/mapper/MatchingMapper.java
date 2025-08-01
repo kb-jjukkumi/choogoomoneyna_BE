@@ -31,5 +31,8 @@ public interface MatchingMapper {
             @Param("roundNumber") Integer roundNumber
     );
 
-    Long getComponentUserIdByUserId(Long userId);
+    Long getComponentUserIdByUserIdAndMatchingId(
+            @Param("userId") Long userId,
+            @Param("matchingId") Long matchingId
+    );
 }

@@ -1,7 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.matching.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingVO;
-import com.choogoomoneyna.choogoomoneyna_be.user.vo.MatchedUserVO;
 
 import java.util.List;
 
@@ -80,8 +79,9 @@ public interface MatchingService {
     /**
      * 매칭된 상대방 사용자의 ID를 조회합니다
      *
-     * @param userId 조회할 사용자의 ID
+     * @param userId     조회할 사용자의 ID
+     * @param matchingId
      * @return 매칭된 상대방의 사용자 ID
      */
-    Long getComponentUserIdByUserId(Long userId);
+    Long getComponentUserIdByUserIdAndMatchingId(Long userId, Long matchingId);
 }
