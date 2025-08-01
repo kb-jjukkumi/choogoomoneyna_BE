@@ -50,7 +50,7 @@ public class CodefServiceImpl implements CodefService {
 
         // 3. codef api로 계좌 리스트 가져오기
         log.info("service addAccount method {}",mockScenario);
-        List<AccountResponseDto> accountList = codefApiRequester.getAccountList(accountRequestDto, connectedId, mockScenario);
+        List<AccountResponseDto> accountList = codefApiRequester.getAccountList(userId, accountRequestDto, connectedId, mockScenario);
         System.out.println(accountList);
 
         if (accountList == null || accountList.isEmpty()) {
