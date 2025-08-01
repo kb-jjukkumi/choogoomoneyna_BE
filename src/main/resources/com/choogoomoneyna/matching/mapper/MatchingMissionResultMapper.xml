@@ -84,6 +84,7 @@
             resultType="com.choogoomoneyna.choogoomoneyna_be.mission.vo.UserMissionVO">
         SELECT
             mmr.user_id AS userId,
+            u.nickname AS nickname,
             m.mission_id AS missionId,
             m.mission_title AS missionTitle,
             m.mission_content AS missionContent,
@@ -91,8 +92,10 @@
             mmr.result_score AS resultScore
         FROM matching_mission_results mmr
                  JOIN missions m ON mmr.mission_id = m.mission_id
+                 JOIN users u ON mmr.user_id = u.user_id
         WHERE mmr.user_id = #{userId}
           AND mmr.matching_id = #{matchingId}
     </select>
+
 
 </mapper>
