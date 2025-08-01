@@ -12,6 +12,6 @@ public class MissionProgressDTO {
     String missionTitle;
     String missionContent;
     Integer missionScore;
-    long userId;
+    String userNickname;
     int score;
 }

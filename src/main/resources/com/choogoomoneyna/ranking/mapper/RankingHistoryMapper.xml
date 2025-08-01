@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.choogoomoneyna.choogoomoneyna_be.ranking.mapper.RankingHistoryMapper">
+
+    <resultMap id="RankingHistoryResultMap" type="com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingHistoryVO">
+        <result property="roundNumber" column="round_number"/>
+        <result property="userId" column="user_id"/>
+        <result property="ranking" column="current_ranking"/>
+        <result property="score" column="score_value"/>
+        <result property="regDate" column="reg_date"/>
+        <result property="choogooMi" column="choogoomi_name"/>
+    </resultMap>
+
+    <select id="findAllRankingHistoryByUserId" resultMap="RankingHistoryResultMap" parameterType="long">
+        SELECT
+            r.round_number,
+            r.user_id,
+            r.current_ranking,
+            s.score_value,
+            r.reg_date,
+            u.choogoomi_name
+        FROM rankings r
+            JOIN scores s
+                ON r.user_id = s.user_id AND r.round_number = s.round_number
+            JOIN users u
+                ON r.user_id = u.user_id
+        WHERE r.user_id = #{userId}
+        ORDER BY r.round_number DESC
+    </select>
+
+</mapper>

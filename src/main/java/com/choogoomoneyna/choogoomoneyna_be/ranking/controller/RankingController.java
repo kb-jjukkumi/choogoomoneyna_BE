@@ -26,6 +26,7 @@ public class RankingController {
     private final RankingService rankingService;
     private final RoundInfoService roundInfoService;
     private final RankingUserChangeService rankingUserChangeService;
+    private final RankingHistoryService rankingHistoryService;
 
     @PutMapping("/update")
     public ResponseEntity<?> updateRanking() {
@@ -59,7 +60,7 @@ public class RankingController {
     public ResponseEntity<?> getRankingHistory(@AuthenticationPrincipal CustomUserDetails userDetails) {
         Long userId = userDetails.getId();
 
-        List<RankingHistoryDTO> rankingHistoryList = rankingService.findAllRankingByUserId(userId)
+        List<RankingHistoryDTO> rankingHistoryList = rankingHistoryService.findAllRankingHistoryByUserId(userId)
                 .stream()
                 .map(RankingConverter::toRankingHistoryDTO)
                 .toList();

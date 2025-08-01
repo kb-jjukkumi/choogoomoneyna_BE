@@ -3,9 +3,9 @@ package com.choogoomoneyna.choogoomoneyna_be.ranking.service;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.dto.response.RankingChangeResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.dto.response.RankingHistoryDTO;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.dto.response.RankingResponseDTO;
+import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingHistoryVO;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingUserChangeVO;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingUserVO;
-import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
 
 public class RankingConverter {
@@ -29,10 +29,13 @@ public class RankingConverter {
                 .build();
     }
 
-    public static RankingHistoryDTO toRankingHistoryDTO(RankingVO rankingVO) {
+    public static RankingHistoryDTO toRankingHistoryDTO(RankingHistoryVO rankingHistoryVO) {
         return RankingHistoryDTO.builder()
-                .regDate(rankingVO.getRegDate())
-                .ranking(rankingVO.getCurrentRanking())
+                .choogooMi(ChoogooMi.valueOf(rankingHistoryVO.getChoogooMi()))
+                .roundNumber(rankingHistoryVO.getRoundNumber())
+                .startDate(rankingHistoryVO.getRegDate())
+                .ranking(rankingHistoryVO.getRanking())
+                .score(rankingHistoryVO.getScore())
                 .build();
     }
 }
