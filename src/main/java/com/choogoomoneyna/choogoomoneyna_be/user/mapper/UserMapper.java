@@ -29,6 +29,12 @@ public interface UserMapper {
 
     void updateUser(UserVO user);
 
+    void updateNicknameAndPasswordByUserId(
+            @Param("userId") Long userId,
+            @Param("nickname") String nickname,
+            @Param("password") String password
+    );
+
     void deleteByEmail(String email);
 
     int countAllUsers();
