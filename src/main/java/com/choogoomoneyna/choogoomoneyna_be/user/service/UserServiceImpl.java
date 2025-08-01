@@ -77,6 +77,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void updatePasswordByUserEmail(String email, String password) {
+        userMapper.updatePasswordByUserEmail(email, password);
+    }
+
+    @Override
     public int countAllUsers() {
         return userMapper.countAllUsers();
     }

@@ -34,4 +34,6 @@ public interface UserMapper {
     void updateConnectedId(@Param("id") Long id, @Param("connectedId") String connectedId);
 
     List<UserVO> findAllUsers();
+
+    void updatePasswordByUserEmail(@Param("email") String email, @Param("password") String password);
 }
