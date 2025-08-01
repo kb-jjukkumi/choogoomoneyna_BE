@@ -160,4 +160,11 @@
         UPDATE users SET connected_id = #{connectedId} WHERE user_id = #{id}
     </update>
 
+    <update id="updatePasswordByUserEmail">
+        UPDATE users
+        SET password = #{password},
+            update_date = NOW()
+        WHERE email = #{email}
+    </update>
+
 </mapper>

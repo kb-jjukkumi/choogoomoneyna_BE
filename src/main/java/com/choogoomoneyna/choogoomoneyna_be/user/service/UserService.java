@@ -15,7 +15,7 @@ public interface UserService {
      * @param user 등록할 사용자의 상세 정보가 담긴 UserVO 객체
      */
     void insertUser(UserVO user);
-    
+
     /**
      * 주어진 사용자 닉네임이 시스템에 이미 중복되어 있는지 확인합니다.
      *
@@ -27,7 +27,7 @@ public interface UserService {
     /**
      * 주어진 이메일과 로그인 타입으로 사용자가 존재하는지 확인합니다.
      *
-     * @param email 검색할 사용자의 이메일 주소
+     * @param email     검색할 사용자의 이메일 주소
      * @param loginType 사용자의 로그인 타입 (예: LOCAL, OAUTH2)
      * @return 해당 이메일과 로그인 타입을 가진 사용자가 존재하면 true, 그렇지 않으면 false
      */
@@ -36,7 +36,7 @@ public interface UserService {
     /**
      * 주어진 이메일과 로그인 타입으로 사용자를 찾아 반환
      *
-     * @param email 검색할 사용자의 이메일 주소
+     * @param email     검색할 사용자의 이메일 주소
      * @param loginType 사용자의 로그인 타입 (예: LOCAL, OAUTH2)
      * @return 해당 이메일과 로그인 타입을 가진 사용자가 존재하면 반환, 그렇지 않으면 null
      */
@@ -45,7 +45,7 @@ public interface UserService {
     /**
      * userId 로 식별된 사용자의 ChoogooMi(선호 타입)를 업데이트합니다.
      *
-     * @param userId ChoogooMi를 업데이트할 사용자의 id
+     * @param userId    ChoogooMi를 업데이트할 사용자의 id
      * @param choogooMi 사용자에게 설정할 새로운 ChoogooMi 값
      */
     void updateChoogooMiByUserId(Long userId, ChoogooMi choogooMi);
@@ -53,7 +53,7 @@ public interface UserService {
     /**
      * userId로 식별된 사용자의 닉네임을 업데이트합니다.
      *
-     * @param userId nickname을 업데이트할 사용자의 id
+     * @param userId   nickname을 업데이트할 사용자의 id
      * @param nickname 사용자에게 설정할 새로운 nickname
      */
     void updateUserNicknameByUserId(Long userId, String nickname);
@@ -61,11 +61,19 @@ public interface UserService {
     /**
      * userId로 식별된 사용자의 프로필 사진을 업데이트합니다.
      *
-     * @param userId 프로필 사진을 업데이트할 사용자의 id
+     * @param userId          프로필 사진을 업데이트할 사용자의 id
      * @param profileImageUrl 사용자에게 설정할 새로운 프로필 사진
      */
     void updateProfileImageUrlByUserId(Long userId, String profileImageUrl);
 
+
+    /**
+     * 주어진 이메일로 식별된 사용자의 비밀번호를 업데이트합니다.
+     *
+     * @param email    비밀번호를 업데이트할 사용자의 이메일 주소
+     * @param password 사용자에게 설정할 새로운 비밀번호
+     */
+    void updatePasswordByUserEmail(String email, String password);
 
     /**
      * 시스템에 등록된 모든 사용자의 수를 반환합니다.
