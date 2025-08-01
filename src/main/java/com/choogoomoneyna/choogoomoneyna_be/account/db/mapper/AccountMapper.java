@@ -16,6 +16,8 @@ public interface AccountMapper {
 
     AccountVO findByAccountNum(String accountNum);
 
+    AccountVO findByUserIdAndAccountNum(@Param("userId") Long userId, @Param("accountNum") String accountNum);
+
     void insertAccount(List<AccountVO> accountVOList);
 
     void updateAccount(AccountVO accountVO);

@@ -233,7 +233,7 @@ public class CodefApiRequester {
 
 
     // 보유 계좌 조회 메서드
-    public List<AccountResponseDto> getAccountList(AccountRequestDto accountRequestDto, String connectedId, String mockScenario) throws Exception {
+    public List<AccountResponseDto> getAccountList(Long userId, AccountRequestDto accountRequestDto, String connectedId, String mockScenario) throws Exception {
         String requestUrl = "https://development.codef.io/v1/kr/bank/p/account/account-list";
 
         ObjectMapper mapper = new ObjectMapper();
@@ -255,7 +255,7 @@ public class CodefApiRequester {
             for (JsonNode accountInfo : depositTrustList) {
                 AccountResponseDto accountResponseDto = new AccountResponseDto();
                 String resAccount = (accountInfo.get("resAccount").asText());
-                if(accountMapper.findByAccountNum(resAccount)!=null){
+                if(accountMapper.findByUserIdAndAccountNum(userId, resAccount)!=null){
                     continue;
                 } else{
                     accountResponseDto.setAccountNum(resAccount);

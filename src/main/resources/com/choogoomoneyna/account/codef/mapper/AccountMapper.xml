@@ -9,6 +9,10 @@
         SELECT * FROM accounts WHERE account_num = #{accountNum}
     </select>
 
+    <select id="findByUserIdAndAccountNum" resultType="com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.AccountVO">
+        SELECT * FROM accounts WHERE account_num = #{accountNum} and  user_id = #{userId}
+    </select>
+
     <select id="findByUserId" resultType="com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.AccountResponseDto">
         SELECT
             account_num,
