@@ -8,5 +8,5 @@ import java.util.List;
 @Mapper
 public interface RankingHistoryMapper {
 
-    List<RankingHistoryVO> :findAllRankingHistoryByUserId(Long userId);
+    List<RankingHistoryVO> findAllRankingHistoryByUserId(Long userId);
 }
