@@ -22,7 +22,7 @@ public class MatchingDetailServiceImpl implements MatchingDetailService {
             throw new CustomNotFoundException("matching progress not found");
         }
 
-        Long opponentUserId = matchingService.getComponentUserIdByUserId(userId);
+        Long opponentUserId = matchingService.getComponentUserIdByUserIdAndMatchingId(userId, matchId);
         if (opponentUserId == null) {
             throw new CustomNotFoundException("opponent user not found");
         }
