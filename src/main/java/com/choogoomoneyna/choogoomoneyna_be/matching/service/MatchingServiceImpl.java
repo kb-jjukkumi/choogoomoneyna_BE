@@ -53,6 +53,13 @@ public class MatchingServiceImpl implements MatchingService {
         if (!user1Id.equals(user2Id)) {
             matchingMissionResultService.createMatchingMissionResult(user2Id, matchingId, commonMissionId);
         }
+
+        for (Integer choogooMiMissionId : choogooMiMissionIds) {
+            matchingMissionResultService.createMatchingMissionResult(user1Id, matchingId, choogooMiMissionId);
+            if (!user1Id.equals(user2Id)) {
+                matchingMissionResultService.createMatchingMissionResult(user2Id, matchingId, choogooMiMissionId);
+            }
+        }
     }
 
     private MatchingVO buildToMatchingVO(Long user1Id, Long user2Id) {
@@ -334,7 +341,12 @@ public class MatchingServiceImpl implements MatchingService {
     }
 
     @Override
-    public Long getComponentUserIdByUserId(Long userId) {
-        return matchingMapper.getComponentUserIdByUserId(userId);
+    public Long getProgressMatchingIdByUserIdAndRoundNumber(Long userId, Integer roundNumber) {
+        return matchingMapper.getProgressMatchingIdByUserIdAndRoundNumber(userId, roundNumber);
+    }
+
+    @Override
+    public Long getComponentUserIdByUserIdAndMatchingId(Long userId, Long matchingId) {
+        return matchingMapper.getComponentUserIdByUserIdAndMatchingId(userId, matchingId);
     }
 }

@@ -3,6 +3,7 @@ package com.choogoomoneyna.choogoomoneyna_be.matching.controller;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.CustomUserDetails;
 import com.choogoomoneyna.choogoomoneyna_be.matching.dto.Request.MatchingMissionUpdateRequest;
 import com.choogoomoneyna.choogoomoneyna_be.matching.dto.Response.MatchingMainResponseDTO;
+import com.choogoomoneyna.choogoomoneyna_be.matching.service.MatchingDetailService;
 import com.choogoomoneyna.choogoomoneyna_be.matching.service.MatchingMissionResultService;
 import com.choogoomoneyna.choogoomoneyna_be.matching.service.MatchingService;
 import com.choogoomoneyna.choogoomoneyna_be.matching.service.RoundInfoService;
@@ -29,6 +30,7 @@ public class MatchingMissionResultController {
     private final MatchingService matchingService;
     private final RoundInfoService roundInfoService;
     private final ScoreService scoreService;
+    private final MatchingDetailService matchingDetailService;
 
     @PutMapping("/missions/complete")
     public ResponseEntity<?> completeMatchingMission(
@@ -96,30 +98,20 @@ public class MatchingMissionResultController {
     @GetMapping("/main")
     public ResponseEntity<?> getMatchingMain(@AuthenticationPrincipal CustomUserDetails userDetails) {
         Long userId = userDetails.getId();
+        Integer roundNumber = roundInfoService.getRoundNumber();
 
-        Long matchId = matchingService.getProgressMatchingIdByUserId(userId);
-        if (matchId == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "matching progress not found"));
-        }
+        MatchingMainResponseDTO response = matchingDetailService.getMatchingDetail(userId, roundNumber);
+        return ResponseEntity.ok(response);
+    }
 
-        Long opponentUserId = matchingService.getComponentUserIdByUserId(userId);
-        if (opponentUserId == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "opponent user not found"));
-        }
+    @GetMapping("/history")
+    public ResponseEntity<?> getMatchingHistory(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestParam Integer roundNumber
+    ) {
+        Long userId = userDetails.getId();
 
-        List<MissionProgressDTO> myProgressList =
-                matchingMissionResultService.getAllMissionProgressDTO(userId, matchId);
-        List<MissionProgressDTO> opponentProgressList =
-                matchingMissionResultService.getAllMissionProgressDTO(opponentUserId, matchId);
-
-        return ResponseEntity.ok(
-                MatchingMainResponseDTO.builder()
-                        .message("Matching main detail")
-                        .myMissionProgressList(myProgressList)
-                        .opponentMissionProgressList(opponentProgressList)
-                        .build()
-        );
+        MatchingMainResponseDTO response = matchingDetailService.getMatchingDetail(userId, roundNumber);
+        return ResponseEntity.ok(response);
     }
 }

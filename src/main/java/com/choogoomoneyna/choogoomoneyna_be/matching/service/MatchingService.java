@@ -1,7 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.matching.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingVO;
-import com.choogoomoneyna.choogoomoneyna_be.user.vo.MatchedUserVO;
 
 import java.util.List;
 
@@ -69,10 +68,20 @@ public interface MatchingService {
     Long getProgressMatchingIdByUserId(Long userId);
 
     /**
+     * 특정 사용자가 특정 라운드에서 진행 중인 매칭의 ID를 조회합니다
+     *
+     * @param userId      조회할 사용자의 ID
+     * @param roundNumber 조회할 라운드 번호
+     * @return 해당 사용자가 해당 라운드에서 진행 중인 매칭 ID, 진행 중인 매칭이 없으면 null 반환
+     */
+    Long getProgressMatchingIdByUserIdAndRoundNumber(Long userId, Integer roundNumber);
+
+    /**
      * 매칭된 상대방 사용자의 ID를 조회합니다
      *
-     * @param userId 조회할 사용자의 ID
+     * @param userId     조회할 사용자의 ID
+     * @param matchingId
      * @return 매칭된 상대방의 사용자 ID
      */
-    Long getComponentUserIdByUserId(Long userId);
+    Long getComponentUserIdByUserIdAndMatchingId(Long userId, Long matchingId);
 }
