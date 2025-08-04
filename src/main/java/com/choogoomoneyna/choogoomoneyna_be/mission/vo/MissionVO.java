@@ -14,4 +14,5 @@ public class MissionVO {
     private String missionContent;
     private Integer missionScore;
     private String missionType;
+    private Integer missionLimitAmount;
 }
