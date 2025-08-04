@@ -18,4 +18,6 @@ public class MatchingMainResponseDTO {
     private List<MissionProgressDTO> opponentMissionProgressList;
     private Integer myTotalScore;
     private Integer opponentTotalScore;
+    private Integer myRanking;
+    private Integer opponentRanking;
 }
