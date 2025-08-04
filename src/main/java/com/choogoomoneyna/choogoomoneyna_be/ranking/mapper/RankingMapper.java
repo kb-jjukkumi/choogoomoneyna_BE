@@ -26,4 +26,9 @@ public interface RankingMapper {
     List<RankingVO> findAllRankingByUserId(Long userId);
 
     Integer findCurrentRankingByUserId(Long userId);
+
+    Integer findRankingByUserIdAndRoundNumber(
+            @Param("userId") Long userId,
+            @Param("roundNumber") Integer roundNumber
+    );
 }
