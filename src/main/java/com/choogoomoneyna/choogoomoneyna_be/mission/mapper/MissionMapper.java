@@ -10,4 +10,6 @@ public interface MissionMapper {
     MissionVO findMissionByMissionId(Integer missionId);
 
     Integer getMissionScore(Integer missionId);
+
+    Integer getMissionLimitAmount(Integer missionId);
 }

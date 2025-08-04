@@ -13,12 +13,13 @@
         <result property="missionContent" column="mission_content"/>
         <result property="missionScore" column="mission_score"/>
         <result property="missionType" column="mission_type"/>
+        <result property="missionLimitAmount" column="mission_limit_amount"/>
     </resultMap>
 
     <!-- INSERT -->
     <insert id="insertMission" parameterType="com.choogoomoneyna.choogoomoneyna_be.mission.vo.MissionVO" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO missions (choogoomi_name, mission_title, mission_content, mission_score, mission_type)
-        VALUES (#{choogooMiName}, #{missionTitle}, #{missionContent}, #{missionScore}, #{missionType})
+        INSERT INTO missions (choogoomi_name, mission_title, mission_content, mission_score, mission_type, mission_limit_amount)
+        VALUES (#{choogooMiName}, #{missionTitle}, #{missionContent}, #{missionScore}, #{missionType}, #{missionLimitAmount})
     </insert>
 
     <!-- SELECT by missionId -->
@@ -34,6 +35,13 @@
         FROM missions
         WHERE mission_id = #{missionId}
         LIMIT 1
+    </select>
+
+    <!--GET missionLimitAmount only -->
+    <select id="getMissionLimitAmount" parameterType="int" resultType="int">
+        SELECT mission_limit_amount
+        FROM missions
+        WHERE mission_id = #{missionId}
     </select>
 
 </mapper>
