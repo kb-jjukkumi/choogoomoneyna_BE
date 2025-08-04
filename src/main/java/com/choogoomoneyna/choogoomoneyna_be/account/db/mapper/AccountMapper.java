@@ -22,8 +22,8 @@ public interface AccountMapper {
 
     List<TransactionVO> findTransactionsByAccountNumAndDateRange(
             @Param("accountNum") String accountNum,
-            @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate);
+            @Param("startDate") String startDate,
+            @Param("endDate") String endDate);
 
     void insertTransaction(List<TransactionVO> transactionVO);
 
@@ -32,5 +32,7 @@ public interface AccountMapper {
     List<TransactionVO> findAllTransactionsVo(String account);
 
     LocalDateTime findLatestTransactionDateByAccount(String accountNum);
+
+    String findBankIdByAccountNum(String accountNum);
 
 }
