@@ -105,4 +105,12 @@
         LIMIT 1
     </select>
 
+    <!-- 특정 유저의 특정 라운의 랭킹 -->
+    <select id="findRankingByUserIdAndRoundNumber" resultType="java.lang.Integer">
+        SELECT current_ranking
+        FROM rankings
+        WHERE user_id = #{userId} AND round_number = #{roundNumber}
+        LIMIT 1
+    </select>
+
 </mapper>

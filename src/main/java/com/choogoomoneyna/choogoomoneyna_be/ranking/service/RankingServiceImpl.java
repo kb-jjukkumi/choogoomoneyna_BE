@@ -57,6 +57,11 @@ public class RankingServiceImpl implements RankingService {
     }
 
     @Override
+    public Integer findRankingByUserIdAndRoundNumber(Long userId, int roundNumber) {
+        return rankingMapper.findRankingByUserIdAndRoundNumber(userId, roundNumber);
+    }
+
+    @Override
     public void batchUpdateCurrentRanking(List<RankingUpdateVO> rankingList) {
         rankingMapper.batchUpdateCurrentRanking(rankingList);
     }
