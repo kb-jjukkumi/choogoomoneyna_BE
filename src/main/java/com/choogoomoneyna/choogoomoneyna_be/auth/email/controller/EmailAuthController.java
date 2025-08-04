@@ -31,8 +31,8 @@ public class EmailAuthController {
                 ResponseEntity.badRequest().body("이메일 인증 실패");
     }
 
-    @GetMapping("/password-reset/send")
-    public ResponseEntity<String> checkEmail(@RequestParam String email) {
+    @PostMapping("/password-reset/send")
+    public ResponseEntity<String> checkEmail(@RequestBody String email) {
         if (userService.existsByEmailAndLoginType(email, LoginType.LOCAL)) {
             emailAuthService.sendAuthCode(email);
         }
