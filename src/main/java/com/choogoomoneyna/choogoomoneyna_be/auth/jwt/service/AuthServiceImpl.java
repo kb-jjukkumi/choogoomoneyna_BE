@@ -6,6 +6,7 @@ import com.choogoomoneyna.choogoomoneyna_be.ranking.service.RankingService;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
 import com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO;
+import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.LoginType;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserJoinRequestDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserConverter;
@@ -40,7 +41,7 @@ public class AuthServiceImpl implements AuthService {
 
         int roundNumber = roundInfoService.getRoundNumber();
 
-        UserVO userVO = UserConverter.joinRequestDtoToVo(dto, LoginType.LOCAL, encryptedPassword);
+        UserVO userVO = UserConverter.joinRequestDtoToVo(dto, LoginType.LOCAL, encryptedPassword, ChoogooMi.O);
         userService.insertUser(userVO);
         Long userId = userService.findByEmailAndLoginType(dto.getEmail(), LoginType.LOCAL).getId();
 
