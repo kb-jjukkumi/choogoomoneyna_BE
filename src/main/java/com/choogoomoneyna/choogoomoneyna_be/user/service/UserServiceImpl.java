@@ -51,6 +51,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void updateNicknameAndPasswordByUserId(Long userId, String nickname, String password) {
+        userMapper.updateNicknameAndPasswordByUserId(userId, nickname, password);
+    }
+
+    @Override
     public void updateUserNicknameByUserId(Long userId, String nickname) {
         // db 에서 userId를 이용하여 user 찾기
         UserVO user = userMapper.findById(userId);

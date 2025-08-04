@@ -135,6 +135,16 @@
         WHERE email = #{email}
     </update>
 
+    <!-- id로 닉네임 패스워드 변경 -->
+    <update id="updateNicknameAndPasswordByUserId">
+        UPDATE users
+        SET
+            nickname = #{nickname},
+            password = #{password},
+            update_date = NOW()
+        WHERE user_id = #{userId}
+    </update>
+
     <!-- 이메일로 삭제 -->
     <delete id="deleteByEmail" parameterType="String">
         DELETE FROM users WHERE email = #{email}

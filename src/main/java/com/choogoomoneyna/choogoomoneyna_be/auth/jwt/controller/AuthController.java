@@ -115,7 +115,9 @@ public class AuthController {
             throw new UsernameNotFoundException("존재하지 않은 이메일입니다.");
         }
 
-        userService.updatePasswordByUserEmail(dto.getEmail(), dto.getNewPassword());
+        String encryptedPassword = passwordEncoder.encode(dto.getNewPassword());
+
+        userService.updatePasswordByUserEmail(dto.getEmail(), encryptedPassword);
         return ResponseEntity.ok("비밀번호 재설정 성공");
     }
 }

@@ -43,6 +43,15 @@ public interface UserService {
     UserVO findByEmailAndLoginType(@NotBlank(message = "이메일은 필수 입니다.") String email, LoginType loginType);
 
     /**
+     * userId로 식별된 사용자의 닉네임과 비밀번호를 업데이트합니다.
+     *
+     * @param userId   업데이트할 사용자의 Id
+     * @param nickname 사용자에게 설정할 새로운 닉네임
+     * @param password 사용자에게 설정할 새로운 비밀번호
+     */
+    void updateNicknameAndPasswordByUserId(Long userId, String nickname, String password);
+
+    /**
      * userId 로 식별된 사용자의 ChoogooMi(선호 타입)를 업데이트합니다.
      *
      * @param userId    ChoogooMi를 업데이트할 사용자의 id

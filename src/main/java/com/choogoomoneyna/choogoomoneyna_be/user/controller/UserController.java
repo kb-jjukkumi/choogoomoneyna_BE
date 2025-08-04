@@ -3,15 +3,18 @@ package com.choogoomoneyna.choogoomoneyna_be.user.controller;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.CustomUserDetails;
 import com.choogoomoneyna.choogoomoneyna_be.matching.service.RoundInfoService;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
+import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserUpdateRequestDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.response.UserMainResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.response.UserMatchingResultHistoryDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserConverter;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserMainInfoService;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserMatchingResultHistoryService;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserService;
+import com.fasterxml.jackson.core.Base64Variant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +29,7 @@ public class UserController {
     private final UserMainInfoService userMainInfoService;
     private final ScoreService scoreService;
     private final UserMatchingResultHistoryService userMatchingResultHistoryService;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/main-profile")
     ResponseEntity<UserMainResponseDTO> getMainProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
@@ -53,5 +57,25 @@ public class UserController {
                 .toList();
 
         return ResponseEntity.ok(userMatchingResultHistoryDTOList);
+    }
+
+    @PutMapping("/update")
+    ResponseEntity<String> updateUserNicknameAndPassword(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody UserUpdateRequestDTO request
+            ) {
+        Long userId = userDetails.getId();
+        String nickname = request.getNickname();
+        String password = request.getPassword();
+        String newPassword = request.getNewPassword();
+
+        if (password == null || !password.equals(newPassword)) {
+            return ResponseEntity.badRequest().body("password not match");
+        }
+
+        String encodedNewPassword = passwordEncoder.encode(newPassword);
+
+        userService.updateNicknameAndPasswordByUserId(userId, nickname, encodedNewPassword);
+        return ResponseEntity.ok("user updated");
     }
 }
