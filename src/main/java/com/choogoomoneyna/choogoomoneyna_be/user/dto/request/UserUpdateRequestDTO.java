@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserUpdateRequestDTO {
     private String nickname;
-    private String verificationCode;
     private String password;
     private String newPassword;
 }
