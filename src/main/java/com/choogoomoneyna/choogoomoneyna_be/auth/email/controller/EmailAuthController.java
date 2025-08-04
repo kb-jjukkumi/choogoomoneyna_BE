@@ -32,7 +32,8 @@ public class EmailAuthController {
     }
 
     @PostMapping("/password-reset/send")
-    public ResponseEntity<String> checkEmail(@RequestBody String email) {
+    public ResponseEntity<String> checkEmail(@RequestBody EmailAuthRequestDTO dto) {
+        String email = dto.getEmail();
         if (userService.existsByEmailAndLoginType(email, LoginType.LOCAL)) {
             emailAuthService.sendAuthCode(email);
         }
