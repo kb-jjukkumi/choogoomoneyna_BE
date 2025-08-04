@@ -3,6 +3,7 @@ package com.choogoomoneyna.choogoomoneyna_be.user.controller;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.CustomUserDetails;
 import com.choogoomoneyna.choogoomoneyna_be.matching.service.RoundInfoService;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
+import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserUpdateRequestDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.response.UserMainResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.response.UserMatchingResultHistoryDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserConverter;
@@ -53,5 +54,23 @@ public class UserController {
                 .toList();
 
         return ResponseEntity.ok(userMatchingResultHistoryDTOList);
+    }
+
+    @PutMapping("/update")
+    ResponseEntity<String> updateUserNicknameAndPassword(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody UserUpdateRequestDTO request
+            ) {
+        Long userId = userDetails.getId();
+        String nickname = request.getNickname();
+        String password = request.getPassword();
+        String newPassword = request.getNewPassword();
+
+        if (password == null || !password.equals(newPassword)) {
+            return ResponseEntity.badRequest().body("password not match");
+        }
+
+        userService.updateNicknameAndPasswordByUserId(userId, nickname, newPassword);
+        return ResponseEntity.ok("user updated");
     }
 }
