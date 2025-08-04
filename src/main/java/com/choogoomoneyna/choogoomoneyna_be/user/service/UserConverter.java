@@ -64,11 +64,8 @@ public class UserConverter {
 
     // UserMainVo -> UserMainResponseDTO
     public static UserMainResponseDTO toUserMainResponseDTO(UserMainInfoVO userMainInfoVo) {
-
-        String choogooMiName = userMainInfoVo.getChoogooMi() != null ? userMainInfoVo.getChoogooMi() : "A";
-
         return UserMainResponseDTO.builder()
-                .choogooMi(ChoogooMi.valueOf(choogooMiName))
+                .choogooMi(ChoogooMi.valueOf(userMainInfoVo.getChoogooMi()))
                 .nickname(userMainInfoVo.getNickname())
                 .userScore(userMainInfoVo.getUserScore())
                 .userRanking(userMainInfoVo.getUserRanking())
