@@ -10,9 +10,11 @@ import com.choogoomoneyna.choogoomoneyna_be.user.service.UserConverter;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserMainInfoService;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserMatchingResultHistoryService;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserService;
+import com.fasterxml.jackson.core.Base64Variant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +29,7 @@ public class UserController {
     private final UserMainInfoService userMainInfoService;
     private final ScoreService scoreService;
     private final UserMatchingResultHistoryService userMatchingResultHistoryService;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/main-profile")
     ResponseEntity<UserMainResponseDTO> getMainProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
@@ -70,7 +73,9 @@ public class UserController {
             return ResponseEntity.badRequest().body("password not match");
         }
 
-        userService.updateNicknameAndPasswordByUserId(userId, nickname, newPassword);
+        String encodedNewPassword = passwordEncoder.encode(newPassword);
+
+        userService.updateNicknameAndPasswordByUserId(userId, nickname, encodedNewPassword);
         return ResponseEntity.ok("user updated");
     }
 }
