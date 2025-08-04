@@ -25,6 +25,8 @@ public interface UserMapper {
 
     String getChoogooMiByUserId(Long userId);
 
+    String getNicknameByUserId(Long userId);
+
     void updateUser(UserVO user);
 
     void deleteByEmail(String email);

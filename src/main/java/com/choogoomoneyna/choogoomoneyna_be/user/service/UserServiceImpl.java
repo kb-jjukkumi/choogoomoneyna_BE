@@ -92,6 +92,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public String getNicknameByUserId(Long userId) {
+        return userMapper.getNicknameByUserId(userId);
+    }
+
+    @Override
     public List<UserVO> findAllUsers() {
         return userMapper.findAllUsers();
     }

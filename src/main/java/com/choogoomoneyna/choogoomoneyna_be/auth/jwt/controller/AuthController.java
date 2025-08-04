@@ -1,6 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.auth.jwt.controller;
 
 import com.choogoomoneyna.choogoomoneyna_be.auth.email.service.EmailAuthService;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.CustomUserDetails;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.JwtTokenProvider;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service.AuthService;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service.RefreshTokenService;
@@ -14,6 +15,7 @@ import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -50,6 +52,18 @@ public class AuthController {
             e.printStackTrace();
             return ResponseEntity.status(500).body("서버 오류: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/check-nickname-for-update")
+    public ResponseEntity<?> checkNicknameForUpdate(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestParam String nickname
+    ) {
+        Long userId = userDetails.getId();
+        String currentNickname = userService.getNicknameByUserId(userId);
+
+        boolean isNicknameDuplicated = !currentNickname.equals(nickname) && userService.isUserLoginIdDuplicated(nickname);
+        return ResponseEntity.ok(isNicknameDuplicated);
     }
 
     @PostMapping("/login")
