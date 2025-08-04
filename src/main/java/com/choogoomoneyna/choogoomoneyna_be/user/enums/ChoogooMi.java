@@ -3,6 +3,7 @@ package com.choogoomoneyna.choogoomoneyna_be.user.enums;
 import com.choogoomoneyna.choogoomoneyna_be.matching.enums.ChoogooMiMissionType;
 
 public enum ChoogooMi {
+    O,
     A,
     B,
     C,

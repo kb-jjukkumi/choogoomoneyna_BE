@@ -49,7 +49,7 @@ public class UserConverter {
     }
 
     // joinRequestDTO -> VO
-    public static UserVO joinRequestDtoToVo(UserJoinRequestDTO dto, LoginType loginType, String encryptedPassword) {
+    public static UserVO joinRequestDtoToVo(UserJoinRequestDTO dto, LoginType loginType, String encryptedPassword, ChoogooMi choogooMi) {
         if (dto == null)
             return null;
 
@@ -58,6 +58,7 @@ public class UserConverter {
                 .password(encryptedPassword)
                 .nickname(dto.getNickname())
 //                .profileImageUrl(dto.getProfileImage() != null ? dto.getProfileImage().getOriginalFilename() : null)
+                .choogooMi(choogooMi.name())
                 .loginType(loginType.name())
                 .build();
     }

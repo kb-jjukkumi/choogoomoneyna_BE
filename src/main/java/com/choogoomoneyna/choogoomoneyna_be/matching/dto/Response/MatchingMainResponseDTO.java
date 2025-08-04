@@ -16,4 +16,6 @@ public class MatchingMainResponseDTO {
     private String message;
     private List<MissionProgressDTO> myMissionProgressList;
     private List<MissionProgressDTO> opponentMissionProgressList;
+    private Integer myTotalScore;
+    private Integer opponentTotalScore;
 }
