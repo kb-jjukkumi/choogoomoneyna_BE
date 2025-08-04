@@ -90,6 +90,13 @@ public interface UserService {
      */
     ChoogooMi getChoogooMiByUserId(Long userId);
 
+    /**
+     * 주어진 사용자 ID를 기준으로 사용자의 닉네임을 조회합니다.
+     *
+     * @param userId 닉네임을 조회할 사용자의 고유 식별자
+     * @return 사용자의 닉네임 (문자열), 사용자를 찾을 수 없는 경우 null 반환
+     */
+    String getNicknameByUserId(Long userId);
 
     /**
      * 시스템에 등록된 모든 사용자 목록을 조회합니다.

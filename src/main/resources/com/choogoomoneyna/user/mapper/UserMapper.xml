@@ -106,6 +106,13 @@
         WHERE user_id = #{userId}
     </select>
 
+    <select id="getNicknameByUserId" parameterType="long" resultType="String">
+        SELECT nickname
+        FROM users
+        WHERE user_id = #{userId}
+    </select>
+
+
     <!-- nickname으로 존재 여부 확인 -->
     <select id="existsByNickname" resultType="java.lang.Boolean">
         SELECT COUNT(*) > 0 FROM users WHERE nickname = #{nickname}
@@ -154,7 +161,6 @@
         FROM users
         WHERE choogoomi_name IS NOT NULL
     </select>
-
 
     <update id="updateConnectedId">
         UPDATE users SET connected_id = #{connectedId} WHERE user_id = #{id}
