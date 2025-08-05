@@ -64,18 +64,31 @@ public class UserController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody UserUpdateRequestDTO request
             ) {
-        Long userId = userDetails.getId();
-        String nickname = request.getNickname();
-        String password = request.getPassword();
-        String newPassword = request.getNewPassword();
 
-        if (password == null || !password.equals(newPassword)) {
-            return ResponseEntity.badRequest().body("password not match");
+        try {
+            Long userId = userDetails.getId();
+            String nickname = request.getNickname();
+            String password = request.getPassword();
+            String newPassword = request.getNewPassword();
+            String newPasswordConfirm = request.getNewPasswordConfirm();
+
+            String encodedPassword = userService.getPasswordByUserId(userId);
+            if (password == null || !passwordEncoder.matches(password, encodedPassword)) {
+                return ResponseEntity.badRequest().body("password not match");
+            }
+
+            if (newPassword == null || !newPassword.equals(newPasswordConfirm)) {
+                return ResponseEntity.badRequest().body("new password not match");
+            }
+
+            String encodedNewPassword = passwordEncoder.encode(newPassword);
+            userService.updateNicknameAndPasswordByUserId(userId, nickname, encodedNewPassword);
+
+            return ResponseEntity.ok("user updated");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-
-        String encodedNewPassword = passwordEncoder.encode(newPassword);
-
-        userService.updateNicknameAndPasswordByUserId(userId, nickname, encodedNewPassword);
-        return ResponseEntity.ok("user updated");
     }
 }
