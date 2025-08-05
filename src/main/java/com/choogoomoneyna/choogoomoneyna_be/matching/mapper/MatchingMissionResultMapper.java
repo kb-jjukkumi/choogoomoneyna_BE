@@ -12,7 +12,7 @@ public interface MatchingMissionResultMapper {
 
     void insertOne(MatchingMissionResultVO matchingMissionResultVO);
 
-    void updateOne(MatchingMissionResultVO matchingMissionResultVO);
+    int updateOne(MatchingMissionResultVO matchingMissionResultVO);
 
     List<MatchingMissionResultVO> findMatchingMissionByUserId(Long UserId);
 

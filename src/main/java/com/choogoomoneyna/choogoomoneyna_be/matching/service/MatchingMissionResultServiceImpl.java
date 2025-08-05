@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -43,10 +44,16 @@ public class MatchingMissionResultServiceImpl implements MatchingMissionResultSe
         MatchingMissionResultVO existingVO = matchingMissionResultMapper
                 .findMatchingMissionResultByUserIdAndMatchingIdAndMissionId(userId, matchingId, missionId);
 
+        log.info("existingVO: {}", existingVO);
+        System.out.println("existingVO: {}"+existingVO.getId() + " " + existingVO.getResultScore() + " " + existingVO.getMatchingId() );
+
+
         if (existingVO == null) return;
 
         existingVO.setResultScore(existingVO.getResultScore() + missionScore);
-        matchingMissionResultMapper.updateOne(existingVO);
+        int result = matchingMissionResultMapper.updateOne(existingVO);
+        //int result = matchingMissionResultMapper.updateOne(existingVO);
+        log.info("✅ updateOne 결과: {} row(s) affected", result);
     }
 
     @Override
@@ -75,13 +82,15 @@ public class MatchingMissionResultServiceImpl implements MatchingMissionResultSe
     @Override
     public void validateMissionType1(Long userId, Long matchingId, Integer missionId, Integer missionSocre, Integer limitAmount) {
         //0. 날짜 계산
-        LocalDate today = LocalDate.now().minusDays(1);
-
+        LocalDate today = LocalDate.now().minusDays(2);
         LocalDate startDate = today.with(DayOfWeek.MONDAY);
         LocalDate endDate = today.with(DayOfWeek.SUNDAY);
 
-        String start = startDate.toString();
-        String end = endDate.toString();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String start = startDate.format(formatter);
+        String end = endDate.format(formatter);
+        log.info("start: {}",start);
+        log.info("end: {}", end);
 
         //1. 사용자의 지출 합계 필드 정의
         int spent = 0;
@@ -114,8 +123,8 @@ public class MatchingMissionResultServiceImpl implements MatchingMissionResultSe
         if(spent >= limitAmount) {
             log.info("validate logic finished-- mission failed");
         } else {
-            updateMatchingMissionResult(userId, matchingId, missionId, spent);
-            log.info("validate logic finished-- mission success{}",spent);
+            updateMatchingMissionResult(userId, matchingId, missionId, missionSocre);
+            log.info("validate logic finished-- mission success spent amount: {}",spent);
         }
     }
 }

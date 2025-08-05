@@ -133,7 +133,7 @@ public class MatchingMissionResultController {
         //3.CODEF_WEEKLY 검증 로직 실행
         matchingMissionResultService.validateMissionType1(userId, matchingId, missionId, missionScore, limitAmount);
 
-        return ResponseEntity.ok(200);
+        return ResponseEntity.ok("success validate codef_weekly mission");
 
     }
 }
