@@ -87,6 +87,7 @@
             u.nickname AS nickname,
             m.mission_id AS missionId,
             m.mission_title AS missionTitle,
+            m.mission_type AS missionType,
             m.mission_content AS missionContent,
             m.mission_score AS missionScore,
             mmr.result_score AS resultScore

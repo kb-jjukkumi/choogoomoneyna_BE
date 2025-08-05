@@ -11,6 +11,7 @@ public class UserMissionVO {
     private Long userId;
     private String nickname;
     private Integer missionId;
+    private String missionType;
     private String missionTitle;
     private String missionContent;
     private Integer missionScore;

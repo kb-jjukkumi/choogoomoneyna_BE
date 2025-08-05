@@ -10,6 +10,7 @@ import lombok.*;
 public class MissionProgressDTO {
     int missionId;
     String missionTitle;
+    String missionType;
     String missionContent;
     Integer missionScore;
     String userNickname;

@@ -12,6 +12,7 @@ public enum ChoogooMi {
 
     public ChoogooMiMissionType getMissionType() {
         switch (this) {
+            case O: return ChoogooMiMissionType.O; // O 타입 추가
             case A: return ChoogooMiMissionType.A;
             case B: return ChoogooMiMissionType.B;
             case C: return ChoogooMiMissionType.C;
