@@ -81,7 +81,7 @@ public class SurveyWeightCalculator {
         );
     }
 
-    private static Map<ChoogooMi, Integer> calculateScore(List<SurveyResponseVO> responses) {
+    public static Map<ChoogooMi, Integer> calculateScore(List<SurveyResponseVO> responses) {
         Map<ChoogooMi, Integer> scores = new EnumMap<>(ChoogooMi.class);
         for (ChoogooMi type : ChoogooMi.values()) {
             scores.put(type, 0);
