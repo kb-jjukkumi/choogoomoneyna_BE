@@ -133,12 +133,10 @@ public class MatchingMissionResultServiceImpl implements MatchingMissionResultSe
         //0. 날짜 계산
         //화, 수, 목, 금, 토, 일, 월새벽에 전날 검증
         LocalDate day = LocalDate.now().minusDays(1);
-        LocalDate startDate = day.with(DayOfWeek.MONDAY);
-        LocalDate endDate = day.with(DayOfWeek.SUNDAY);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        String start = startDate.format(formatter);
-        String end = endDate.format(formatter);
+        String start = day.format(formatter);
+        String end = day.format(formatter);
         log.info("start: {}",start);
         log.info("end: {}", end);
 
@@ -162,8 +160,8 @@ public class MatchingMissionResultServiceImpl implements MatchingMissionResultSe
                 log.error(e.getMessage(),e);
             }
 
-            //5. 위클리 거래내역 조회
-            List<TransactionItemDto> transactions = accountDbService.getWeeklyTransactions(account.getAccountNum(),start,end);
+            //5. 데일리 거래내역 조회
+            List<TransactionItemDto> transactions = accountDbService.getDailyTransactions(account.getAccountNum(),start,end);
             for (TransactionItemDto transaction : transactions) {
                 spent += transaction.getTrAccountOut();
             }
@@ -171,10 +169,10 @@ public class MatchingMissionResultServiceImpl implements MatchingMissionResultSe
 
         //6. 지출 총합 비교
         if(spent >= limitAmount) {
-            log.info("validate logic finished-- mission failed");
+            log.info("validate logic finished-- mission failed spent money : {}", spent);
         } else {
             updateMatchingMissionResult(userId, matchingId, missionId, missionScore);
-            log.info("validate logic finished-- mission success spent amount: {}",spent);
+            log.info("validate logic finished-- mission success spent money : {}",spent);
         }
     }
 }
