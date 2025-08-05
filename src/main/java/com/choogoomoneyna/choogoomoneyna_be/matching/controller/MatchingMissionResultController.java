@@ -1,6 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.matching.controller;
 
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.CustomUserDetails;
+import com.choogoomoneyna.choogoomoneyna_be.matching.dto.Request.MatchingMissionQuizUpdateDTO;
 import com.choogoomoneyna.choogoomoneyna_be.matching.dto.Request.MatchingMissionUpdateRequest;
 import com.choogoomoneyna.choogoomoneyna_be.matching.dto.Response.MatchingMainResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.matching.service.MatchingDetailService;
@@ -151,5 +152,33 @@ public class MatchingMissionResultController {
                         .build()
         );
     }
+
+    @PutMapping("missions/validate/4")
+    public ResponseEntity<?> validatemissionType4(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                  @RequestBody MatchingMissionQuizUpdateDTO request) {
+        //1-1. 유저아이디 추출
+        Long userId = userDetails.getId();
+
+        //1-2.유저가 얻은 점수 추출
+        int score = request.getScore();
+
+        //2. 매칭, 미션아이디 추출
+        Long matchingId = matchingService.getProgressMatchingIdByUserId(userId);
+        if (matchingId == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "matching progress not found"));
+        }
+        int missionId = request.getMissionId();
+
+        //3.점수 업데이트
+        matchingMissionResultService.updateMatchingMissionResult(
+                userId, matchingId, missionId, score
+        );
+
+        return ResponseEntity.ok(Map.of(
+                        "message", "퀴즈 미션 채점 완료",
+                        "score", score)
+        );
+    }
+
 
 }
