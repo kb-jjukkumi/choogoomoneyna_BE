@@ -44,6 +44,15 @@ public class AccountDbServiceImpl implements AccountDbService {
     }
 
     @Override
+    public List<TransactionItemDto> getDailyTransactions(String account, String start, String end) {
+        List<TransactionVO> voList = accountMapper.findDailyTransactions(account, start, end);
+
+        return voList.stream()
+                .map(TransactionConverter::voToItemDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public String getBankId(String account) {
         return accountMapper.findBankIdByAccountNum(account);
     }

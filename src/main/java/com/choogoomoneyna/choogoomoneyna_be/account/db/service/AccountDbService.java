@@ -24,11 +24,22 @@ public interface AccountDbService {
     List<TransactionItemDto> getAllTransactions(String account);
 
     /**
-     *  account(계좌번호)의 이번주 거래내역을 조회합니다.
+     * account(계좌번호)의 이번주 거래내역을 조회합니다.
      * @param account 계좌번호
-     * @return 거래내역아이템 리스트
+     * @param start 시작날짜(월요일)
+     * @param end 종료날짜(일요일)
+     * @return 거래내역 dto 리스트
      */
     List<TransactionItemDto> getWeeklyTransactions(String account,String start, String end);
+
+    /**
+     * account(계좌번호)의 하루치 거래내역을 조회합니다.
+     * @param account 계좌번호
+     * @param start 시작일
+     * @param end 종료일(시작일과 같음)
+     * @return 거래내역 dto 리스트
+     */
+    List<TransactionItemDto> getDailyTransactions(String account,String start, String end);
 
     /**
      * 해당 계좌가 어느 은행의 계좌인지, bankId를 조회합니다.
@@ -36,4 +47,6 @@ public interface AccountDbService {
      * @return 은행아이디(bankId)
      */
     String getBankId(String account);
+
+
 }
