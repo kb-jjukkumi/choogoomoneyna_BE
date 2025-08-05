@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 public enum ChoogooMiMissionType {
+    O(null),
     A(Arrays.asList(101, 102, 103, 104)),
     B(Arrays.asList(201, 202, 203, 204)),
     C(Arrays.asList(301, 302, 303, 304)),
