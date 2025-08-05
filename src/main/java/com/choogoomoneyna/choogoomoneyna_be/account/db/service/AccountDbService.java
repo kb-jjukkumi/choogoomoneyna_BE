@@ -30,5 +30,10 @@ public interface AccountDbService {
      */
     List<TransactionItemDto> getWeeklyTransactions(String account,String start, String end);
 
+    /**
+     * 해당 계좌가 어느 은행의 계좌인지, bankId를 조회합니다.
+     * @param account 계좌번호
+     * @return 은행아이디(bankId)
+     */
     String getBankId(String account);
 }
