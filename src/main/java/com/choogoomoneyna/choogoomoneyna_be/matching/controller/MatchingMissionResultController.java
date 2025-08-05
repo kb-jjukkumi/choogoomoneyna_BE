@@ -32,48 +32,6 @@ public class MatchingMissionResultController {
     private final ScoreService scoreService;
     private final MatchingDetailService matchingDetailService;
 
-    @PutMapping("/missions/complete")
-    public ResponseEntity<?> completeMatchingMission(
-            @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestBody MatchingMissionUpdateRequest request) {
-
-        Long userId = userDetails.getId();
-
-        Long matchId = matchingService.getProgressMatchingIdByUserId(userId);
-        if (matchId == null) {
-            return ResponseEntity.badRequest().body(Map.of("message", "matching progress not found"));
-        }
-
-        int missionId = request.getMissionId();
-        Integer score = missionService.getMissionScore(missionId);
-        if (score == null) {
-            return ResponseEntity.badRequest().body(Map.of("message", "mission score not found"));
-        }
-
-        matchingMissionResultService.updateMatchingMissionResult(
-                userId, matchId, missionId, score
-        );
-
-        List<MissionProgressDTO> progressList =
-                matchingMissionResultService.getAllMissionProgressDTO(userId, matchId);
-
-        int updateScore = scoreService.getScoreByUserIdAndRoundNumber(userId, roundInfoService.getRoundNumber()) + score;
-//        scoreService.updateScore(
-//                UserScoreVO.builder()
-//                        .userId(userId)
-//                        .score(updateScore)
-//                        .build()
-//        );
-
-        return ResponseEntity.ok(
-                MissionProgressListResponseDTO.builder()
-                        .message("Mission progress updated")
-                        .missionProgressDTOList(progressList)
-                        .resultScore(updateScore)
-                        .build()
-        );
-    }
-
     @GetMapping("/detail")
     public ResponseEntity<?> getMatchingMissionProgress(@AuthenticationPrincipal CustomUserDetails userDetails) {
         Long userId = userDetails.getId();
@@ -155,6 +113,43 @@ public class MatchingMissionResultController {
         matchingMissionResultService.validateMissionType2(userId, matchingId, missionId, missionScore, limitAmount);
 
         return ResponseEntity.ok("success validate codef_daily mission");
+    }
+
+    @PutMapping("/missions/validate/3")
+    public ResponseEntity<?> validateMissionType3(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody MatchingMissionUpdateRequest request) {
+
+        //1. 유저아이디 추출
+        Long userId = userDetails.getId();
+
+        //2. 매칭, 미션아이디, 미션 점수 추출
+        Long matchingId = matchingService.getProgressMatchingIdByUserId(userId);
+        if (matchingId == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "matching progress not found"));
+        }
+        int missionId = request.getMissionId();
+        Integer score = missionService.getMissionScore(missionId);
+        if (score == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "mission score not found"));
+        }
+
+        matchingMissionResultService.updateMatchingMissionResult(
+                userId, matchingId, missionId, score
+        );
+
+        List<MissionProgressDTO> progressList =
+                matchingMissionResultService.getAllMissionProgressDTO(userId, matchingId);
+
+        int updateScore = scoreService.getScoreByUserIdAndRoundNumber(userId, roundInfoService.getRoundNumber()) + score;
+
+        return ResponseEntity.ok(
+                MissionProgressListResponseDTO.builder()
+                        .message("Mission progress updated")
+                        .missionProgressDTOList(progressList)
+                        .resultScore(updateScore)
+                        .build()
+        );
     }
 
 }
