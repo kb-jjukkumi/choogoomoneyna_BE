@@ -13,6 +13,7 @@ public class MatchingMissionConverter {
                 .missionId(vo.getMissionId())
                 .userNickname(vo.getNickname())
                 .missionTitle(vo.getMissionTitle())
+                .missionType(vo.getMissionType())
                 .missionContent(vo.getMissionContent())
                 .missionScore(vo.getMissionScore())
                 .score(vo.getResultScore() != null ? vo.getResultScore() : 0)
