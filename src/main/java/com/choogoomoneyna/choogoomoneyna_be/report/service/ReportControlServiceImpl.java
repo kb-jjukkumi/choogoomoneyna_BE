@@ -20,7 +20,7 @@ public class ReportControlServiceImpl implements ReportControlService {
         System.out.println("userId: " + userId);
         try {
             ReportVO latestReport = reportService.findTopByUserIdOrderByRegDateDesc(userId);
-            long periodMillis = TimeUnit.DAYS.toMillis(0);  // 7일
+            long periodMillis = TimeUnit.DAYS.toMillis(2);  // 2일 제한
 
             // 만료되었으면 새로 뽑기
             if (latestReport == null || isExpired(latestReport.getRegDate(), periodMillis)) {
