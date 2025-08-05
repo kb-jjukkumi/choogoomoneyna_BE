@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.choogoomoneyna.choogoomoneyna_be.report.mapper.ReportMapper">
+
+    <!-- resultMap -->
+    <resultMap id="reportResultMap" type="com.choogoomoneyna.choogoomoneyna_be.report.vo.ReportVO">
+        <id property="id" column="report_id" />
+        <result property="userId" column="user_id" />
+        <result property="title" column="title" />
+        <result property="content" column="content" />
+        <result property="regDate" column="reg_date" />
+    </resultMap>
+
+    <!-- Report 삽입 -->
+    <insert id="insertReport" parameterType="com.choogoomoneyna.choogoomoneyna_be.report.vo.ReportVO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO reports (user_id, title, content, reg_date)
+        VALUES (#{userId}, #{title}, #{content}, NOW())
+    </insert>
+
+    <!-- userId를 이용하여 찾기 -->
+    <select id="findAllByUserId" parameterType="long" resultMap="reportResultMap">
+        SELECT report_id, user_id, title, content, reg_date
+        FROM reports
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 가장 최신 리포트 가져오기 -->
+    <select id="findTopByUserIdOrderByRegDateDesc" parameterType="long" resultMap="reportResultMap">
+        SELECT *
+        FROM reports
+        WHERE user_id = #{userId}
+        ORDER BY reg_date DESC
+            LIMIT 1
+    </select>
+
+</mapper>
