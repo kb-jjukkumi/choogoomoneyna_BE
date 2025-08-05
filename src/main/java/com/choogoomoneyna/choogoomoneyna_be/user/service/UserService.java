@@ -113,4 +113,12 @@ public interface UserService {
      * @return 시스템에 등록된 모든 사용자 목록
      */
     List<UserVO> findAllUsers();
+
+    /**
+     * 사용자 ID로 식별된 사용자의 비밀번호를 조회합니다.
+     *
+     * @param userId 비밀번호를 조회할 사용자의 고유 식별자
+     * @return 사용자의 비밀번호 (문자열), 사용자를 찾을 수 없는 경우 null 반환
+     */
+    String getPasswordByUserId(Long userId);
 }
