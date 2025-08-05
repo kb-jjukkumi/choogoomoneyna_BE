@@ -220,6 +220,9 @@ public class MatchingServiceImpl implements MatchingService {
 
         // User를 점수에 따라 내림차순 정렬
         for (ChoogooMi choogooMi : ChoogooMi.values()) {
+            if (choogooMi.equals(ChoogooMi.O))
+                continue;
+
             List<UserVO> users = groupByChoogooMi(totalUsers, choogooMi);
             List<MatchedUserVO> matchableUsers = users.stream()
                     .map(user -> new MatchedUserVO(
