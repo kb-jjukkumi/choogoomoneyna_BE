@@ -134,6 +134,27 @@ public class MatchingMissionResultController {
         matchingMissionResultService.validateMissionType1(userId, matchingId, missionId, missionScore, limitAmount);
 
         return ResponseEntity.ok("success validate codef_weekly mission");
-
     }
+
+    @PutMapping("missions/validate/2")
+    public ResponseEntity<?> validatemissionType2(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                  @RequestBody MatchingMissionUpdateRequest request) {
+        //1. 유저아이디 추출
+        Long userId = userDetails.getId();
+
+        //2. 매칭, 미션, 제한 금액 추출
+        Long matchingId = matchingService.getProgressMatchingIdByUserId(userId);
+        if (matchingId == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "matching progress not found"));
+        }
+        int missionId = request.getMissionId();
+        int limitAmount = missionService.getMissionLimitAmount(missionId);
+        int missionScore = missionService.getMissionScore(missionId);
+
+        //3.CODEF_DAILY 검증 로직 실행
+        matchingMissionResultService.validateMissionType2(userId, matchingId, missionId, missionScore, limitAmount);
+
+        return ResponseEntity.ok("success validate codef_daily mission");
+    }
+
 }

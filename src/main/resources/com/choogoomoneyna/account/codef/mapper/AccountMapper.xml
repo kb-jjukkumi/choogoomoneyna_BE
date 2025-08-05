@@ -45,6 +45,16 @@
         AND tr_time BETWEEN #{startDate} AND #{endDate}
     </select>
 
+    <select id="findDailyTransactions"
+            resultType="com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.TransactionVO">
+        SELECT *
+        FROM transactions
+        WHERE account_num = #{accountNum}
+        AND tr_time BETWEEN STR_TO_DATE(#{startDate}, '%Y%m%d')
+        AND DATE_ADD(STR_TO_DATE(#{endDate}, '%Y%m%d'), INTERVAL 1 DAY)
+    </select>
+
+
     <insert id="insertTransaction" parameterType="java.util.List">
         INSERT INTO transactions (account_num, tr_time, tr_account_out, tr_account_in,
         tr_after_balance, transaction_type, tr_desc1, tr_desc2, tr_desc3, tr_desc4 )

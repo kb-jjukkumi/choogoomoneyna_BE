@@ -25,6 +25,10 @@ public interface AccountMapper {
             @Param("startDate") String startDate,
             @Param("endDate") String endDate);
 
+    List<TransactionVO> findDailyTransactions(@Param("accountNum") String accountNum,
+                                              @Param("startDate") String startDate,
+                                              @Param("endDate") String endDate);
+
     void insertTransaction(List<TransactionVO> transactionVO);
 
     List<AccountResponseDto> findByUserId(Long userId);

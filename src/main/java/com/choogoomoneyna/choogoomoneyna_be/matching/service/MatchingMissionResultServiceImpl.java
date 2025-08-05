@@ -80,9 +80,9 @@ public class MatchingMissionResultServiceImpl implements MatchingMissionResultSe
     }
 
     @Override
-    public void validateMissionType1(Long userId, Long matchingId, Integer missionId, Integer missionSocre, Integer limitAmount) {
+    public void validateMissionType1(Long userId, Long matchingId, Integer missionId, Integer missionScore, Integer limitAmount) {
         //0. 날짜 계산
-        LocalDate today = LocalDate.now().minusDays(2);
+        LocalDate today = LocalDate.now().minusDays(1); //월요일에 검증 로직이 실행되니 날짜 -1로 고정
         LocalDate startDate = today.with(DayOfWeek.MONDAY);
         LocalDate endDate = today.with(DayOfWeek.SUNDAY);
 
@@ -123,8 +123,56 @@ public class MatchingMissionResultServiceImpl implements MatchingMissionResultSe
         if(spent >= limitAmount) {
             log.info("validate logic finished-- mission failed");
         } else {
-            updateMatchingMissionResult(userId, matchingId, missionId, missionSocre);
+            updateMatchingMissionResult(userId, matchingId, missionId, missionScore);
             log.info("validate logic finished-- mission success spent amount: {}",spent);
+        }
+    }
+
+    @Override
+    public void validateMissionType2(Long userId, Long matchingId, Integer missionId, Integer missionScore, Integer limitAmount) {
+        //0. 날짜 계산
+        //화, 수, 목, 금, 토, 일, 월새벽에 전날 검증
+        LocalDate day = LocalDate.now().minusDays(1);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String start = day.format(formatter);
+        String end = day.format(formatter);
+        log.info("start: {}",start);
+        log.info("end: {}", end);
+
+        //1. 사용자의 지출 합계 필드 정의
+        int spent = 0;
+
+        //2. 사용자의 계좌목록 조회
+        List<AccountResponseDto> accounts = accountDbService.getAllAccounts(userId);
+
+        //3. 계좌별 for문
+        for (AccountResponseDto account : accounts) {
+            //4. codef로부터 거래내역 업데이트
+            try {
+                TransactionRequestDto dto = new TransactionRequestDto();
+                dto.setAccount(account.getAccountNum());
+                dto.setOrganization(accountDbService.getBankId(account.getAccountNum()));
+                dto.setStartDate(start);
+                dto.setEndDate(end);
+                codefService.addTransaction(userId,dto);
+            } catch (Exception e) {
+                log.error(e.getMessage(),e);
+            }
+
+            //5. 데일리 거래내역 조회
+            List<TransactionItemDto> transactions = accountDbService.getDailyTransactions(account.getAccountNum(),start,end);
+            for (TransactionItemDto transaction : transactions) {
+                spent += transaction.getTrAccountOut();
+            }
+        }
+
+        //6. 지출 총합 비교
+        if(spent >= limitAmount) {
+            log.info("validate logic finished-- mission failed spent money : {}", spent);
+        } else {
+            updateMatchingMissionResult(userId, matchingId, missionId, missionScore);
+            log.info("validate logic finished-- mission success spent money : {}",spent);
         }
     }
 }
