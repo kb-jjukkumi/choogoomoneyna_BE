@@ -75,7 +75,7 @@
     </insert>
 
     <select id="findAllTransactionsVo" resultType="com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.TransactionVO">
-        SELECT * FROM transactions WHERE account_num = #{account}
+        SELECT * FROM transactions WHERE account_num = #{account} ORDER BY tr_time DESC
     </select>
 
     <select id="findLatestTransactionDateByAccount" resultType="java.time.LocalDateTime">
