@@ -18,6 +18,7 @@ import com.choogoomoneyna.choogoomoneyna_be.user.service.UserService;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.MatchedUserVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MatchingServiceImpl implements MatchingService {
 
     private final MatchingMapper matchingMapper;
@@ -274,12 +276,15 @@ public class MatchingServiceImpl implements MatchingService {
 
         for (MatchingVO progressMatching : progressMatchings) {
             long matchingId = progressMatching.getId();
+            log.info("matchingId: {}",matchingId);
 
             long user1Id = progressMatching.getUser1Id();
             long user2Id = progressMatching.getUser2Id();
 
             int user1Score = matchingMissionResultService.getAllScoreByUserIdAndMatchingId(user1Id, matchingId);
             int user2Score = matchingMissionResultService.getAllScoreByUserIdAndMatchingId(user2Id, matchingId);
+            log.info("user1Score: {}",user1Score);
+            log.info("user2Score: {}",user2Score);
 
             if (user1Score > user2Score) {
                 insertUserMatchingHistoryMatchResult(user1Id, matchingId, roundNumber, MatchingResult.WIN);
