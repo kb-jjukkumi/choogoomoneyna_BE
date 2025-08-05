@@ -33,8 +33,8 @@ class AccountDbServiceTest {
         //given
         Long userId = 1L;
         List<AccountResponseDto> mockAccounts = List.of(
-                new AccountResponseDto("1234567890", "KB은행", "0004", "500"),
-                new AccountResponseDto("9876543210", "NH은행", "0005", "1000")
+                new AccountResponseDto("1234567890", "KB은행", "0004", "500", ""),
+                new AccountResponseDto("9876543210", "NH은행", "0005", "1000", "")
         );
 
         when(accountMapper.findByUserId(userId)).thenReturn(mockAccounts);

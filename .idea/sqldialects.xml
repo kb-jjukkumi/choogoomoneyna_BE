@@ -10,6 +10,7 @@
     <file url="file://$PROJECT_DIR$/src/main/resources/com/choogoomoneyna/ranking/mapper/RankingMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/com/choogoomoneyna/ranking/mapper/RankingUserChangeMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/com/choogoomoneyna/ranking/mapper/RankingUserMapper.xml" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/com/choogoomoneyna/report/mapper/ReportMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/com/choogoomoneyna/score/mapper/ScoreMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/com/choogoomoneyna/survey/mapper/SurveyResponseMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/com/choogoomoneyna/user/mapper/UserMainInfoMapper.xml" dialect="MySQL" />
