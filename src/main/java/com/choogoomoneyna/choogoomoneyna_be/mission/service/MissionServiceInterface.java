@@ -14,4 +14,9 @@ public class MissionServiceInterface implements MissionService {
     public Integer getMissionScore(Integer missionId) {
         return missionMapper.getMissionScore(missionId);
     }
+
+    @Override
+    public Integer getMissionLimitAmount(Integer missionId) {
+        return missionMapper.getMissionLimitAmount(missionId);
+    }
 }

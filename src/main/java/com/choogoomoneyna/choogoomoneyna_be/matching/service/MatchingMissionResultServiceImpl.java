@@ -1,18 +1,31 @@
 package com.choogoomoneyna.choogoomoneyna_be.matching.service;
 
+import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.AccountResponseDto;
+import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.TransactionRequestDto;
+import com.choogoomoneyna.choogoomoneyna_be.account.codef.service.CodefService;
+import com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.AccountVO;
+import com.choogoomoneyna.choogoomoneyna_be.account.db.dto.TransactionItemDto;
+import com.choogoomoneyna.choogoomoneyna_be.account.db.service.AccountDbService;
 import com.choogoomoneyna.choogoomoneyna_be.matching.mapper.MatchingMissionResultMapper;
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingMissionResultVO;
 import com.choogoomoneyna.choogoomoneyna_be.mission.dto.response.MissionProgressDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MatchingMissionResultServiceImpl implements MatchingMissionResultService {
 
     private final MatchingMissionResultMapper matchingMissionResultMapper;
+    private final AccountDbService accountDbService;
+    private final CodefService codefService;
 
     @Override
     public void createMatchingMissionResult(Long userId, Long matchingId, Integer missionId) {
@@ -31,10 +44,16 @@ public class MatchingMissionResultServiceImpl implements MatchingMissionResultSe
         MatchingMissionResultVO existingVO = matchingMissionResultMapper
                 .findMatchingMissionResultByUserIdAndMatchingIdAndMissionId(userId, matchingId, missionId);
 
+        log.info("existingVO: {}", existingVO);
+        System.out.println("existingVO: {}"+existingVO.getId() + " " + existingVO.getResultScore() + " " + existingVO.getMatchingId() );
+
+
         if (existingVO == null) return;
 
         existingVO.setResultScore(existingVO.getResultScore() + missionScore);
-        matchingMissionResultMapper.updateOne(existingVO);
+        int result = matchingMissionResultMapper.updateOne(existingVO);
+        //int result = matchingMissionResultMapper.updateOne(existingVO);
+        log.info("✅ updateOne 결과: {} row(s) affected", result);
     }
 
     @Override
@@ -58,5 +77,54 @@ public class MatchingMissionResultServiceImpl implements MatchingMissionResultSe
                 .stream()
                 .map(MatchingMissionConverter::toMissionProgressDTO)
                 .toList();
+    }
+
+    @Override
+    public void validateMissionType1(Long userId, Long matchingId, Integer missionId, Integer missionSocre, Integer limitAmount) {
+        //0. 날짜 계산
+        LocalDate today = LocalDate.now().minusDays(2);
+        LocalDate startDate = today.with(DayOfWeek.MONDAY);
+        LocalDate endDate = today.with(DayOfWeek.SUNDAY);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String start = startDate.format(formatter);
+        String end = endDate.format(formatter);
+        log.info("start: {}",start);
+        log.info("end: {}", end);
+
+        //1. 사용자의 지출 합계 필드 정의
+        int spent = 0;
+
+        //2. 사용자의 계좌목록 조회
+        List<AccountResponseDto> accounts = accountDbService.getAllAccounts(userId);
+
+        //3. 계좌별 for문
+        for (AccountResponseDto account : accounts) {
+            //4. codef로부터 거래내역 업데이트
+            try {
+                TransactionRequestDto dto = new TransactionRequestDto();
+                dto.setAccount(account.getAccountNum());
+                dto.setOrganization(accountDbService.getBankId(account.getAccountNum()));
+                dto.setStartDate(start);
+                dto.setEndDate(end);
+                codefService.addTransaction(userId,dto);
+            } catch (Exception e) {
+                log.error(e.getMessage(),e);
+            }
+
+            //5. 위클리 거래내역 조회
+            List<TransactionItemDto> transactions = accountDbService.getWeeklyTransactions(account.getAccountNum(),start,end);
+            for (TransactionItemDto transaction : transactions) {
+                spent += transaction.getTrAccountOut();
+            }
+        }
+
+        //6. 지출 총합 비교
+        if(spent >= limitAmount) {
+            log.info("validate logic finished-- mission failed");
+        } else {
+            updateMatchingMissionResult(userId, matchingId, missionId, missionSocre);
+            log.info("validate logic finished-- mission success spent amount: {}",spent);
+        }
     }
 }

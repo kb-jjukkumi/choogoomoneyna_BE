@@ -72,4 +72,8 @@
         SELECT MAX(tr_time) FROM transactions WHERE account_num = #{accountNum}
     </select>
 
+    <select id="findBankIdByAccountNum" resultType="String">
+        SELECT bank_id FROM accounts WHERE account_num =#{accountNum}
+    </select>
+
 </mapper>
