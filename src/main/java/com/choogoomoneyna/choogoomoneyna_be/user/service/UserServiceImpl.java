@@ -105,4 +105,9 @@ public class UserServiceImpl implements UserService {
     public List<UserVO> findAllUsers() {
         return userMapper.findAllUsers();
     }
+
+    @Override
+    public String getPasswordByUserId(Long userId) {
+        return userMapper.getPasswordByUserId(userId);
+    }
 }

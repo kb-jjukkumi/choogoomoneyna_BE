@@ -183,4 +183,11 @@
         WHERE email = #{email}
     </update>
 
+    <select id="getPasswordByUserId" resultType="java.lang.String">
+        SELECT password
+        FROM users
+        WHERE user_id = #{userId}
+        LIMIT 1
+    </select>
+
 </mapper>
