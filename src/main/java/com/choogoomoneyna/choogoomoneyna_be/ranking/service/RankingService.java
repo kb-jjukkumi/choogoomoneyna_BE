@@ -74,6 +74,16 @@ public interface RankingService {
     Integer findCurrentRankingByUserId(Long userId);
 
     /**
+     * 특정 사용자의 특정 라운드 랭킹을 조회합니다.
+     *
+     * @param userId      랭킹을 조회할 사용자의 고유 식별자
+     * @param roundNumber 랭킹을 조회할 라운드 번호
+     * @return 해당 사용자의 특정 라운드 랭킹을 {@link Integer}로 반환,
+     * 제공된 사용자 ID와 라운드 번호에 대한 랭킹 데이터가 없는 경우 null 반환
+     */
+    Integer findRankingByUserIdAndRoundNumber(Long userId, int roundNumber);
+
+    /**
      * 여러 사용자의 현재 랭킹을 일괄 업데이트합니다.
      * 업데이트할 랭킹은 제공된 RankingUpdateVO 객체 리스트에 명시됩니다.
      *
