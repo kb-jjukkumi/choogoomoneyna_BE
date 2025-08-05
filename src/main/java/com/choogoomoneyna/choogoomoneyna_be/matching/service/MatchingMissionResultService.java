@@ -67,4 +67,15 @@ public interface MatchingMissionResultService {
      * @param limitAmount 해당 미션의 지출 제한 금액 값
      */
     void validateMissionType1(Long userId, Long matchingId, Integer missionId, Integer missionScore, Integer limitAmount);
+
+    /**
+     * 미션 타입 2번, CODEF_DAILY 미션 결과를 검증합니다.
+     * @param userId 미션 검증을 진행할 사용자의 ID
+     * @param matchingId 미션이 포함되어있는 매칭 ID
+     * @param missionId 해당 미션 ID
+     * @param missionScore 해당 미션의 만점 점수
+     * @param limitAmount 해당 미션의 지출 제한 금액 값
+     */
+    void validateMissionType2(Long userId, Long matchingId, Integer missionId, Integer missionScore, Integer limitAmount);
+
 }
