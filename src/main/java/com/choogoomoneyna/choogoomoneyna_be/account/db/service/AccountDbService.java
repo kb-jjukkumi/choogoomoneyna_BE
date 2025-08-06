@@ -23,6 +23,8 @@ public interface AccountDbService {
      */
     List<TransactionItemDto> getAllTransactions(String account);
 
+    List<TransactionItemDto> getMonthlyTransactions(String account, String startDate, String endDate);
+
     /**
      * account(계좌번호)의 이번주 거래내역을 조회합니다.
      * @param account 계좌번호
