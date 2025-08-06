@@ -1,5 +1,8 @@
 package com.choogoomoneyna.choogoomoneyna_be.report.service;
 
+import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.AccountResponseDto;
+import com.choogoomoneyna.choogoomoneyna_be.account.db.dto.TransactionItemDto;
+import com.choogoomoneyna.choogoomoneyna_be.account.db.service.AccountDbService;
 import com.choogoomoneyna.choogoomoneyna_be.report.dto.response.GptResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.report.vo.ReportVO;
 import com.choogoomoneyna.choogoomoneyna_be.survey.service.SurveyResponseService;
@@ -9,10 +12,13 @@ import com.choogoomoneyna.choogoomoneyna_be.user.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReportGenerateServiceImpl implements ReportGenerateService {
@@ -20,6 +26,7 @@ public class ReportGenerateServiceImpl implements ReportGenerateService {
     private final ReportService reportService;
     private final SurveyResponseService surveyResponseService;
     private final UserService userService;
+    private final AccountDbService accountDbService;
     private final AiClient aiClient;
 
     private final ObjectMapper objectMapper = new ObjectMapper(); // JSON 변환용
@@ -120,8 +127,45 @@ public class ReportGenerateServiceImpl implements ReportGenerateService {
             }
         });
 
+        sb.append("""
+                아래는 사용자의 최근 한 달간 계좌 거래내역입니다. 소비 습관, 고정 지출, 저축 패턴 등을 분석하여, 설문 점수와 함께 사용자에게 가장 적절한 재무 조언과 추천 유형을 제시해주세요.
+                """);
         // TODO: 계좌 정보 연동시 이곳에 추가
         // sb.append("계좌 정보: ...\n");
+        LocalDate endDate = LocalDate.now();
+        LocalDate startDate = endDate.minusDays(30); //한달간의 거래내역 데이터 사용
+        String start = startDate.toString();
+        String end = endDate.toString();
+
+        //사용자의 등록된 계좌내역 가져오기
+        List<AccountResponseDto> accountList = accountDbService.getAllAccounts(userId);
+        for(AccountResponseDto account : accountList) {
+            //계좌별 최근 한 달간 거래내역 조회
+            List<TransactionItemDto> transactions = accountDbService.getMonthlyTransactions(account.getAccountNum(),start, end);
+            if(!transactions.isEmpty()) {
+                sb.append("계좌번호: ").append(account.getAccountNum()).append("\n");
+
+                //거래내역 내용 추가
+                for (TransactionItemDto t : transactions) {
+                    String date = t.getTrTime().split("T")[0]; // "2025-07-28"
+                    String type = t.getTransactionType();       // "Input" or "Output"
+                    int amount = type.equalsIgnoreCase("Input") ? t.getTrAccountIn() : t.getTrAccountOut();
+                    String amountStr = (type.equalsIgnoreCase("Input") ? "+" : "-") + String.format("%,d", amount) + "원";
+
+                    // 거래 주요 정보(desc3) 추가
+                    String desc = String.join(" / ", Optional.ofNullable(t.getTrDesc3()).orElse(""));
+
+                    String transactionLine = date + " | " + (type.equals("Input") ? "입금 " : "출금 ")
+                            + amountStr + " | " + desc;
+
+                    sb.append(transactionLine).append("\n");
+                    log.info("🧾 거래내역 로그: {}", transactionLine);
+                }
+
+                sb.append("\n");
+            }
+        }
+
 
         System.out.println(sb);
         System.out.println(scores);
