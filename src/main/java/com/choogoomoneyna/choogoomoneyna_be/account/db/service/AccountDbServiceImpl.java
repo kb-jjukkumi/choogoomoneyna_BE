@@ -34,6 +34,15 @@ public class AccountDbServiceImpl implements AccountDbService {
     }
 
     @Override
+    public List<TransactionItemDto> getMonthlyTransactions(String account, String startDate, String endDate) {
+        List<TransactionVO> voList = accountMapper.findTransactionsByAccountNumAndDateRange(account, startDate, endDate);
+
+        return voList.stream()
+                .map(TransactionConverter::voToItemDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<TransactionItemDto> getWeeklyTransactions(String account, String start, String end) {
 
         List<TransactionVO> voList = accountMapper.findTransactionsByAccountNumAndDateRange(account, start, end);
