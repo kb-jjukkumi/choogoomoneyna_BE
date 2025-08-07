@@ -2,12 +2,14 @@ package com.choogoomoneyna.choogoomoneyna_be.auth.oauth.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.auth.oauth.dto.OAuthUserInfoDTO;
 import com.choogoomoneyna.choogoomoneyna_be.config.KakaoOAuthConfig;
+import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.LoginType;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserService;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -16,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -25,6 +28,7 @@ public class KakaoLoginService implements OAuthLoginService {
     private final RestTemplate restTemplate;
     private final KakaoOAuthConfig kakaoOAuthConfig;
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public String getAccessToken(String code) {
@@ -75,25 +79,31 @@ public class KakaoLoginService implements OAuthLoginService {
 
         return OAuthUserInfoDTO.builder()
                 .oAuthEmail("kakao" + response.getBody().get("id") + "@social.kakao")
-                .nickname((String) profile.get("nickname"))
+                .nickname("kakao_" + profile.get("nickname"))
                 .build();
     }
 
     @Override
     public UserVO findOrCreateUserByOAuth(OAuthUserInfoDTO dto) {
         UserVO user = userService.findByEmailAndLoginType(dto.getOAuthEmail(), LoginType.KAKAO);
+        System.out.println("UserVO: " + user);
 
         if (user == null) {
+            String rawPassword = UUID.randomUUID().toString();
+            String encryptedPassword = passwordEncoder.encode(rawPassword);
+
             Date now = new Date();
             user = UserVO.builder()
                     .email(dto.getOAuthEmail())
-                    .password("<PASSWORD>")
+                    .password(encryptedPassword)
                     .nickname(dto.getNickname())
                     .loginType(LoginType.KAKAO.name())
                     .regDate(now)
                     .updateDate(now)
-                    .choogooMi(LoginType.KAKAO.name())
+                    .choogooMi(ChoogooMi.O.name())
                     .build();
+
+            System.out.println("UserVO: " + user);
             userService.insertUser(user);
         }
 
