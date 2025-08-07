@@ -92,4 +92,21 @@
         LIMIT 1
     </select>
 
+    <select id="findAllUserIdInProgressMatching" resultType="java.lang.Long">
+        SELECT user_id
+        FROM (
+                 SELECT user1_id AS user_id
+                 FROM matchings
+                 WHERE matching_status = 'PROGRESS'
+
+                 UNION
+
+                 SELECT user2_id AS user_id
+                 FROM matchings
+                 WHERE matching_status = 'PROGRESS'
+             ) AS all_users
+    </select>
+
+
+
 </mapper>
