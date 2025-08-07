@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/test/matching")
 @RequiredArgsConstructor
@@ -81,6 +83,11 @@ public class MatchingTestController {
     public ResponseEntity<String> getMatchingStatus(@PathVariable Long matchingId) {
         String status = matchingService.findMatchingStatus(matchingId);
         return ResponseEntity.ok(status);
+    }
+
+    @GetMapping("/all/users")
+    public ResponseEntity<List<Long>> getAllMatchingUsers() {
+        return ResponseEntity.ok(matchingService.findAllUserIdInProgressMatching());
     }
 
 
