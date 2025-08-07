@@ -19,7 +19,7 @@
     </resultMap>
 
     <!-- INSERT -->
-    <insert id="insertUser" parameterType="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO">
+    <insert id="insertUser" parameterType="com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO users (
             email, password, nickname, profile_imageurl,
             reg_date, update_date, choogoomi_name, user_login_type,
