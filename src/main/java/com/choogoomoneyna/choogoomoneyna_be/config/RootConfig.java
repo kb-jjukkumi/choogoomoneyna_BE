@@ -6,20 +6,27 @@ import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @ComponentScan(basePackages = {
-        "com.choogoomoneyna.choogoomoneyna_be.account.codef.controller",
-        "com.choogoomoneyna.choogoomoneyna_be.account.db.controller",
-        "com.choogoomoneyna.choogoomoneyna_be.auth.email.controller",
-        "com.choogoomoneyna.choogoomoneyna_be.auth.jwt.controller",
-        "com.choogoomoneyna.choogoomoneyna_be.auth.oauth.controller",
-        "com.choogoomoneyna.choogoomoneyna_be.matching.controller",
-        "com.choogoomoneyna.choogoomoneyna_be.mock.controller",
-        "com.choogoomoneyna.choogoomoneyna_be.ranking.controller",
-        "com.choogoomoneyna.choogoomoneyna_be.report.controller",
-        "com.choogoomoneyna.choogoomoneyna_be.survey.controller",
-        "com.choogoomoneyna.choogoomoneyna_be.user.controller",
+        "com.choogoomoneyna.choogoomoneyna_be.account.codef.service",
+        "com.choogoomoneyna.choogoomoneyna_be.account.db.service",
+        "com.choogoomoneyna.choogoomoneyna_be.auth.email.service",
+        "com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service",
+        "com.choogoomoneyna.choogoomoneyna_be.auth.oauth.service",
+        "com.choogoomoneyna.choogoomoneyna_be.batch",
+        "com.choogoomoneyna.choogoomoneyna_be.config",
+        "com.choogoomoneyna.choogoomoneyna_be.exception",
+        "com.choogoomoneyna.choogoomoneyna_be.matching.service",
+        "com.choogoomoneyna.choogoomoneyna_be.mission.service",
+        "com.choogoomoneyna.choogoomoneyna_be.mock.service",
+        "com.choogoomoneyna.choogoomoneyna_be.ranking.service",
+        "com.choogoomoneyna.choogoomoneyna_be.report.service",
+        "com.choogoomoneyna.choogoomoneyna_be.score.service",
+        "com.choogoomoneyna.choogoomoneyna_be.survey.service",
+        "com.choogoomoneyna.choogoomoneyna_be.user.service",
+        "com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util",
+
 })
 @Configuration
 @Import(MyBatisConfig.class)
 @EnableScheduling
-public class RootConfig {
+class RootConfig {
 }
