@@ -1,6 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.ranking.controller;
 
-import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.CustomUserDetails;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.CustomUserDetails;
 import com.choogoomoneyna.choogoomoneyna_be.matching.service.RoundInfoService;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.dto.response.RankingChangeResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.dto.response.RankingHistoryDTO;

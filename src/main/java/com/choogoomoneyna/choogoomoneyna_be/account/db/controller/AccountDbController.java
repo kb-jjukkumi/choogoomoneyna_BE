@@ -1,12 +1,9 @@
 package com.choogoomoneyna.choogoomoneyna_be.account.db.controller;
 
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.AccountResponseDto;
-import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.TransactionRequestDto;
-import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.TransactionResponseDto;
 import com.choogoomoneyna.choogoomoneyna_be.account.db.dto.TransactionItemDto;
 import com.choogoomoneyna.choogoomoneyna_be.account.db.service.AccountDbService;
-import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.CustomUserDetails;
-import io.swagger.annotations.Authorization;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;

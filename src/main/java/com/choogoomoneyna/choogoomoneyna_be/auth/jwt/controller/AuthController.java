@@ -1,8 +1,8 @@
 package com.choogoomoneyna.choogoomoneyna_be.auth.jwt.controller;
 
 import com.choogoomoneyna.choogoomoneyna_be.auth.email.service.EmailAuthService;
-import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.CustomUserDetails;
-import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.JwtTokenProvider;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.CustomUserDetails;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.JwtTokenProvider;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service.AuthService;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service.RefreshTokenService;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserPasswordResetDTO;

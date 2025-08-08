@@ -1,7 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.auth.oauth.controller;
 
-import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.CustomUserDetails;
-import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.JwtTokenProvider;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.CustomUserDetails;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.JwtTokenProvider;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service.RefreshTokenService;
 import com.choogoomoneyna.choogoomoneyna_be.auth.oauth.dto.OAuthUserInfoDTO;
 import com.choogoomoneyna.choogoomoneyna_be.auth.oauth.service.KakaoLoginService;

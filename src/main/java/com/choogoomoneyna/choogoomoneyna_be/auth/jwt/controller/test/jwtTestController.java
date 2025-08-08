@@ -1,6 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.auth.jwt.controller.test;
 
-import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.CustomUserDetails;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.CustomUserDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

@@ -1,6 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.matching.controller;
 
-import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.CustomUserDetails;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.CustomUserDetails;
 import com.choogoomoneyna.choogoomoneyna_be.matching.dto.Request.MatchingMissionQuizUpdateDTO;
 import com.choogoomoneyna.choogoomoneyna_be.matching.dto.Request.MatchingMissionUpdateRequest;
 import com.choogoomoneyna.choogoomoneyna_be.matching.dto.Response.MatchingMainResponseDTO;

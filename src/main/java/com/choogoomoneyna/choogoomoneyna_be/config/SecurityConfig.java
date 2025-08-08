@@ -1,7 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.config;
 
-import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.JwtAuthenticationEntryPoint;
-import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.JwtAuthenticationFilter;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.JwtAuthenticationEntryPoint;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.JwtAuthenticationFilter;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

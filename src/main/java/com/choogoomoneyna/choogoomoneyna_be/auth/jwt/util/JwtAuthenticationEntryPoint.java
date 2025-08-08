@@ -1,4 +1,4 @@
-package com.choogoomoneyna.choogoomoneyna_be.auth.jwt;
+package com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

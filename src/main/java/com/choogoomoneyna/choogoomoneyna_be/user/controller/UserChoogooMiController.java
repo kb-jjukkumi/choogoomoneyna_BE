@@ -1,6 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.user.controller;
 
-import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.CustomUserDetails;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.CustomUserDetails;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserUpdatedChoogooMiDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserService;

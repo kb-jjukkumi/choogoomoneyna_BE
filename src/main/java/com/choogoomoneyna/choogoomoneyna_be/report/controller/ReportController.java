@@ -1,6 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.report.controller;
 
-import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.CustomUserDetails;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.CustomUserDetails;
 import com.choogoomoneyna.choogoomoneyna_be.report.dto.response.ReportResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.report.service.ReportControlService;
 import com.choogoomoneyna.choogoomoneyna_be.report.service.ReportConverter;
