@@ -78,4 +78,6 @@ public interface MatchingMissionResultService {
      */
     void validateMissionType2(Long userId, Long matchingId, Integer missionId, Integer missionScore, Integer limitAmount);
 
+    List<Integer> findMissionIdsByUserIdAndMatchingId(Long userId, Long matchingId);
+
 }

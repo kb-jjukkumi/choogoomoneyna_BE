@@ -121,10 +121,10 @@ public class MatchingMissionResultServiceImpl implements MatchingMissionResultSe
 
         //6. 지출 총합 비교
         if(spent >= limitAmount) {
-            log.info("validate logic finished-- mission failed");
+            log.info("userId : {} validate logic finished-- mission failed",userId);
         } else {
             updateMatchingMissionResult(userId, matchingId, missionId, missionScore);
-            log.info("validate logic finished-- mission success spent amount: {}",spent);
+            log.info("userId : {} validate logic finished-- mission success spent amount: {}",userId,spent);
         }
     }
 
@@ -169,10 +169,15 @@ public class MatchingMissionResultServiceImpl implements MatchingMissionResultSe
 
         //6. 지출 총합 비교
         if(spent >= limitAmount) {
-            log.info("validate logic finished-- mission failed spent money : {}", spent);
+            log.info("userId: {} validate logic finished-- mission failed spent money : {}", userId, spent);
         } else {
             updateMatchingMissionResult(userId, matchingId, missionId, missionScore);
-            log.info("validate logic finished-- mission success spent money : {}",spent);
+            log.info("userId: {} validate logic finished-- mission success spent money : {}", userId, spent);
         }
+    }
+
+    @Override
+    public List<Integer> findMissionIdsByUserIdAndMatchingId(Long userId, Long matchingId) {
+        return matchingMissionResultMapper.findMissionIdsByUserIdAndMatchingId(userId, matchingId);
     }
 }

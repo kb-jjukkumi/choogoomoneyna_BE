@@ -72,7 +72,7 @@
 
     <!-- 유저, 매치 아이디를 이용하여 전체 가져오기 -->
     <select id="findAllMatchingMissionResultByUserIdAndMatchingId"
-            resultType="com.choogoomoneyna.choogoomoneyna_be.mission.vo.UserMissionVO">
+            resultType="com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingMissionResultVO">
         SELECT result_id, matching_id, mission_id, user_id, result_score, reg_date, update_date
         FROM matching_mission_results
         WHERE user_id = #{userId}
@@ -98,5 +98,11 @@
           AND mmr.matching_id = #{matchingId}
     </select>
 
+    <select id="findMissionIdsByUserIdAndMatchingId" resultType="java.lang.Integer">
+        SELECT mission_id
+        FROM matching_mission_results
+        WHERE user_id = #{userId}
+          AND matching_id = #{matchingId}
+    </select>
 
 </mapper>
