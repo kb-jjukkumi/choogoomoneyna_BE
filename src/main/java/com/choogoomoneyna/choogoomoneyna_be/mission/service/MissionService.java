@@ -15,4 +15,6 @@ public interface MissionService {
      * @return 지출 제한 금액
      */
     public Integer getMissionLimitAmount(Integer missionId);
+
+    String getMissionType(Integer missionId);
 }

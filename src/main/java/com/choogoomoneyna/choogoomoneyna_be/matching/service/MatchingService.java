@@ -84,4 +84,6 @@ public interface MatchingService {
      * @return 매칭된 상대방의 사용자 ID
      */
     Long getComponentUserIdByUserIdAndMatchingId(Long userId, Long matchingId);
+
+    List<Long> findAllUserIdInProgressMatching();
 }

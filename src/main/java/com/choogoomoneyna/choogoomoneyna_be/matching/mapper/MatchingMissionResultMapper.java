@@ -37,4 +37,10 @@ public interface MatchingMissionResultMapper {
             @Param("userId") Long UserId,
             @Param("matchingId") Long matchingId
     );
+
+    List<Integer> findMissionIdsByUserIdAndMatchingId(
+            @Param("userId") Long userId,
+            @Param("matchingId") Long matchingId
+    );
+
 }

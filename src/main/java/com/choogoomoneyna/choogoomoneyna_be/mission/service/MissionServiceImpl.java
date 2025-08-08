@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class MissionServiceInterface implements MissionService {
+public class MissionServiceImpl implements MissionService {
 
     private final MissionMapper missionMapper;
 
@@ -18,5 +18,10 @@ public class MissionServiceInterface implements MissionService {
     @Override
     public Integer getMissionLimitAmount(Integer missionId) {
         return missionMapper.getMissionLimitAmount(missionId);
+    }
+
+    @Override
+    public String getMissionType(Integer missionId) {
+        return missionMapper.getMissionType(missionId);
     }
 }

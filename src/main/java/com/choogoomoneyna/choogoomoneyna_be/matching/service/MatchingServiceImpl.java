@@ -357,4 +357,9 @@ public class MatchingServiceImpl implements MatchingService {
     public Long getComponentUserIdByUserIdAndMatchingId(Long userId, Long matchingId) {
         return matchingMapper.getComponentUserIdByUserIdAndMatchingId(userId, matchingId);
     }
+
+    @Override
+    public List<Long> findAllUserIdInProgressMatching() {
+        return matchingMapper.findAllUserIdInProgressMatching();
+    }
 }

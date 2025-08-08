@@ -129,6 +129,11 @@ dependencies {
 
   //Java Faker(Mock Data »ý¼º¿ë)
   implementation 'com.github.javafaker:javafaker:1.0.2'
+
+  //spring batch
+  implementation 'org.springframework.batch:spring-batch-core:4.3.10'
+  implementation 'org.springframework.batch:spring-batch-infrastructure:4.3.10'
+
 }
 
 

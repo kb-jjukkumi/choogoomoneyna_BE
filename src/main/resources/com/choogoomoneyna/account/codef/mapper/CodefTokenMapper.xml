@@ -18,7 +18,7 @@
     <!--토큰 수정-->
     <update id="updateToken">
         UPDATE codef_tokens SET access_token = #{accessToken}, token_expiry_time = #{tokenExpiryTime}
-        WHERE id = #{id}
+        WHERE codef_token_id = #{id}
     </update>
 
 </mapper>

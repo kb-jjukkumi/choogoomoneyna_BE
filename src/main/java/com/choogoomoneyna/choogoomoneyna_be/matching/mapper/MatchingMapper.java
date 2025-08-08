@@ -35,4 +35,6 @@ public interface MatchingMapper {
             @Param("userId") Long userId,
             @Param("matchingId") Long matchingId
     );
+
+    List<Long> findAllUserIdInProgressMatching();
 }

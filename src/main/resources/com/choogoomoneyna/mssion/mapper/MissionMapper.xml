@@ -44,4 +44,9 @@
         WHERE mission_id = #{missionId}
     </select>
 
+    <select id="getMissionType" resultType="String">
+        SELECT mission_type
+        FROM missions
+        where mission_id = #{missionId}
+    </select>
 </mapper>
