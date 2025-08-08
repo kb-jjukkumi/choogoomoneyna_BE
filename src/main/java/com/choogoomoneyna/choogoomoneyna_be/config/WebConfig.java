@@ -1,5 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.config;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
@@ -8,6 +9,7 @@ import javax.servlet.Filter;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletRegistration;
 
+@Configuration
 public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     private static final String LOCATION = "/testtest";
@@ -17,7 +19,7 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[]{RootConfig.class, SecurityConfig.class};
+        return new Class<?>[]{RootConfig.class, SecurityConfig.class,};
     }
 
     @Override
