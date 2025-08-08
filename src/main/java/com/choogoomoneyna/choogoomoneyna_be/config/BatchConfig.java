@@ -1,6 +1,9 @@
 package com.choogoomoneyna.choogoomoneyna_be.config;
 
+import com.choogoomoneyna.choogoomoneyna_be.batch.tasklet.CodefDailyMissionTasklet;
 import com.choogoomoneyna.choogoomoneyna_be.batch.tasklet.CodefWeeklyMissionTasklet;
+import com.choogoomoneyna.choogoomoneyna_be.batch.tasklet.MatchingFinishTasklet;
+import com.choogoomoneyna.choogoomoneyna_be.batch.tasklet.MatchingStartTasklet;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -73,15 +76,43 @@ public class BatchConfig {
     }
 
     @Bean
-    public Job codefDailyMissionJob(Step codefWeeklyMissionStep) throws Exception {
-        return jobBuilderFactory().get("codefWeeklyMissionJob")
-                .start(codefWeeklyMissionStep)
+    public Job codefDailyMissionJob(Step codefDailyMissionStep) throws Exception {
+        return jobBuilderFactory().get("codefDailyMissionJob")
+                .start(codefDailyMissionStep)
                 .build();
     }
 
     @Bean
-    public Step codefDailyMissionStep(CodefWeeklyMissionTasklet tasklet) throws Exception {
-        return stepBuilderFactory().get("codefWeeklyMissionStep")
+    public Step codefDailyMissionStep(CodefDailyMissionTasklet tasklet) throws Exception {
+        return stepBuilderFactory().get("codefDailyMissionStep")
+                .tasklet(tasklet)
+                .build();
+    }
+
+    @Bean
+    public Job matchingStartJob(Step matchingStartStep) throws Exception {
+        return jobBuilderFactory().get("matchingStartJob")
+                .start(matchingStartStep)
+                .build();
+    }
+
+    @Bean
+    public Step matchingStartStep(MatchingStartTasklet tasklet) throws Exception {
+        return stepBuilderFactory().get("matchingStartStep")
+                .tasklet(tasklet)
+                .build();
+    }
+
+    @Bean
+    public Job matchingFinishJob(Step matchingFinishStep) throws Exception {
+        return jobBuilderFactory().get("matchingStartJob")
+                .start(matchingFinishStep)
+                .build();
+    }
+
+    @Bean
+    public Step matchingFinishStep(MatchingFinishTasklet tasklet) throws Exception {
+        return stepBuilderFactory().get("matchingFinishStep")
                 .tasklet(tasklet)
                 .build();
     }
