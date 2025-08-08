@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -20,4 +21,15 @@ public class GptResponseDTO {
 
     @JsonAlias({"action_items", "actionItems"})
     private List<String> actionItems;  // 행동 권장 사항 리스트
+
+    private Long totalSpent;           //총 지출 금액
+
+    @JsonProperty("categorySpent")
+    private Map<String, CategoryStat> categorySpent;
+
+    @Getter@Setter@AllArgsConstructor@NoArgsConstructor
+    public static class CategoryStat {
+        private Long amount;           // 카테고리 금액 합,
+        private Double ratio;          // 카테고리 비율
+    }
 }

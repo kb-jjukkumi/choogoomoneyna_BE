@@ -19,6 +19,8 @@ public class ReportConverter {
                     .advice(gptContent.getAdvice())
                     .recommend(gptContent.getRecommend())
                     .actionItems(gptContent.getActionItems())
+                    .totalSpent(gptContent.getTotalSpent())
+                    .categorySpent(gptContent.getCategorySpent())
                     .build();
 
         } catch (Exception e) {
