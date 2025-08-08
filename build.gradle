@@ -26,7 +26,7 @@ tasks.withType(JavaCompile) {
 
 
 dependencies {
-  // ½ºÇÁ¸µ
+  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
   implementation("org.springframework:spring-context:${springVersion}")
           { exclude group: 'commons-logging', module: 'commons-logging' }
   implementation "org.springframework:spring-webmvc:${springVersion}"
@@ -56,7 +56,7 @@ dependencies {
   // SLF4J API
   implementation 'org.slf4j:slf4j-api:1.7.36'
 
-  // Logback Classic (SLF4J ±¸ÇöÃ¼)
+  // Logback Classic (SLF4J ï¿½ï¿½ï¿½ï¿½Ã¼)
   implementation 'ch.qos.logback:logback-classic:1.2.11'
 
   implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4:1.16'
@@ -67,17 +67,17 @@ dependencies {
   implementation 'io.springfox:springfox-swagger2:2.9.2'
   implementation 'io.springfox:springfox-swagger-ui:2.9.2'
 
-  // xml³» ÇÑ±Û Ã³¸®
+  // xmlï¿½ï¿½ ï¿½Ñ±ï¿½ Ã³ï¿½ï¿½
   implementation 'xerces:xercesImpl:2.12.2'
 
   // Lombok
   compileOnly "org.projectlombok:lombok:${lombokVersion}"
   annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
-  // Jackson - Json Ã³¸®
+  // Jackson - Json Ã³ï¿½ï¿½
   implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.4'
 
-  // µ¥ÀÌÅÍº£ÀÌ½º
+  // ï¿½ï¿½ï¿½ï¿½ï¿½Íºï¿½ï¿½Ì½ï¿½
   implementation 'com.mysql:mysql-connector-j:8.1.0'
   implementation 'com.zaxxer:HikariCP:2.7.4'
 
@@ -88,7 +88,7 @@ dependencies {
   implementation 'org.mybatis:mybatis-spring:1.3.2'
 
 
-  // º¸¾È
+  // ï¿½ï¿½ï¿½ï¿½
   implementation("org.springframework.security:spring-security-web:${springSecurityVersion}")
   implementation("org.springframework.security:spring-security-config:${springSecurityVersion}")
   implementation("org.springframework.security:spring-security-core:${springSecurityVersion}")
@@ -100,7 +100,7 @@ dependencies {
   implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
 
 
-  // Å×½ºÆ®
+  // ï¿½×½ï¿½Æ®
   testImplementation "org.springframework:spring-test:${springVersion}"
   testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
   testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
@@ -121,13 +121,13 @@ dependencies {
   testImplementation 'junit:junit:4.13.2'
   testImplementation 'com.jayway.jsonpath:json-path:2.7.0'
 
-  // Spring Mail ±â´É (JavaMailSenderImpl Æ÷ÇÔ)
+  // Spring Mail ï¿½ï¿½ï¿½ (JavaMailSenderImpl ï¿½ï¿½ï¿½ï¿½)
   implementation("org.springframework:spring-context-support:${springVersion}")
 
-  // JavaMail (SMTP Àü¼Û)
+  // JavaMail (SMTP ï¿½ï¿½ï¿½ï¿½)
   implementation 'com.sun.mail:javax.mail:1.6.2'
 
-  //Java Faker(Mock Data »ý¼º¿ë)
+  //Java Faker(Mock Data ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
   implementation 'com.github.javafaker:javafaker:1.0.2'
 
   //spring batch
