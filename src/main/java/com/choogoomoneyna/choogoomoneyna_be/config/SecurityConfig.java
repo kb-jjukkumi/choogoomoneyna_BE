@@ -70,14 +70,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authenticationEntryPoint(authenticationEntryPoint) // 인증 실패 처리
                 .and()
                 .authorizeRequests()
-                    .antMatchers(
-                            "/v2/api-docs",
-                            "/v3/api-docs",
-                            "/swagger-resources/**",
-                            "/swagger-ui/**",
-                            "/swagger-ui.html",
-                            "/webjars/**"
-                    ).permitAll()
+                .antMatchers(
+                        "/v2/api-docs",
+                        "/swagger-resources/**",
+                        "/swagger-ui.html",
+                        "/webjars/**",
+                        "/swagger/**",
+                        "/csrf" // 404 뜨는 부분 무시
+                ).permitAll()
 
                     .antMatchers("/**").permitAll()
                     .antMatchers("/api/users/login", "/api/users/signup").permitAll() // 로그인, 회원가입은 인증 없이 허용
