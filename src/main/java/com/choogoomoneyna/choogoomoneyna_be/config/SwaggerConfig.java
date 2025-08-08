@@ -17,7 +17,8 @@ public class SwaggerConfig {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())  // 📌 문서 정보 설정
+                .apiInfo(apiInfo())
+                .pathMapping("/")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.choogoomoneyna.choogoomoneyna_be"))
                 .paths(PathSelectors.any())
