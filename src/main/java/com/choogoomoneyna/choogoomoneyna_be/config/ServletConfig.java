@@ -21,6 +21,7 @@ import springfox.documentation.swagger.web.UiConfigurationBuilder;
         "com.choogoomoneyna.choogoomoneyna_be.report.controller",
         "com.choogoomoneyna.choogoomoneyna_be.survey.controller",
         "com.choogoomoneyna.choogoomoneyna_be.user.controller",
+        "com.choogoomoneyna.choogoomoneyna_be.dockertest.controller",
 })
 public class ServletConfig implements WebMvcConfigurer {
 
