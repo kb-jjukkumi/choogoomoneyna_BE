@@ -15,11 +15,12 @@ jobs:
       - name: Set up JDK 11
         uses: actions/setup-java@v4
         with:
-          distribution: temurin   # 여기에 JDK 배포본 이름 반드시 넣기
+          distribution: temurin
           java-version: '11'
 
-      - name: Build WAR
-        run: mvn clean package -DskipTests
+      - name: Build WAR with Gradle
+        run: ./gradlew clean build -x test
+        # working-directory: ./choogoomoneyna_BE
 
       - name: Build Docker image
         run: docker build -t myapp:latest .
