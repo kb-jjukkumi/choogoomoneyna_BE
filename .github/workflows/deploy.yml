@@ -47,7 +47,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker load < myapp.tar
-            docker stop myapp || true
-            docker rm myapp || true
-            docker run -d --name myapp -p 80:8080 myapp:latest
+            sudo docker load < myapp.tar
+            sudo docker stop myapp || true
+            sudo docker rm myapp || true
+            sudo docker run -d --name myapp -p 80:8080 myapp:latest
