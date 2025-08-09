@@ -1,7 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service;
 
-import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.JwtProperties;
-import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.JwtTokenProvider;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.JwtProperties;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.JwtTokenProvider;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.mapper.RefreshTokenMapper;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.vo.RefreshTokenVO;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.choogoomoneyna.choogoomoneyna_be.auth.jwt;
+package com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util;
 
 import com.choogoomoneyna.choogoomoneyna_be.user.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +14,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Map;
 
 /**
  * HTTP 요청의 JWT 토큰 인증을 처리하는 필터.

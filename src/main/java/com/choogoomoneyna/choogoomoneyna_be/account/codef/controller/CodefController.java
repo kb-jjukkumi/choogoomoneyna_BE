@@ -2,15 +2,12 @@ package com.choogoomoneyna.choogoomoneyna_be.account.codef.controller;
 
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.*;
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.service.CodefService;
-import com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.TransactionVO;
-import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.CustomUserDetails;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.parameters.P;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

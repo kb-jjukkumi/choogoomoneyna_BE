@@ -1,4 +1,4 @@
-package com.choogoomoneyna.choogoomoneyna_be.auth.jwt;
+package com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util;
 
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.LoginType;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;

@@ -1,11 +1,10 @@
 package com.choogoomoneyna.choogoomoneyna_be.config;
 
-import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.JwtAuthenticationEntryPoint;
-import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.JwtAuthenticationFilter;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.JwtAuthenticationEntryPoint;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.JwtAuthenticationFilter;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -16,6 +15,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -23,9 +24,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@ComponentScan(basePackages = {
-        "com.choogoomoneyna.choogoomoneyna_be"
-})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -72,6 +70,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authenticationEntryPoint(authenticationEntryPoint) // 인증 실패 처리
                 .and()
                 .authorizeRequests()
+                .antMatchers(
+                        "/v2/api-docs",
+                        "/swagger-resources/**",
+                        "/swagger-ui.html",
+                        "/webjars/**",
+                        "/swagger/**",
+                        "/csrf" // 404 뜨는 부분 무시
+                ).permitAll()
+
                     .antMatchers("/**").permitAll()
                     .antMatchers("/api/users/login", "/api/users/signup").permitAll() // 로그인, 회원가입은 인증 없이 허용
                     .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**").permitAll() // 정적 리소스 접근 허용
@@ -112,5 +119,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    /**
+     * URL 인코딩된 슬래시와 세미콜론을 허용하도록 커스텀 HttpFirewall 빈을 설정합니다.
+     *
+     * @return URL 인코딩된 슬래시와 세미콜론을 허용하는 HttpFirewall 인스턴스
+     */
+    @Bean
+    public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
+        StrictHttpFirewall firewall = new StrictHttpFirewall();
+        firewall.setAllowUrlEncodedDoubleSlash(true); // ✅ 이중 슬래시 허용
+        firewall.setAllowSemicolon(true); // 선택적으로 ; 도 허용 가능
+        return firewall;
     }
 }

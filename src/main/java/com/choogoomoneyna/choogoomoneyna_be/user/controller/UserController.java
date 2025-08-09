@@ -1,6 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.user.controller;
 
-import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.CustomUserDetails;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.CustomUserDetails;
 import com.choogoomoneyna.choogoomoneyna_be.matching.service.RoundInfoService;
 import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserUpdateRequestDTO;
@@ -10,7 +10,6 @@ import com.choogoomoneyna.choogoomoneyna_be.user.service.UserConverter;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserMainInfoService;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserMatchingResultHistoryService;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserService;
-import com.fasterxml.jackson.core.Base64Variant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

@@ -1,6 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.survey.controller;
 
-import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.CustomUserDetails;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.CustomUserDetails;
 import com.choogoomoneyna.choogoomoneyna_be.survey.dto.request.SurveyRequestDTO;
 import com.choogoomoneyna.choogoomoneyna_be.survey.service.SurveyCalculatorService;
 import com.choogoomoneyna.choogoomoneyna_be.survey.service.SurveyConverter;
