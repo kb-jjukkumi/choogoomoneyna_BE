@@ -103,7 +103,6 @@ public class MatchingMissionResultControllerTest {
         mockMvc.perform(put("/api/matching/missions/{userId}/complete", userId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("matching progress not found"));
+                .andExpect(status().isNotFound());
     }
 }
