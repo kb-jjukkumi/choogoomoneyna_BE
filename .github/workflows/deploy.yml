@@ -24,8 +24,14 @@ jobs:
       - name: Build WAR with Gradle
         run: ./gradlew clean build -x test
 
+      - name: List build/libs content
+        run: ls -l build/libs/
+
+      - name: Check current directory
+        run: pwd
+
       - name: Build Docker image
-        run: docker build -t myapp:latest ./choogoomoneyna_be
+        run: docker build -t myapp:latest .
 
       - name: Save Docker image to tar
         run: docker save myapp:latest > myapp.tar
