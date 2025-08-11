@@ -18,4 +18,8 @@ public interface MissionMapper {
 
     String getMissionType(Integer missionId);
 
+    String getMissionTitle(Integer missionId);
+
+    String getMissionContent(Integer missionId);
+
 }
