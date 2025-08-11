@@ -39,7 +39,7 @@ dependencies {
   implementation 'org.aspectj:aspectjweaver:1.9.20'
 
   // JSP, SERVLET, JSTL
-  implementation('javax.servlet:javax.servlet-api:4.0.1')
+  compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
   compileOnly 'javax.servlet.jsp:jsp-api:2.1'
   implementation 'javax.servlet:jstl:1.2'
 
