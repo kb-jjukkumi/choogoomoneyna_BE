@@ -2,6 +2,7 @@ package com.choogoomoneyna.choogoomoneyna_be.matching.controller;
 
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.CustomUserDetails;
 import com.choogoomoneyna.choogoomoneyna_be.matching.dto.Request.MatchingMissionQuizUpdateDTO;
+import com.choogoomoneyna.choogoomoneyna_be.matching.dto.Request.MatchingMissionTextDTO;
 import com.choogoomoneyna.choogoomoneyna_be.matching.dto.Request.MatchingMissionUpdateRequest;
 import com.choogoomoneyna.choogoomoneyna_be.matching.dto.Response.MatchingMainResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.matching.service.MatchingDetailService;
@@ -119,12 +120,12 @@ public class MatchingMissionResultController {
     @PutMapping("/missions/validate/3")
     public ResponseEntity<?> validateMissionType3(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestBody MatchingMissionUpdateRequest request) {
+            @RequestBody MatchingMissionTextDTO request) {
 
         //1. 유저아이디 추출
         Long userId = userDetails.getId();
 
-        //2. 매칭, 미션아이디, 미션 점수 추출
+        //2. 매칭아이디, 미션아이디, 미션 점수, 글 내용 추출
         Long matchingId = matchingService.getProgressMatchingIdByUserId(userId);
         if (matchingId == null) {
             return ResponseEntity.badRequest().body(Map.of("message", "matching progress not found"));
@@ -134,13 +135,12 @@ public class MatchingMissionResultController {
         if (score == null) {
             return ResponseEntity.badRequest().body(Map.of("message", "mission score not found"));
         }
+        String contents = request.getContents();
 
-        matchingMissionResultService.updateMatchingMissionResult(
-                userId, matchingId, missionId, score
-        );
+        //3.open ai api로 내용 검증
+        matchingMissionResultService.validateMissionType3(userId, matchingId, missionId, contents, score);
 
-        List<MissionProgressDTO> progressList =
-                matchingMissionResultService.getAllMissionProgressDTO(userId, matchingId);
+        List<MissionProgressDTO> progressList = matchingMissionResultService.getAllMissionProgressDTO(userId, matchingId);
 
         int updateScore = scoreService.getScoreByUserIdAndRoundNumber(userId, roundInfoService.getRoundNumber()) + score;
 
