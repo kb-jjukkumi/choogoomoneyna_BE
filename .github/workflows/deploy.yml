@@ -23,10 +23,10 @@ jobs:
 
       - name: Build WAR with Gradle
         run: ./gradlew clean build -x test
-        # working-directory: ./choogoomoneyna_BE
+        working-directory: ./choogoomoneyna_be
 
       - name: Build Docker image
-        run: docker build -t myapp:latest .
+        run: docker build -t myapp:latest ./choogoomoneyna_be
 
       - name: Save Docker image to tar
         run: docker save myapp:latest > myapp.tar
