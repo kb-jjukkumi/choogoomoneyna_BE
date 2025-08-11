@@ -78,6 +78,23 @@ public interface MatchingMissionResultService {
      */
     void validateMissionType2(Long userId, Long matchingId, Integer missionId, Integer missionScore, Integer limitAmount);
 
+    /**
+     * 미션 타입 3번, 텍스트 인풋 미션의 결과를 검증합니다.
+     * open ai의 내용 검증 결과 점수 100점 만점에 70점 이상이면 성공입니다.
+     * @param userId 미션 검증을 진행할 사용자의 ID
+     * @param matchingId 미션이 포함되어있는 매칭 ID
+     * @param missionId 해당 미션 ID
+     * @param contents 사용자가 작성한 글 내용
+     * @param score 해당 미션의 만점 점수
+     */
+    void validateMissionType3(Long userId, Long matchingId, Integer missionId, String contents, Integer score);
+
+    /**
+     * 유저 아이디와 매칭 아이디로 미션 3개 아이디 리스트를 조회하는 메서드
+     * @param userId 유저아이디
+     * @param matchingId 매칭아이디
+     * @return
+     */
     List<Integer> findMissionIdsByUserIdAndMatchingId(Long userId, Long matchingId);
 
 }
