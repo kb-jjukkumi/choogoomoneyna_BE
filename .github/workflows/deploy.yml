@@ -23,7 +23,6 @@ jobs:
 
       - name: Build WAR with Gradle
         run: ./gradlew clean build -x test
-        working-directory: ./choogoomoneyna_be
 
       - name: Build Docker image
         run: docker build -t myapp:latest ./choogoomoneyna_be
