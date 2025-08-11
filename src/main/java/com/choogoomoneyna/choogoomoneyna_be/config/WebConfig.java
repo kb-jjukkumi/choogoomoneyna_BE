@@ -37,7 +37,7 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
         registration.setMultipartConfig(multipartConfigElement);
     }
 
-
+    @Override
     protected Filter[] getServletFilters() {
         CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
 
@@ -48,4 +48,10 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
 
         return new Filter[]{characterEncodingFilter, securityFilter};
     }
+
+    @Override
+    protected String getServletName() {
+        return "dispatcher";
+    }
+
 }
