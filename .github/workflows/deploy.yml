@@ -24,6 +24,9 @@ jobs:
       - name: Build WAR with Gradle
         run: ./gradlew clean build -x test
 
+      - name: Check Jakarta Servlet dependency
+        run: ./gradlew dependencies --configuration runtimeClasspath | grep jakarta.servlet || echo "No jakarta.servlet dependency found"
+
       - name: List build/libs content
         run: ls -l build/libs/
 
