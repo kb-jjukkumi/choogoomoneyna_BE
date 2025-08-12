@@ -46,8 +46,8 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            mkdir -p /home/ec2-user/appconfig
-            echo "${{ secrets.ENV_B64 }}" | base64 -d > /home/ec2-user/appconfig/.env
+            mkdir -p /home/ubuntu/appconfig
+            echo "${{ secrets.ENV_B64 }}" | base64 -d > /home/ubuntu/appconfig/.env
 
             sudo docker stop myapp || true
             sudo docker rm myapp || true
@@ -57,5 +57,5 @@ jobs:
 
             sudo docker run -d --name myapp -p 80:8080 \
               --restart always \
-              --env-file /home/ec2-user/appconfig/.env \
+              --env-file /home/ubuntu/appconfig/.env \
               myapp:latest
