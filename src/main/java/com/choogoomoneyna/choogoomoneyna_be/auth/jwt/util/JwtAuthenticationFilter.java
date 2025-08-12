@@ -56,24 +56,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // HTTP 요청 헤더에서 Authorization 헤더 값 가져오기
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
 
-        // Authorization 헤더가 없거나 "Bearer "로 시작하지 않으면 예외 발생
-        if (bearerToken == null || !bearerToken.startsWith(BEARER_PREFIX)) {
-            throw new InvalidTokenException("Invalid bearer token");
+        try {
+            // Authorization 헤더가 없거나 "Bearer "로 시작하지 않으면 예외 발생
+            if (bearerToken == null || !bearerToken.startsWith(BEARER_PREFIX)) {
+                SecurityContextHolder.clearContext();
+                throw new InvalidTokenException("Invalid bearer token");
+            }
+
+            // "Bearer " 접두어 제거하여 실제 토큰 부분만 추출
+            String token = bearerToken.substring(BEARER_PREFIX.length());
+
+            // 토큰이 유효하지 않거나 만료되었으면 예외 발생
+            if (!jwtTokenProvider.validateToken(token)) {
+                throw new InvalidTokenException("Invalid or expired token");
+            }
+
+            // 토큰으로부터 인증 정보를 생성하여 SecurityContext에 저장 (인증 처리 완료)
+            Authentication authentication = getAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            filterChain.doFilter(request, response);
+        } catch (InvalidTokenException ex) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json;charset=UTF-8");
+            String json = String.format("{\"message\":\"%s\"}", ex.getMessage());
+            response.getWriter().write(json);
         }
-
-        // "Bearer " 접두어 제거하여 실제 토큰 부분만 추출
-        String token = bearerToken.substring(BEARER_PREFIX.length());
-
-        // 토큰이 유효하지 않거나 만료되었으면 예외 발생
-        if (!jwtTokenProvider.validateToken(token)) {
-            throw new InvalidTokenException("Invalid or expired token");
-        }
-
-        // 토큰으로부터 인증 정보를 생성하여 SecurityContext에 저장 (인증 처리 완료)
-        Authentication authentication = getAuthentication(token);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        filterChain.doFilter(request, response);
     }
 
     /**
