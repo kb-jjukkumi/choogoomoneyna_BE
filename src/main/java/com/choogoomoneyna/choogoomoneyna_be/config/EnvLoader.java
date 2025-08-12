@@ -9,8 +9,13 @@ import java.util.Arrays;
 public class EnvLoader implements ApplicationContextInitializer<ConfigurableApplicationContext> {
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
+        String dotenvDir = System.getenv("DOTENV_DIR");
+        if (dotenvDir == null || dotenvDir.isEmpty()) {
+            dotenvDir = "C:/choogoomoneyna/choogoomoneyna_be";  // 프로젝트 루트 절대경로
+        }
+
         Dotenv dotenv = Dotenv.configure()
-                .directory("C:/choogoomoneyna/choogoomoneyna_be") // 프로젝트 루트 등 절대경로 지정
+                .directory(dotenvDir)
                 .filename(".env")
                 .load();
 
