@@ -138,6 +138,8 @@ dependencies {
   implementation 'org.springframework.batch:spring-batch-infrastructure:4.3.10'
 
   implementation fileTree(dir: 'lib', include: ['*.jar'])
+
+  implementation 'io.github.cdimascio:dotenv-java:2.2.4'
 }
 
 
