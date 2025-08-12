@@ -47,7 +47,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             mkdir -p /home/ubuntu/appconfig
-            echo "${{ secrets.ENV_B64 }}" | base64 -d > /home/ubuntu/appconfig/.env
+            echo "${{ secrets.APP_ENV_B64 }}" | base64 -d > /home/ubuntu/appconfig/.env
 
             sudo docker stop myapp || true
             sudo docker rm myapp || true
