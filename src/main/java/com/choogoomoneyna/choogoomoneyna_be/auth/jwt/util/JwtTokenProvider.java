@@ -1,5 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util;
 
+import com.choogoomoneyna.choogoomoneyna_be.config.JwtProperties;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
