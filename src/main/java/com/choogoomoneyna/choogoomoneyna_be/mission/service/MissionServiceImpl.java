@@ -24,4 +24,14 @@ public class MissionServiceImpl implements MissionService {
     public String getMissionType(Integer missionId) {
         return missionMapper.getMissionType(missionId);
     }
+
+    @Override
+    public String getMissionTitle(Integer missionId) {
+        return missionMapper.getMissionTitle(missionId);
+    }
+
+    @Override
+    public String getMissionContent(Integer missionId) {
+        return missionMapper.getMissionContent(missionId);
+    }
 }

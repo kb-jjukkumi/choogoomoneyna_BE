@@ -49,4 +49,17 @@
         FROM missions
         where mission_id = #{missionId}
     </select>
+
+    <select id="getMissionTitle" resultType="String">
+        SELECT mission_title
+        FROM missions
+        where mission_id = #{missionId}
+    </select>
+
+    <select id="getMissionContent" resultType="String">
+        SELECT mission_content
+        FROM missions
+        where mission_id = #{missionId}
+    </select>
+
 </mapper>

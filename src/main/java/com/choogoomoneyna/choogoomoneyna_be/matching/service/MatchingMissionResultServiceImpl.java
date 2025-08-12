@@ -6,9 +6,12 @@ import com.choogoomoneyna.choogoomoneyna_be.account.codef.service.CodefService;
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.AccountVO;
 import com.choogoomoneyna.choogoomoneyna_be.account.db.dto.TransactionItemDto;
 import com.choogoomoneyna.choogoomoneyna_be.account.db.service.AccountDbService;
+import com.choogoomoneyna.choogoomoneyna_be.matching.dto.Response.TextAiResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.matching.mapper.MatchingMissionResultMapper;
+import com.choogoomoneyna.choogoomoneyna_be.matching.service.opneAi.MissionAiService;
 import com.choogoomoneyna.choogoomoneyna_be.matching.vo.MatchingMissionResultVO;
 import com.choogoomoneyna.choogoomoneyna_be.mission.dto.response.MissionProgressDTO;
+import com.choogoomoneyna.choogoomoneyna_be.mission.service.MissionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,7 +27,9 @@ import java.util.List;
 public class MatchingMissionResultServiceImpl implements MatchingMissionResultService {
 
     private final MatchingMissionResultMapper matchingMissionResultMapper;
+    private final MissionAiService missionAiService;
     private final AccountDbService accountDbService;
+    private final MissionService missionService;
     private final CodefService codefService;
 
     @Override
@@ -173,6 +178,27 @@ public class MatchingMissionResultServiceImpl implements MatchingMissionResultSe
         } else {
             updateMatchingMissionResult(userId, matchingId, missionId, missionScore);
             log.info("userId: {} validate logic finished-- mission success spent money : {}", userId, spent);
+        }
+    }
+
+    @Override
+    public void validateMissionType3(Long userId, Long matchingId, Integer missionId, String contents, Integer score) {
+        String missionTitle = missionService.getMissionTitle(missionId);
+        String missionContent = missionService.getMissionContent(missionId);
+        StringBuilder sb = new StringBuilder();
+        sb.append(missionTitle);
+        sb.append(" ");
+        sb.append(missionContent);
+
+        TextAiResponseDTO response =  missionAiService.validateMission3(sb.toString(), contents);
+
+        log.info("user contents score: {}", response.getScore());
+
+        if(response.getScore()>=70) {
+            updateMatchingMissionResult(userId, matchingId, missionId, score);
+            log.info("user get mission score: {}", score);
+        } else {
+            log.info("use couldn't get mission score");
         }
     }
 

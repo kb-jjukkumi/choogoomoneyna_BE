@@ -17,4 +17,8 @@ public interface MissionService {
     public Integer getMissionLimitAmount(Integer missionId);
 
     String getMissionType(Integer missionId);
+
+    String getMissionTitle(Integer missionId);
+
+    String getMissionContent(Integer missionId);
 }
