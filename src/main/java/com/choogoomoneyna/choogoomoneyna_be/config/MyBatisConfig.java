@@ -7,18 +7,12 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 
 @Configuration
-//@PropertySource("classpath:application-secret-database.properties")
-@PropertySource({
-        "classpath:application-secret-database.properties",
-        "classpath:application-secret-codef.properties"
-})
 @MapperScan(basePackages = {
         "com.choogoomoneyna.choogoomoneyna_be.user.mapper",
         "com.choogoomoneyna.choogoomoneyna_be.score.mapper",

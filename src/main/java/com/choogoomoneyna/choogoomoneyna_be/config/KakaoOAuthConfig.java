@@ -2,13 +2,8 @@ package com.choogoomoneyna.choogoomoneyna_be.config;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 
-@PropertySource({
-        "classpath:application-secret-kakao.properties"
-})
 @Getter
 @Configuration
 public class KakaoOAuthConfig {

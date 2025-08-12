@@ -43,3 +43,5 @@ bin/
 
 ### application-secret ###
 application-secret-*.*
+.env
+env.*

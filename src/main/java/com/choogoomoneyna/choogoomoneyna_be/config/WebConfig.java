@@ -1,15 +1,12 @@
 package com.choogoomoneyna.choogoomoneyna_be.config;
 
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-import javax.servlet.Filter;
-import javax.servlet.MultipartConfigElement;
-import javax.servlet.ServletRegistration;
+import javax.servlet.*;
 
-@Configuration
 public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     private static final String LOCATION = "/testtest";
@@ -39,7 +36,7 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
         registration.setMultipartConfig(multipartConfigElement);
     }
 
-
+    @Override
     protected Filter[] getServletFilters() {
         CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
 
@@ -50,4 +47,17 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
 
         return new Filter[]{characterEncodingFilter, securityFilter};
     }
+
+    @Override
+    protected String getServletName() {
+        return "dispatcher";
+    }
+
+    @Override
+    protected ApplicationContextInitializer<?>[] getRootApplicationContextInitializers() {
+        return new ApplicationContextInitializer<?>[] {
+                new EnvLoader()
+        };
+    }
+
 }
