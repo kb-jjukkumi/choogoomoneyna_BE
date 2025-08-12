@@ -1,12 +1,11 @@
 package com.choogoomoneyna.choogoomoneyna_be.config;
 
+import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-import javax.servlet.Filter;
-import javax.servlet.MultipartConfigElement;
-import javax.servlet.ServletRegistration;
+import javax.servlet.*;
 
 public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitializer {
 
@@ -52,6 +51,13 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
     @Override
     protected String getServletName() {
         return "dispatcher";
+    }
+
+    @Override
+    protected ApplicationContextInitializer<?>[] getRootApplicationContextInitializers() {
+        return new ApplicationContextInitializer<?>[] {
+                new EnvLoader()
+        };
     }
 
 }
