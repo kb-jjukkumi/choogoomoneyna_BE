@@ -1,8 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.config;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.*;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @ComponentScan(basePackages = {
@@ -29,4 +28,24 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Import(MyBatisConfig.class)
 @EnableScheduling
 class RootConfig {
+
+    @Configuration
+    @Profile("local")
+    @PropertySource("classpath:application-local.properties")
+    static class LocalProperties {
+        @Bean
+        public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+            return new PropertySourcesPlaceholderConfigurer();
+        }
+    }
+
+    @Configuration
+    @Profile("prod")
+    @PropertySource("classpath:application-prod.properties")
+    static class ProdProperties {
+        @Bean
+        public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+            return new PropertySourcesPlaceholderConfigurer();
+        }
+    }
 }
