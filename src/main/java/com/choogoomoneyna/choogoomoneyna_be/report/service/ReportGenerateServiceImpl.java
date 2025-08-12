@@ -93,9 +93,8 @@ public class ReportGenerateServiceImpl implements ReportGenerateService {
                     투자도전형 - “작은 돈으로도 투자에 도전하고 배우는 재테크 입문러”
                     금융탐구형 - “궁금한 건 바로 검색하고 실천하는 금융 루틴러”
                 - 계좌 정보는 잔액, 월별 입출금 패턴, 고정 지출, 저축 비율 등의 정보로 구성되어 있습니다.
-                - 응답을 JSON 형식으로 해줘. 코드블럭 없이, 마크다운 없이 순수 JSON만 보내줘.
+                - 다른 텍스트 추가하지 말고 응답은 무조건 아래 JSON 구조 대로만 해, 코드블럭 없이, 마크다운 없이 순수 JSON만 보내줘.
                 
-
                 JSON 구조:
                 {
                   "summary": "한 문장 요약",
