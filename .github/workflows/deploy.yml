@@ -24,28 +24,20 @@ jobs:
       - name: Build WAR with Gradle
         run: ./gradlew clean build -x test
 
-      - name: Check Jakarta Servlet dependency
-        run: ./gradlew dependencies --configuration runtimeClasspath | grep jakarta.servlet || echo "No jakarta.servlet dependency found"
-
-      - name: List build/libs content
-        run: ls -l build/libs/
-
-      - name: Check current directory
-        run: pwd
-
       - name: Build Docker image
         run: docker build -t myapp:latest .
 
       - name: Save Docker image to tar
         run: docker save myapp:latest > myapp.tar
 
-      - name: Copy image to EC2
+      - name: Copy image and env file to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "myapp.tar"
+          source: |
+            myapp.tar
           target: "~/"
 
       - name: SSH into EC2 and deploy
@@ -55,42 +47,19 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # 이전 컨테이너 중지 및 삭제
+            # env.b64 파일 생성
+            echo "${{ secrets.ENV_B64 }}" | base64 -d > .env
+
+            # 기존 컨테이너/이미지 정리
             sudo docker stop myapp || true
             sudo docker rm myapp || true
-      
-            # 이전 이미지 삭제
             sudo docker rmi myapp:latest || true
-      
-            # tar로 받은 이미지 로드
+
+            # 이미지 로드
             sudo docker load < myapp.tar
-            
-            # 컨테이너 실행
+
+            # --env-file 옵션으로 .env 읽어서 컨테이너 실행
             sudo docker run -d --name myapp -p 80:8080 \
-            --restart always \
-            --env SPRING_PROFILES_ACTIVE=prod \
-            --env CODEF_CLIENT_ID=${{ secrets.CODEF_CLIENT_ID }} \
-            --env CODEF_CLIENT_SECRET=${{ secrets.CODEF_CLIENT_SECRET }} \
-            --env CODEF_RSA_PUBLIC_KEY=${{ secrets.CODEF_RSA_PUBLIC_KEY }} \
-            --env SPRING_DATASOURCE_DRIVER_CLASS_NAME=${{ secrets.SPRING_DATASOURCE_DRIVER_CLASS_NAME }} \
-            --env SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }} \
-            --env SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }} \
-            --env SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }} \
-            --env SPRING_MAIL_HOST=${{ secrets.SPRING_MAIL_HOST }} \
-            --env SPRING_MAIL_PORT=${{ secrets.SPRING_MAIL_PORT }} \
-            --env SPRING_MAIL_USERNAME=${{ secrets.SPRING_MAIL_USERNAME }} \
-            --env SPRING_MAIL_PASSWORD=${{ secrets.SPRING_MAIL_PASSWORD }} \
-            --env JWT_SECRET=${{ secrets.JWT_SECRET }} \
-            --env JWT_ACCESS_EXPIRATION=${{ secrets.JWT_ACCESS_EXPIRATION }} \
-            --env JWT_REFRESH_EXPIRATION=${{ secrets.JWT_REFRESH_EXPIRATION }} \
-            --env KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }} \
-            --env KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }} \
-            --env KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }} \
-            --env KAKAO_AUTH_URI=${{ secrets.KAKAO_AUTH_URI }} \
-            --env KAKAO_TOKEN_URI=${{ secrets.KAKAO_TOKEN_URI }} \
-            --env KAKAO_USER_INFO_URI=${{ secrets.KAKAO_USER_INFO_URI }} \
-            --env KAKAO_UNLINK_URI=${{ secrets.KAKAO_UNLINK_URI }} \
-            --env OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
-            --env OPENAI_MODEL=${{ secrets.OPENAI_MODEL }} \
-            --env OPENAI_API_URL=${{ secrets.OPENAI_API_URL }} \
-            myapp:latest
+              --restart always \
+              --env-file .env \
+              myapp:latest
