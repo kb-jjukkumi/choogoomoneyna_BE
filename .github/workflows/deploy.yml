@@ -55,11 +55,20 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo docker load < myapp.tar
+            # 이전 컨테이너 중지 및 삭제
             sudo docker stop myapp || true
             sudo docker rm myapp || true
-            # --env 옵션을 사용하여 모든 환경 변수를 컨테이너에 전달합니다.
+      
+            # 이전 이미지 삭제
+            sudo docker rmi myapp:latest || true
+      
+            # tar로 받은 이미지 로드
+            sudo docker load < myapp.tar
+            
+            # 컨테이너 실행
             sudo docker run -d --name myapp -p 80:8080 \
+            --restart always \
+            --env SPRING_PROFILES_ACTIVE=prod \
             --env CODEF_CLIENT_ID=${{ secrets.CODEF_CLIENT_ID }} \
             --env CODEF_CLIENT_SECRET=${{ secrets.CODEF_CLIENT_SECRET }} \
             --env CODEF_RSA_PUBLIC_KEY=${{ secrets.CODEF_RSA_PUBLIC_KEY }} \
