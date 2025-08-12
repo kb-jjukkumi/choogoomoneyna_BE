@@ -12,6 +12,13 @@ import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    private ResponseEntity<Map<String, String>> buildResponse(HttpStatus status, String message) {
+        return ResponseEntity.status(status)
+                .header("Content-Type", "text/plain;charset=UTF-8")
+                .body(Map.of("message", message));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
     public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException ex) {
@@ -22,44 +29,34 @@ public class GlobalExceptionHandler {
                     .append(error.getDefaultMessage())
                     .append("; ");
         });
-        return ResponseEntity.badRequest()
-                .header("Content-Type", "text/plain;charset=UTF-8")
-                .body(sb.toString());
+        return buildResponse(HttpStatus.BAD_REQUEST, sb.toString());
     }
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ResponseEntity<String> handleEmailAlreadyExistsException(EmailAlreadyExistsException ex) {
-        return ResponseEntity.badRequest()
-                .header("Content-Type", "text/plain;charset=UTF-8")
-                .body(ex.getMessage());
+    public ResponseEntity<?> handleEmailAlreadyExistsException(EmailAlreadyExistsException ex) {
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(BindException.class)
     @ResponseBody
     public ResponseEntity<?> handleBindException(BindException ex) {
-        return ResponseEntity.badRequest()
-                .header("Content-Type", "text/plain;charset=UTF-8")
-                .body("BindException: " + ex.getMessage());
+        return buildResponse(HttpStatus.BAD_REQUEST, "BindException: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(CustomNotFoundException.class)
+    public ResponseEntity<?> handleNotFound(CustomNotFoundException ex) {
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<?> tokenNotFound(InvalidTokenException ex) {
+        return buildResponse(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public ResponseEntity<?> handleGeneric(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .header("Content-Type", "text/plain;charset=UTF-8")
-                .body("서버 오류가 발생했습니다.");
-    }
-
-    @ExceptionHandler(CustomNotFoundException.class)
-    public ResponseEntity<?> handleNotFound(CustomNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(Map.of("message", ex.getMessage()));
-    }
-
-    @ExceptionHandler(InvalidTokenException.class)
-    public ResponseEntity<?> tokenNotFound(InvalidTokenException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(Map.of("message", ex.getMessage()));
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류가 발생했습니다.");
     }
 }
 
