@@ -1,6 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service;
 
-import com.choogoomoneyna.choogoomoneyna_be.config.JwtProperties;
+import com.choogoomoneyna.choogoomoneyna_be.config.JwtConfig;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.JwtTokenProvider;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.mapper.RefreshTokenMapper;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.vo.RefreshTokenVO;
@@ -15,14 +15,14 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     private final RefreshTokenMapper refreshTokenMapper;
     private final JwtTokenProvider jwtTokenProvider;
-    private final JwtProperties jwtProperties;
+    private final JwtConfig jwtConfig;
 
     @Override
     public String generateRefreshTokenAndSave(Long userId) {
         String refreshToken = jwtTokenProvider.generateRefreshToken(userId);
 
         Date issuedAt = new Date(); // 현재 시간
-        Date expiresAt = new Date(issuedAt.getTime() + jwtProperties.getRefreshTokenExpirationTime());
+        Date expiresAt = new Date(issuedAt.getTime() + jwtConfig.getRefreshTokenExpirationTime());
 
         refreshTokenMapper.insertRefreshToken(userId, refreshToken, issuedAt, expiresAt);
 

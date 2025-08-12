@@ -1,6 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util;
 
-import com.choogoomoneyna.choogoomoneyna_be.config.JwtProperties;
+import com.choogoomoneyna.choogoomoneyna_be.config.JwtConfig;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -16,7 +16,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
-    private final JwtProperties jwtProperties;
+    private final JwtConfig jwtConfig;
 
     /**
      * JWT 토큰 서명에 사용되는 비밀키(SecretKey)를 생성하여 반환
@@ -26,7 +26,7 @@ public class JwtTokenProvider {
      * @return JWT 서명에 사용되는 SecretKey 객체
      */
     public SecretKey getSecretKey() {
-        return Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes(StandardCharsets.UTF_8));
+        return Keys.hmacShaKeyFor(jwtConfig.getSecretKey().getBytes(StandardCharsets.UTF_8));
     }
 
     /**
@@ -37,7 +37,7 @@ public class JwtTokenProvider {
      */
     public String generateAccessToken(Long userId) {
         Date now = new Date();  // 현재 시각
-        Date expirationDate = new Date(now.getTime() + jwtProperties.getAccessTokenExpirationTime());  // 만료 시각
+        Date expirationDate = new Date(now.getTime() + jwtConfig.getAccessTokenExpirationTime());  // 만료 시각
 
         return Jwts.builder()
                 .claim("userId", userId)
@@ -56,7 +56,7 @@ public class JwtTokenProvider {
      */
     public String generateRefreshToken(Long userId) {
         Date now = new Date();  // 현재 시각
-        Date expirationDate = new Date(now.getTime() + jwtProperties.getRefreshTokenExpirationTime());  // 만료 시각
+        Date expirationDate = new Date(now.getTime() + jwtConfig.getRefreshTokenExpirationTime());  // 만료 시각
 
         return Jwts.builder()
                 .claim("userId", userId)
