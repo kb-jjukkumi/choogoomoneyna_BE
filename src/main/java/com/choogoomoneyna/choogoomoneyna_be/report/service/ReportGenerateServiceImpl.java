@@ -100,7 +100,7 @@ public class ReportGenerateServiceImpl implements ReportGenerateService {
                 {
                   "summary": "한 문장 요약",
                   "advice": "사용자에게 전달할 구체적인 재무 조언",
-                  "recommend": "사용자의 생활과 가장 비슷한 추구미",
+                  "recommend": "사용자의 생활과 가장 비슷한 추구미, 추구미 유형에 대한 설명은 빼고 유형 이름만 작성",
                   "action_items": [
                     "첫 번째 행동 권장사항",
                     "두 번째 행동 권장사항",
@@ -119,7 +119,7 @@ public class ReportGenerateServiceImpl implements ReportGenerateService {
                 {
                   "summary": "지출을 줄이고 자동 저축을 늘리는 것이 중요합니다.",
                   "advice": "매달 지출 내역을 점검하고, 고정 지출을 줄이는 방법을 찾아보세요.",
-                  "recommend": "지출제로형" - “1원도 아끼는 생활을 실천하는 절약왕”
+                  "recommend": "지출제로형"
                   "action_items": [
                     "정기 지출 항목 재검토",
                     "비상금 자동이체 설정",
@@ -133,7 +133,7 @@ public class ReportGenerateServiceImpl implements ReportGenerateService {
                      "기타": { "amount": "900000", "ratio": "12.0" }
                    }
                 }
-                - 위에 적은 3가지 카테고리는 예시일 뿐, 이 형식을 활용해서 분석한 카테고리 결과에 맞게 amount, ratio 작성해주세요.
+                - 위의 4가지 카테고리만으로 분석해서 카테고리 결과에 맞게 amount, ratio 작성해주세요.
 
                 ===사용자의 현재 정보===
                 """);
