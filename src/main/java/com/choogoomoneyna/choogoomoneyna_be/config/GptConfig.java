@@ -9,9 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
-@PropertySource({
-        "classpath:application-secret-openai.properties"
-})
+@PropertySource("classpath:application.properties")
 @Getter
 @Configuration
 public class GptConfig {

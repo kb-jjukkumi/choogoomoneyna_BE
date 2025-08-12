@@ -14,11 +14,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import javax.sql.DataSource;
 
 @Configuration
-//@PropertySource("classpath:application-secret-database.properties")
-@PropertySource({
-        "classpath:application-secret-database.properties",
-        "classpath:application-secret-codef.properties"
-})
+@PropertySource("classpath:application.properties")
 @MapperScan(basePackages = {
         "com.choogoomoneyna.choogoomoneyna_be.user.mapper",
         "com.choogoomoneyna.choogoomoneyna_be.score.mapper",
