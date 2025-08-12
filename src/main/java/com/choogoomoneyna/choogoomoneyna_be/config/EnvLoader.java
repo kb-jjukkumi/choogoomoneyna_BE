@@ -11,7 +11,7 @@ public class EnvLoader implements ApplicationContextInitializer<ConfigurableAppl
     public void initialize(ConfigurableApplicationContext applicationContext) {
         String dotenvDir = System.getenv("DOTENV_DIR");
         if (dotenvDir == null || dotenvDir.isEmpty()) {
-            dotenvDir = System.getProperty("user.dir");  // 현재 JVM 실행 경로 절대 경로
+            dotenvDir = "C:\\choogoomoneyna\\choogoomoneyna_be";
         }
         System.out.println("Dotenv directory: " + dotenvDir);
 
