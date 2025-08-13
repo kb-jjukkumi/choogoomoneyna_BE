@@ -1,6 +1,6 @@
 package com.choogoomoneyna.choogoomoneyna_be.auth.oauth.service;
 
-import com.choogoomoneyna.choogoomoneyna_be.auth.oauth.dto.OAuthUserInfoDTO;
+import com.choogoomoneyna.choogoomoneyna_be.auth.oauth.dto.response.OAuthUserInfoResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.JwtTokenResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 
@@ -30,7 +30,7 @@ public interface OAuthLoginService {
      *                    인증에 사용됨
      * @return 사용자의 OAuth 이메일과 닉네임이 포함된 {@code OAuthUserInfoDTO} 인스턴스
      */
-    OAuthUserInfoDTO getUserInfo(String accessToken);
+    OAuthUserInfoResponseDTO getUserInfo(String accessToken);
 
     /**
      * 제공된 OAuth 사용자 정보를 기반으로 기존 사용자를 찾거나 새로운 사용자를 생성합니다.
@@ -38,6 +38,6 @@ public interface OAuthLoginService {
      * @param dto 사용자 이메일과 닉네임이 포함된 OAuth 사용자 정보 DTO
      * @return 기존 또는 새로 생성된 {@code UserVO} 인스턴스
      */
-    UserVO findOrCreateUserByOAuth(OAuthUserInfoDTO dto);
+    UserVO findOrCreateUserByOAuth(OAuthUserInfoResponseDTO dto);
 
 }

@@ -2,7 +2,7 @@ package com.choogoomoneyna.choogoomoneyna_be.auth.oauth.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service.RefreshTokenService;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.JwtTokenProvider;
-import com.choogoomoneyna.choogoomoneyna_be.auth.oauth.dto.OAuthUserInfoDTO;
+import com.choogoomoneyna.choogoomoneyna_be.auth.oauth.dto.response.OAuthUserInfoResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.config.KakaoOAuthConfig;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.JwtTokenResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
@@ -38,7 +38,7 @@ public class KakaoLoginService implements OAuthLoginService {
     @Override
     public JwtTokenResponseDTO login(String code) {
         // OAuth 공급자로부터 사용자 정보 조회
-        OAuthUserInfoDTO userInfo = getUserInfo(getAccessToken(code));
+        OAuthUserInfoResponseDTO userInfo = getUserInfo(getAccessToken(code));
 
         // 사용자 정보로 기존 회원 조회 또는 신규 회원 생성
         UserVO user = findOrCreateUserByOAuth(userInfo);
@@ -90,7 +90,7 @@ public class KakaoLoginService implements OAuthLoginService {
     }
 
     @Override
-    public OAuthUserInfoDTO getUserInfo(String accessToken) {
+    public OAuthUserInfoResponseDTO getUserInfo(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
 
@@ -100,14 +100,14 @@ public class KakaoLoginService implements OAuthLoginService {
         Map<String, Object> kakaoAccount = (Map<String, Object>) response.getBody().get("kakao_account");
         Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
 
-        return OAuthUserInfoDTO.builder()
+        return OAuthUserInfoResponseDTO.builder()
                 .oAuthEmail("kakao" + response.getBody().get("id") + "@social.kakao")
                 .nickname("kakao_" + profile.get("nickname"))
                 .build();
     }
 
     @Override
-    public UserVO findOrCreateUserByOAuth(OAuthUserInfoDTO dto) {
+    public UserVO findOrCreateUserByOAuth(OAuthUserInfoResponseDTO dto) {
         UserVO user = userService.findByEmailAndLoginType(dto.getOAuthEmail(), LoginType.KAKAO);
         System.out.println("UserVO: " + user);
 
