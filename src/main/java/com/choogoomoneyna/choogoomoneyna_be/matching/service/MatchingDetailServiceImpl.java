@@ -1,6 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.matching.service;
 
-import com.choogoomoneyna.choogoomoneyna_be.exception.CustomNotFoundException;
+import com.choogoomoneyna.choogoomoneyna_be.exception.CustomException;
+import com.choogoomoneyna.choogoomoneyna_be.exception.ResponseCode;
 import com.choogoomoneyna.choogoomoneyna_be.matching.dto.Response.MatchingMainResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.mission.dto.response.MissionProgressDTO;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.service.RankingService;
@@ -23,12 +24,12 @@ public class MatchingDetailServiceImpl implements MatchingDetailService {
     public MatchingMainResponseDTO getMatchingDetail(Long userId, Integer roundNumber) {
         Long matchId = matchingService.getProgressMatchingIdByUserIdAndRoundNumber(userId, roundNumber);
         if (matchId == null) {
-            throw new CustomNotFoundException("matching progress not found");
+            throw new CustomException(ResponseCode.NOT_FOUND, "matching progress not found");
         }
 
         Long opponentUserId = matchingService.getComponentUserIdByUserIdAndMatchingId(userId, matchId);
         if (opponentUserId == null) {
-            throw new CustomNotFoundException("opponent user not found");
+            throw new CustomException(ResponseCode.NOT_FOUND, "opponent user not found");
         }
 
         List<MissionProgressDTO> myProgressList = matchingMissionResultService.getAllMissionProgressDTO(userId, matchId);

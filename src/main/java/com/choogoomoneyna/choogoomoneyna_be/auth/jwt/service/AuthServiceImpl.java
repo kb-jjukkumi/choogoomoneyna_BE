@@ -1,6 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service;
 
-import com.choogoomoneyna.choogoomoneyna_be.exception.EmailAlreadyExistsException;
+import com.choogoomoneyna.choogoomoneyna_be.exception.CustomException;
+import com.choogoomoneyna.choogoomoneyna_be.exception.ResponseCode;
 import com.choogoomoneyna.choogoomoneyna_be.matching.service.RoundInfoService;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.service.RankingService;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO;
@@ -35,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
     public void registerUser(UserJoinRequestDTO dto) {
         // email 중복 체크
         if (userService.existsByEmailAndLoginType(dto.getEmail(), LoginType.LOCAL)) {
-            throw new EmailAlreadyExistsException("이미 존재하는 이메일입니다.");
+            throw new CustomException(ResponseCode.AUTH_EMAIL_EXISTS, "이미 존재하는 이메일입니다.");
         }
         String encryptedPassword = passwordEncoder.encode(dto.getPassword());
 
