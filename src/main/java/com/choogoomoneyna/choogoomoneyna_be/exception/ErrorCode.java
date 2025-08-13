@@ -8,8 +8,6 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ErrorCode {
 
-    // 200 Success
-    SUCCESS(HttpStatus.OK, "성공했습니다."),
 
     // 400 BadRequest
     AUTH_VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "사용자 입력값이 올바르지 않습니다."),
