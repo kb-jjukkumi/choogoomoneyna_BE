@@ -27,6 +27,7 @@ public enum ResponseCode {
 
     // 404 Not Found
     NOT_FOUND(HttpStatus.NOT_FOUND, "요청하신 리소스를 찾을 수 없습니다."),
+    MATCHING_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 매칭입니다."),
 
     // 500 Internal Server Error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류가 발생했습니다.");
