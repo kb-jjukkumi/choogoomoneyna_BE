@@ -1,7 +1,10 @@
 package com.choogoomoneyna.choogoomoneyna_be.auth.oauth.service;
 
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service.RefreshTokenService;
+import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.JwtTokenProvider;
 import com.choogoomoneyna.choogoomoneyna_be.auth.oauth.dto.OAuthUserInfoDTO;
 import com.choogoomoneyna.choogoomoneyna_be.config.KakaoOAuthConfig;
+import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.JwtTokenResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.LoginType;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserService;
@@ -29,6 +32,26 @@ public class KakaoLoginService implements OAuthLoginService {
     private final KakaoOAuthConfig kakaoOAuthConfig;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final RefreshTokenService refreshTokenService;
+    private final JwtTokenProvider jwtTokenProvider;
+
+    @Override
+    public JwtTokenResponseDTO login(String code) {
+        // OAuth 공급자로부터 사용자 정보 조회
+        OAuthUserInfoDTO userInfo = getUserInfo(getAccessToken(code));
+
+        // 사용자 정보로 기존 회원 조회 또는 신규 회원 생성
+        UserVO user = findOrCreateUserByOAuth(userInfo);
+
+        // 기존 리프레시 토큰 모두 삭제 
+        refreshTokenService.deleteAllTokensByUserId(user.getId());
+
+        // 새로운 액세스 토큰과 리프레시 토큰 생성
+        String accessToken = jwtTokenProvider.generateAccessToken(user.getId());
+        String refreshToken = refreshTokenService.generateRefreshTokenAndSave(user.getId());
+
+        return new JwtTokenResponseDTO(accessToken, refreshToken);
+    }
 
     @Override
     public String getAccessToken(String code) {

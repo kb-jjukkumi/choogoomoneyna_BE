@@ -1,9 +1,18 @@
 package com.choogoomoneyna.choogoomoneyna_be.auth.oauth.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.auth.oauth.dto.OAuthUserInfoDTO;
+import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.JwtTokenResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 
 public interface OAuthLoginService {
+
+    /**
+     * OAuth 로그인을 처리하고 JWT 토큰을 발급합니다.
+     *
+     * @param code OAuth 공급자로부터 받은 인증 코드
+     * @return 액세스 토큰과 리프레시 토큰이 포함된 응답 DTO
+     */
+    JwtTokenResponseDTO login(String code);
 
     /**
      * OAuth 공급자로부터 인증 코드를 사용하여 액세스 토큰을 조회합니다.
