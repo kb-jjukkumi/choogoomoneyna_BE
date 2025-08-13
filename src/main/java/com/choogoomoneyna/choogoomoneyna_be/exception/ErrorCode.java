@@ -16,6 +16,7 @@ public enum ErrorCode {
     EMAIL_SEND_FAILURE(HttpStatus.BAD_REQUEST, "이메일 전송 중 오류가 발생했습니다."),
     EMAIL_CODE_EXPIRED(HttpStatus.BAD_REQUEST, "인증 코드가 만료되었습니다."),
     INVALID_INPUT(HttpStatus.BAD_REQUEST, "잘못된 입력입니다."),
+    INVALID_REQUEST(HttpStatus.BAD_REQUEST, "유효하지 않은 요청입니다"),
     MATCHING_USER_EMPTY(HttpStatus.BAD_REQUEST, "매칭할 유저를 조회하지 못하였습니다."),
     SCORE_EMPTY(HttpStatus.BAD_REQUEST, "점수를 조회하지 못하였습니다."),
 
@@ -36,7 +37,10 @@ public enum ErrorCode {
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "DB 에러가 발생했습니다."),
     REPORT_GENERATOR_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "레포트 생성 도중 에러가 발생하였습니다."),
     SURVEY_FIND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "설문 조사를 찾는 중 에러가 발생하였습니다."),
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류가 발생했습니다.");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류가 발생했습니다."),
+
+    // 502 Bad Gateway
+    EXTERNAL_API_ERROR(HttpStatus.BAD_GATEWAY, "외부 API 호출 실패");
 
     private final HttpStatus httpStatus;
     private final String message;
