@@ -47,13 +47,30 @@ public class EmailAuthServiceImpl implements EmailAuthService {
     @Override
     public boolean verifyAuthCode(String email, String code) {
         AuthCodeData storedCode = codeStorage.get(email);
-        if (storedCode == null || storedCode.isExpired()) {
-            return false;
+
+        if (storedCode == null) {
+            throw new CustomException(
+                    ResponseCode.AUTH_VALIDATION_ERROR,
+                    "해당 이메일로 발급된 인증 코드가 없습니다."
+            );
         }
-        boolean isValid = storedCode.code().equals(code);
-        if (isValid) {
-            codeStorage.remove(email); // 재사용 방지
+
+        if (storedCode.isExpired()) {
+            codeStorage.remove(email);
+            throw new CustomException(
+                    ResponseCode.AUTH_VALIDATION_ERROR,
+                    "인증 코드가 만료되었습니다."
+            );
         }
-        return isValid;
+
+        if (!storedCode.code().equals(code)) {
+            throw new CustomException(
+                    ResponseCode.AUTH_VALIDATION_ERROR,
+                    "인증 코드가 올바르지 않습니다."
+            );
+        }
+
+        codeStorage.remove(email);
+        return true;
     }
 }
