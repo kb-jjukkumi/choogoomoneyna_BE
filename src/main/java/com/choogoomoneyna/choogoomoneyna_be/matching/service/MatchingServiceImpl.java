@@ -1,5 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.matching.service;
 
+import com.choogoomoneyna.choogoomoneyna_be.exception.CustomException;
+import com.choogoomoneyna.choogoomoneyna_be.exception.ResponseCode;
 import com.choogoomoneyna.choogoomoneyna_be.matching.enums.MatchingStatus;
 import com.choogoomoneyna.choogoomoneyna_be.matching.enums.CommonMissionType;
 import com.choogoomoneyna.choogoomoneyna_be.matching.enums.MatchingResult;
@@ -45,22 +47,26 @@ public class MatchingServiceImpl implements MatchingService {
     private void assignMatchMission(Long user1Id, Long user2Id, ChoogooMi choogooMi) {
         Long matchingId = matchingMapper.getProgressMatchingIdByUserId(user1Id);
         if (matchingId == null) {
-            throw new IllegalArgumentException("Matching ID is null");
+            throw new CustomException(ResponseCode.MATCHING_NOT_FOUND);
         }
 
         int commonMissionId = CommonMissionType.COMMON.getRandomId();
         List<Integer> choogooMiMissionIds = choogooMi.getMissionType().getRandomIds(2);
 
-        matchingMissionResultService.createMatchingMissionResult(user1Id, matchingId, commonMissionId);
-        if (!user1Id.equals(user2Id)) {
-            matchingMissionResultService.createMatchingMissionResult(user2Id, matchingId, commonMissionId);
-        }
-
-        for (Integer choogooMiMissionId : choogooMiMissionIds) {
-            matchingMissionResultService.createMatchingMissionResult(user1Id, matchingId, choogooMiMissionId);
+        try {
+            matchingMissionResultService.createMatchingMissionResult(user1Id, matchingId, commonMissionId);
             if (!user1Id.equals(user2Id)) {
-                matchingMissionResultService.createMatchingMissionResult(user2Id, matchingId, choogooMiMissionId);
+                matchingMissionResultService.createMatchingMissionResult(user2Id, matchingId, commonMissionId);
             }
+
+            for (Integer choogooMiMissionId : choogooMiMissionIds) {
+                matchingMissionResultService.createMatchingMissionResult(user1Id, matchingId, choogooMiMissionId);
+                if (!user1Id.equals(user2Id)) {
+                    matchingMissionResultService.createMatchingMissionResult(user2Id, matchingId, choogooMiMissionId);
+                }
+            }
+        } catch (Exception e) {
+            throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR, "매칭 미션을 부여하는 도중 에러가 발생하였습니다");
         }
     }
 
@@ -82,54 +88,66 @@ public class MatchingServiceImpl implements MatchingService {
         boolean[] isMatched = new boolean[userSize];
         Random random = new Random();
 
-        // 10등 안으로 차이 나게 랜덤 매칭
-        for (int i = 0; i < userSize; i++) {
-            if (isMatched[i]) {
-                continue;
+        try {
+            // 10등 안으로 차이 나게 랜덤 매칭
+            for (int i = 0; i < userSize; i++) {
+                if (isMatched[i]) {
+                    continue;
+                }
+
+                for (int j = i + random.nextInt(1, 10); j < userSize; j++) {
+                    if (!isMatched[j]) {
+                        isMatched[i] = true;
+                        isMatched[j] = true;
+
+                        matchingMapper.insertMatching(buildToMatchingVO(users.get(i).getId(), users.get(j).getId()));
+                        assignMatchMission(users.get(i).getId(), users.get(j).getId(), choogooMi);
+
+                        break;
+                    }
+                }
             }
 
-            for (int j = i + random.nextInt(1, 10); j < userSize; j++) {
-                if (!isMatched[j]) {
+            // 매칭 안된 사람끼리 순서대로
+            boolean one = false;
+            MatchedUserVO user1 = null;
+            for (int i = 0; i < userSize; i++) {
+                if (!isMatched[i]) {
+                    if (one) {
+                        matchingMapper.insertMatching(buildToMatchingVO(user1.getId(), users.get(i).getId()));
+                        assignMatchMission(user1.getId(), users.get(i).getId(), choogooMi);
+                        user1 = null;
+                    } else {
+                        user1 = users.get(i);
+                    }
                     isMatched[i] = true;
-                    isMatched[j] = true;
-
-                    matchingMapper.insertMatching(buildToMatchingVO(users.get(i).getId(), users.get(j).getId()));
-                    assignMatchMission(users.get(i).getId(), users.get(j).getId(), choogooMi);
-
-                    break;
+                    one = !one;
                 }
             }
-        }
 
-        // 매칭 안된 사람끼리 순서대로
-        boolean one = false;
-        MatchedUserVO user1 = null;
-        for (int i = 0; i < userSize; i++) {
-            if (!isMatched[i]) {
-                if (one) {
-                    matchingMapper.insertMatching(buildToMatchingVO(user1.getId(), users.get(i).getId()));
-                    assignMatchMission(user1.getId(), users.get(i).getId(), choogooMi);
-                    user1 = null;
-                } else {
-                    user1 = users.get(i);
-                }
-                isMatched[i] = true;
-                one = !one;
+            // 한명이 남음
+            if (one) {
+                // TODO: dummy data로 넣도록 수정 -> 일단 본인
+                matchingMapper.insertMatching(buildToMatchingVO(user1.getId(), user1.getId()));
+                assignMatchMission(user1.getId(), user1.getId(), choogooMi);
             }
-        }
-
-        // 한명이 남음
-        if (one) {
-            // TODO: dummy data로 넣도록 수정 -> 일단 본인
-            matchingMapper.insertMatching(buildToMatchingVO(user1.getId(), user1.getId()));
-            assignMatchMission(user1.getId(), user1.getId(), choogooMi);
+        } catch (Exception e) {
+            throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR, "두 명씩 매칭 중 에러가 발생하였습니다.");
         }
     }
 
     private List<UserVO> groupByChoogooMi(List<UserVO> users, ChoogooMi choogooMi) {
-        return users.stream()
-                .filter(user -> choogooMi.name().equals(user.getChoogooMi()))
-                .collect(Collectors.toList());
+        try {
+            if (users == null || choogooMi == null) {
+                throw new CustomException(ResponseCode.INVALID_INPUT);
+            }
+
+            return users.stream()
+                    .filter(user -> choogooMi.name().equals(user.getChoogooMi()))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR, "추구미 별로 그루핑 중 오류가 발생하였습니다.");
+        }
     }
 
     /**
@@ -163,20 +181,33 @@ public class MatchingServiceImpl implements MatchingService {
      * </ul>
      */
     private void prepareNewRoundAndUpdateDates() {
-        RoundInfoVO roundInfoVO = roundInfoService.getLatestRoundInfo();
-        int nextRoundNumber = roundInfoVO.getRoundNumber() + 1;
-        Date nextStartDate = getNextWeekDate(roundInfoVO.getStartDate());
-        Date nextEndDate = getNextWeekDate(roundInfoVO.getEndDate());
+        try {
+            RoundInfoVO roundInfoVO = roundInfoService.getLatestRoundInfo();
+            if (roundInfoVO == null) {
+                throw new CustomException(ResponseCode.ROUND_INFO_NOT_FOUND);
+            }
+            int nextRoundNumber = roundInfoVO.getRoundNumber() + 1;
+            Date nextStartDate = getNextWeekDate(roundInfoVO.getStartDate());
+            Date nextEndDate = getNextWeekDate(roundInfoVO.getEndDate());
 
-        roundNumber = nextRoundNumber;
+            roundNumber = nextRoundNumber;
 
-        roundInfoService.createRoundInfo(
-                RoundInfoVO.builder()
-                        .roundNumber(nextRoundNumber)
-                        .startDate(nextStartDate)
-                        .endDate(nextEndDate)
-                        .build()
-        );
+            roundInfoService.createRoundInfo(
+                    RoundInfoVO.builder()
+                            .roundNumber(nextRoundNumber)
+                            .startDate(nextStartDate)
+                            .endDate(nextEndDate)
+                            .build()
+            );
+        } catch (CustomException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new CustomException(
+                    ResponseCode.INTERNAL_SERVER_ERROR,
+                    "새로운 라운드를 준비하는 중 에러가 발생하였습니다.",
+                    e
+            );
+        }
     }
 
     @Override
@@ -184,8 +215,17 @@ public class MatchingServiceImpl implements MatchingService {
     public void startAllMatching() {
         prepareNewRoundAndUpdateDates();
 
+        // 전체 유저 가져오기
         List<UserVO> totalUsers = userService.findAllUsers();
+        if (totalUsers == null || totalUsers.isEmpty()) {
+            throw new CustomException(ResponseCode.MATCHING_USER_EMPTY);
+        }
+
+        // 이전 라운드 점수 가져오기
         List<UserScoreVO> scores = scoreService.findCurrentAllScores(roundNumber-1);
+        if (scores == null || scores.isEmpty()) {
+            throw new CustomException(ResponseCode.SCORE_EMPTY);
+        }
 
         // ranking 과 score 테이블에도 이번 라운드에 대한 내용 생성
         List<UserScoreVO> newScores = new ArrayList<>();
@@ -208,12 +248,16 @@ public class MatchingServiceImpl implements MatchingService {
         System.out.println("newScores: " + newScores.size());
         System.out.println("newRankings: " + newRankings.size());
 
-        // score 테이블에 삽입
-        scoreService.batchCreateScores(newScores);
+        try {
+            // score 테이블에 삽입
+            scoreService.batchCreateScores(newScores);
 
-        // ranking 테이블에 삽입 및 정렬
-        rankingService.batchCreateRankings(newRankings);
-        rankingUpdateService.updateRanking();
+            // ranking 테이블에 삽입 및 정렬
+            rankingService.batchCreateRankings(newRankings);
+            rankingUpdateService.updateRanking();
+        } catch (Exception e) {
+            throw new CustomException(ResponseCode.DATABASE_ERROR, "점수/랭킹 테이블 업데이트 실패", e);
+        }
 
         Map<Long, Integer> scoreMap = scores.stream()
                 .collect(Collectors.toMap(UserScoreVO::getUserId, UserScoreVO::getScoreValue));
@@ -268,54 +312,59 @@ public class MatchingServiceImpl implements MatchingService {
     @Override
     @Transactional
     public void finishAllMatching() {
-        // 승리 점수
-        int unitScore = 50;
+        try {
+            // 승리 점수
+            int unitScore = 50;
 
-        // 매칭 라운드
-        int roundNumber = roundInfoService.getLatestRoundInfo().getRoundNumber();
+            // 매칭 라운드
+            int roundNumber = roundInfoService.getLatestRoundInfo().getRoundNumber();
 
-        // 진행 중인 매칭 전체 가져오기
-        List<MatchingVO> progressMatchings = matchingMapper.findAllProgressMatchings();
+            // 진행 중인 매칭 전체 가져오기
+            List<MatchingVO> progressMatchings = matchingMapper.findAllProgressMatchings();
 
-        for (MatchingVO progressMatching : progressMatchings) {
-            long matchingId = progressMatching.getId();
-            log.info("matchingId: {}",matchingId);
+            for (MatchingVO progressMatching : progressMatchings) {
+                long matchingId = progressMatching.getId();
+                log.info("matchingId: {}", matchingId);
 
-            long user1Id = progressMatching.getUser1Id();
-            long user2Id = progressMatching.getUser2Id();
+                long user1Id = progressMatching.getUser1Id();
+                long user2Id = progressMatching.getUser2Id();
 
-            int user1Score = matchingMissionResultService.getAllScoreByUserIdAndMatchingId(user1Id, matchingId);
-            int user2Score = matchingMissionResultService.getAllScoreByUserIdAndMatchingId(user2Id, matchingId);
-            log.info("user1Score: {}",user1Score);
-            log.info("user2Score: {}",user2Score);
+                int user1Score = matchingMissionResultService.getAllScoreByUserIdAndMatchingId(user1Id, matchingId);
+                int user2Score = matchingMissionResultService.getAllScoreByUserIdAndMatchingId(user2Id, matchingId);
+                log.info("user1Score: {}", user1Score);
+                log.info("user2Score: {}", user2Score);
 
-            if (user1Score > user2Score) {
-                insertUserMatchingHistoryMatchResult(user1Id, matchingId, roundNumber, MatchingResult.WIN);
-                insertUserMatchingHistoryMatchResult(user2Id, matchingId, roundNumber, MatchingResult.LOSE);
+                if (user1Score > user2Score) {
+                    insertUserMatchingHistoryMatchResult(user1Id, matchingId, roundNumber, MatchingResult.WIN);
+                    insertUserMatchingHistoryMatchResult(user2Id, matchingId, roundNumber, MatchingResult.LOSE);
 
-                user1Score += unitScore;
-            } else if (user1Score < user2Score) {
-                insertUserMatchingHistoryMatchResult(user1Id, matchingId, roundNumber, MatchingResult.LOSE);
-                insertUserMatchingHistoryMatchResult(user2Id, matchingId, roundNumber, MatchingResult.WIN);
+                    user1Score += unitScore;
+                } else if (user1Score < user2Score) {
+                    insertUserMatchingHistoryMatchResult(user1Id, matchingId, roundNumber, MatchingResult.LOSE);
+                    insertUserMatchingHistoryMatchResult(user2Id, matchingId, roundNumber, MatchingResult.WIN);
 
-                user2Score += unitScore;
-            } else {
-                insertUserMatchingHistoryMatchResult(user1Id, matchingId, roundNumber, MatchingResult.DRAW);
-                insertUserMatchingHistoryMatchResult(user2Id, matchingId, roundNumber, MatchingResult.DRAW);
+                    user2Score += unitScore;
+                } else {
+                    insertUserMatchingHistoryMatchResult(user1Id, matchingId, roundNumber, MatchingResult.DRAW);
+                    insertUserMatchingHistoryMatchResult(user2Id, matchingId, roundNumber, MatchingResult.DRAW);
 
-                user1Score += unitScore / 2;
-                user2Score += unitScore / 2;
+                    user1Score += unitScore / 2;
+                    user2Score += unitScore / 2;
+                }
+
+                scoreCalculateService.calculateScore(user1Id, roundNumber, user1Score);
+                scoreCalculateService.calculateScore(user2Id, roundNumber, user2Score);
             }
 
-            scoreCalculateService.calculateScore(user1Id, roundNumber, user1Score);
-            scoreCalculateService.calculateScore(user2Id, roundNumber, user2Score);
+            // ranking table 업데이트
+            rankingUpdateService.updateRanking();
+
+            // 매칭 상태가 Progress인 column을 전부 Completed로 변경
+            matchingMapper.updateAllProgressMatchings();
+        } catch (Exception e) {
+            log.error("finishAllMatching error: {}", e.getMessage());
+            throw new CustomException(ResponseCode.DATABASE_ERROR, "매칭 종료 도중 DB 오류가 발생하였습니다.");
         }
-
-        // ranking table 업데이트
-        rankingUpdateService.updateRanking();
-
-        // 매칭 상태가 Progress인 column을 전부 Completed로 변경
-        matchingMapper.updateAllProgressMatchings();
     }
 
     @Override
