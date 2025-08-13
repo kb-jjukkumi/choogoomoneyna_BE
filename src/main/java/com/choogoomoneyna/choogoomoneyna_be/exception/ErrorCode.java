@@ -17,8 +17,10 @@ public enum ErrorCode {
     EMAIL_CODE_EXPIRED(HttpStatus.BAD_REQUEST, "인증 코드가 만료되었습니다."),
     INVALID_INPUT(HttpStatus.BAD_REQUEST, "잘못된 입력입니다."),
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "유효하지 않은 요청입니다"),
+    INVALID_CONNECTED_ID(HttpStatus.BAD_REQUEST, "응답에 connectedId가 없습니다"),
     MATCHING_USER_EMPTY(HttpStatus.BAD_REQUEST, "매칭할 유저를 조회하지 못하였습니다."),
     SCORE_EMPTY(HttpStatus.BAD_REQUEST, "점수를 조회하지 못하였습니다."),
+    HTTP_REQUEST_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "외부 API 요청 실패"),
 
     // 401 Unauthorized
     AUTH_TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "유효하지 않거나 만료된 토큰입니다."),
