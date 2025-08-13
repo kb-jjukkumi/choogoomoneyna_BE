@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ResponseCode {
 
+    // 200 Success
+    SUCCESS(HttpStatus.OK, "성공했습니다."),
+
     // 400 BadRequest
     AUTH_VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "사용자 입력값이 올바르지 않습니다."),
     AUTH_EMAIL_EXISTS(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일입니다."),
@@ -21,9 +24,7 @@ public enum ResponseCode {
     NOT_FOUND(HttpStatus.NOT_FOUND, "요청하신 리소스를 찾을 수 없습니다."),
 
     // 500 Internal Server Error
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류가 발생했습니다."),
-
-    SUCCESS(HttpStatus.OK, "성공했습니다.");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류가 발생했습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
