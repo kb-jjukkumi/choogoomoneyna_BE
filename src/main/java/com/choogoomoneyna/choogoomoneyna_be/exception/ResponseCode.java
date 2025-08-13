@@ -36,6 +36,7 @@ public enum ResponseCode {
     // 500 Internal Server Error
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "DB 에러가 발생했습니다."),
     REPORT_GENERATOR_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "레포트 생성 도중 에러가 발생하였습니다."),
+    SURVEY_FIND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "설문 조사를 찾는 중 에러가 발생하였습니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류가 발생했습니다.");
 
     private final HttpStatus httpStatus;
