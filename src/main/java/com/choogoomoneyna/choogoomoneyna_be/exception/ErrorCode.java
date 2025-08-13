@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public enum ResponseCode {
+public enum ErrorCode {
 
     // 200 Success
     SUCCESS(HttpStatus.OK, "성공했습니다."),

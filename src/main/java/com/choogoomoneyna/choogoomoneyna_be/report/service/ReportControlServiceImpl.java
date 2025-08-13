@@ -1,7 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.report.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.exception.CustomException;
-import com.choogoomoneyna.choogoomoneyna_be.exception.ResponseCode;
+import com.choogoomoneyna.choogoomoneyna_be.exception.ErrorCode;
 import com.choogoomoneyna.choogoomoneyna_be.report.dto.response.ReportResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.report.vo.ReportVO;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class ReportControlServiceImpl implements ReportControlService {
 
             return ReportConverter.toResponseDTO(latestReport);
         } catch (Exception e) {
-            throw new CustomException(ResponseCode.REPORT_GENERATOR_FAIL);
+            throw new CustomException(ErrorCode.REPORT_GENERATOR_FAIL);
         }
     }
 

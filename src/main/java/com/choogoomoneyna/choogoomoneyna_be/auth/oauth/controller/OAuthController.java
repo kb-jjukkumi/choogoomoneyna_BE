@@ -5,7 +5,7 @@ import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service.RefreshTokenService
 import com.choogoomoneyna.choogoomoneyna_be.auth.oauth.dto.request.OAuthRequestDTO;
 import com.choogoomoneyna.choogoomoneyna_be.auth.oauth.service.KakaoLoginService;
 import com.choogoomoneyna.choogoomoneyna_be.exception.CustomException;
-import com.choogoomoneyna.choogoomoneyna_be.exception.ResponseCode;
+import com.choogoomoneyna.choogoomoneyna_be.exception.ErrorCode;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.JwtTokenResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +40,7 @@ public class OAuthController {
     @PostMapping("/kakao/logout")
     public ResponseEntity<?> kakaoLogout(@RequestHeader(value = "refreshToken") String refreshToken) {
         if (refreshToken == null || refreshToken.isBlank()) {
-            throw new CustomException(ResponseCode.AUTH_TOKEN_INVALID, "refreshToken 헤더가 없습니다.");
+            throw new CustomException(ErrorCode.AUTH_TOKEN_INVALID, "refreshToken 헤더가 없습니다.");
         }
 
         refreshTokenService.deleteTokenByRefreshToken(refreshToken);

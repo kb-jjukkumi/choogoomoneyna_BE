@@ -1,7 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.matching.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.exception.CustomException;
-import com.choogoomoneyna.choogoomoneyna_be.exception.ResponseCode;
+import com.choogoomoneyna.choogoomoneyna_be.exception.ErrorCode;
 import com.choogoomoneyna.choogoomoneyna_be.matching.enums.MatchingStatus;
 import com.choogoomoneyna.choogoomoneyna_be.matching.enums.CommonMissionType;
 import com.choogoomoneyna.choogoomoneyna_be.matching.enums.MatchingResult;
@@ -47,7 +47,7 @@ public class MatchingServiceImpl implements MatchingService {
     private void assignMatchMission(Long user1Id, Long user2Id, ChoogooMi choogooMi) {
         Long matchingId = matchingMapper.getProgressMatchingIdByUserId(user1Id);
         if (matchingId == null) {
-            throw new CustomException(ResponseCode.MATCHING_NOT_FOUND);
+            throw new CustomException(ErrorCode.MATCHING_NOT_FOUND);
         }
 
         int commonMissionId = CommonMissionType.COMMON.getRandomId();
@@ -66,7 +66,7 @@ public class MatchingServiceImpl implements MatchingService {
                 }
             }
         } catch (Exception e) {
-            throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR, "매칭 미션을 부여하는 도중 에러가 발생하였습니다");
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR, "매칭 미션을 부여하는 도중 에러가 발생하였습니다");
         }
     }
 
@@ -132,21 +132,21 @@ public class MatchingServiceImpl implements MatchingService {
                 assignMatchMission(user1.getId(), user1.getId(), choogooMi);
             }
         } catch (Exception e) {
-            throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR, "두 명씩 매칭 중 에러가 발생하였습니다.");
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR, "두 명씩 매칭 중 에러가 발생하였습니다.");
         }
     }
 
     private List<UserVO> groupByChoogooMi(List<UserVO> users, ChoogooMi choogooMi) {
         try {
             if (users == null || choogooMi == null) {
-                throw new CustomException(ResponseCode.INVALID_INPUT);
+                throw new CustomException(ErrorCode.INVALID_INPUT);
             }
 
             return users.stream()
                     .filter(user -> choogooMi.name().equals(user.getChoogooMi()))
                     .collect(Collectors.toList());
         } catch (Exception e) {
-            throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR, "추구미 별로 그루핑 중 오류가 발생하였습니다.");
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR, "추구미 별로 그루핑 중 오류가 발생하였습니다.");
         }
     }
 
@@ -184,7 +184,7 @@ public class MatchingServiceImpl implements MatchingService {
         try {
             RoundInfoVO roundInfoVO = roundInfoService.getLatestRoundInfo();
             if (roundInfoVO == null) {
-                throw new CustomException(ResponseCode.ROUND_INFO_NOT_FOUND);
+                throw new CustomException(ErrorCode.ROUND_INFO_NOT_FOUND);
             }
             int nextRoundNumber = roundInfoVO.getRoundNumber() + 1;
             Date nextStartDate = getNextWeekDate(roundInfoVO.getStartDate());
@@ -203,7 +203,7 @@ public class MatchingServiceImpl implements MatchingService {
             throw e;
         } catch (Exception e) {
             throw new CustomException(
-                    ResponseCode.INTERNAL_SERVER_ERROR,
+                    ErrorCode.INTERNAL_SERVER_ERROR,
                     "새로운 라운드를 준비하는 중 에러가 발생하였습니다.",
                     e
             );
@@ -218,13 +218,13 @@ public class MatchingServiceImpl implements MatchingService {
         // 전체 유저 가져오기
         List<UserVO> totalUsers = userService.findAllUsers();
         if (totalUsers == null || totalUsers.isEmpty()) {
-            throw new CustomException(ResponseCode.MATCHING_USER_EMPTY);
+            throw new CustomException(ErrorCode.MATCHING_USER_EMPTY);
         }
 
         // 이전 라운드 점수 가져오기
         List<UserScoreVO> scores = scoreService.findCurrentAllScores(roundNumber-1);
         if (scores == null || scores.isEmpty()) {
-            throw new CustomException(ResponseCode.SCORE_EMPTY);
+            throw new CustomException(ErrorCode.SCORE_EMPTY);
         }
 
         // ranking 과 score 테이블에도 이번 라운드에 대한 내용 생성
@@ -256,7 +256,7 @@ public class MatchingServiceImpl implements MatchingService {
             rankingService.batchCreateRankings(newRankings);
             rankingUpdateService.updateRanking();
         } catch (Exception e) {
-            throw new CustomException(ResponseCode.DATABASE_ERROR, "점수/랭킹 테이블 업데이트 실패", e);
+            throw new CustomException(ErrorCode.DATABASE_ERROR, "점수/랭킹 테이블 업데이트 실패", e);
         }
 
         Map<Long, Integer> scoreMap = scores.stream()
@@ -363,7 +363,7 @@ public class MatchingServiceImpl implements MatchingService {
             matchingMapper.updateAllProgressMatchings();
         } catch (Exception e) {
             log.error("finishAllMatching error: {}", e.getMessage());
-            throw new CustomException(ResponseCode.DATABASE_ERROR, "매칭 종료 도중 DB 오류가 발생하였습니다.");
+            throw new CustomException(ErrorCode.DATABASE_ERROR, "매칭 종료 도중 DB 오류가 발생하였습니다.");
         }
     }
 

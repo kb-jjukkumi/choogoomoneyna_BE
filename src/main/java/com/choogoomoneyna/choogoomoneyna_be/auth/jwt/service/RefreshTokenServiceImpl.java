@@ -5,7 +5,7 @@ import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.JwtTokenProvider;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.mapper.RefreshTokenMapper;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.vo.RefreshTokenVO;
 import com.choogoomoneyna.choogoomoneyna_be.exception.CustomException;
-import com.choogoomoneyna.choogoomoneyna_be.exception.ResponseCode;
+import com.choogoomoneyna.choogoomoneyna_be.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +32,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
             return refreshToken;
         } catch (Exception e) {
             throw new CustomException(
-                    ResponseCode.INTERNAL_SERVER_ERROR,
+                    ErrorCode.INTERNAL_SERVER_ERROR,
                     "RefreshToken 생성 중 알 수 없는 오류가 발생했습니다.",
                     e
             );
@@ -45,7 +45,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
             refreshTokenMapper.deleteByUserId(userId);
         } catch (Exception e) {
             throw new CustomException(
-                    ResponseCode.INTERNAL_SERVER_ERROR,
+                    ErrorCode.INTERNAL_SERVER_ERROR,
                     "전체 RefreshToken 삭제 중 오류가 발생했습니다.",
                     e
             );
@@ -58,7 +58,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
             refreshTokenMapper.deleteByRefreshToken(refreshToken);
         } catch (Exception e) {
             throw new CustomException(
-                    ResponseCode.INTERNAL_SERVER_ERROR,
+                    ErrorCode.INTERNAL_SERVER_ERROR,
                     "RefreshToken 삭제 중 오류가 발생했습니다.",
                     e
             );
@@ -72,7 +72,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
             return tokenVO != null && tokenVO.getExpiresAt().after(new Date());
         } catch (Exception e) {
             throw new CustomException(
-                    ResponseCode.INTERNAL_SERVER_ERROR,
+                    ErrorCode.INTERNAL_SERVER_ERROR,
                     "RefreshToken 검증 중 오류가 발생했습니다.",
                     e
             );
@@ -94,7 +94,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
             throw e;
         } catch (Exception e) {
             throw new CustomException(
-                    ResponseCode.INTERNAL_SERVER_ERROR,
+                    ErrorCode.INTERNAL_SERVER_ERROR,
                     "AccessToken 재발급 처리 중 알 수 없는 오류가 발생했습니다.",
                     e
             );

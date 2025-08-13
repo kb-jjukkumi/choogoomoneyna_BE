@@ -1,7 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.ranking.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.exception.CustomException;
-import com.choogoomoneyna.choogoomoneyna_be.exception.ResponseCode;
+import com.choogoomoneyna.choogoomoneyna_be.exception.ErrorCode;
 import com.choogoomoneyna.choogoomoneyna_be.matching.service.RoundInfoService;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingUpdateVO;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO;
@@ -28,7 +28,7 @@ public class RankingUpdateServiceImpl implements RankingUpdateService {
 
         List<UserScoreVO> sortedUserScores = new ArrayList<>(scoreService.findCurrentAllScores(roundNumber));
         if (sortedUserScores.isEmpty()) {
-            throw new CustomException(ResponseCode.SCORE_EMPTY);
+            throw new CustomException(ErrorCode.SCORE_EMPTY);
         }
 
         sortedUserScores.sort(Comparator.comparingInt(UserScoreVO::getScoreValue).reversed());

@@ -3,7 +3,7 @@ package com.choogoomoneyna.choogoomoneyna_be.auth.email.service;
 import com.choogoomoneyna.choogoomoneyna_be.auth.email.util.AuthCodeGenerator;
 import com.choogoomoneyna.choogoomoneyna_be.auth.email.vo.AuthCodeData;
 import com.choogoomoneyna.choogoomoneyna_be.exception.CustomException;
-import com.choogoomoneyna.choogoomoneyna_be.exception.ResponseCode;
+import com.choogoomoneyna.choogoomoneyna_be.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -34,10 +34,10 @@ public class EmailAuthServiceImpl implements EmailAuthService {
 
             mailSender.send(message);
         } catch (MailException e) {
-            throw new CustomException(ResponseCode.EMAIL_SEND_FAILURE);
+            throw new CustomException(ErrorCode.EMAIL_SEND_FAILURE);
         } catch (Exception e) {
             throw new CustomException(
-                    ResponseCode.INTERNAL_SERVER_ERROR,
+                    ErrorCode.INTERNAL_SERVER_ERROR,
                     "이메일 인증 코드 생성/전송 중 알 수 없는 오류가 발생했습니다.",
                     e
             );
@@ -50,7 +50,7 @@ public class EmailAuthServiceImpl implements EmailAuthService {
 
         if (storedCode == null) {
             throw new CustomException(
-                    ResponseCode.AUTH_VALIDATION_ERROR,
+                    ErrorCode.AUTH_VALIDATION_ERROR,
                     "해당 이메일로 발급된 인증 코드가 없습니다."
             );
         }
@@ -58,14 +58,14 @@ public class EmailAuthServiceImpl implements EmailAuthService {
         if (storedCode.isExpired()) {
             codeStorage.remove(email);
             throw new CustomException(
-                    ResponseCode.AUTH_VALIDATION_ERROR,
+                    ErrorCode.AUTH_VALIDATION_ERROR,
                     "인증 코드가 만료되었습니다."
             );
         }
 
         if (!storedCode.code().equals(code)) {
             throw new CustomException(
-                    ResponseCode.AUTH_VALIDATION_ERROR,
+                    ErrorCode.AUTH_VALIDATION_ERROR,
                     "인증 코드가 올바르지 않습니다."
             );
         }

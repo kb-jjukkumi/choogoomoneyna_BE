@@ -9,7 +9,7 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    private ResponseEntity<Map<String, String>> buildResponse(ResponseCode code, String message) {
+    private ResponseEntity<Map<String, String>> buildResponse(ErrorCode code, String message) {
         return ResponseEntity.status(code.getHttpStatus())
                 .header("Content-Type", "application/json;charset=UTF-8")
                 .body(Map.of(
@@ -20,12 +20,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<?> handleCustomException(CustomException ex) {
-        return buildResponse(ex.getResponseCode(), ex.getMessage());
+        return buildResponse(ex.getErrorCode(), ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGeneric(Exception ex) {
-        return buildResponse(ResponseCode.INTERNAL_SERVER_ERROR, ResponseCode.INTERNAL_SERVER_ERROR.getMessage());
+        return buildResponse(ErrorCode.INTERNAL_SERVER_ERROR, ErrorCode.INTERNAL_SERVER_ERROR.getMessage());
     }
 }
 

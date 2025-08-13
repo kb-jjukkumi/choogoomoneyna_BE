@@ -1,7 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.exception.CustomException;
-import com.choogoomoneyna.choogoomoneyna_be.exception.ResponseCode;
+import com.choogoomoneyna.choogoomoneyna_be.exception.ErrorCode;
 import com.choogoomoneyna.choogoomoneyna_be.matching.service.RoundInfoService;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.service.RankingService;
 import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO;
@@ -37,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
         try {
             // email 중복 체크
             if (userService.existsByEmailAndLoginType(dto.getEmail(), LoginType.LOCAL)) {
-                throw new CustomException(ResponseCode.AUTH_EMAIL_EXISTS, "이미 존재하는 이메일입니다.");
+                throw new CustomException(ErrorCode.AUTH_EMAIL_EXISTS, "이미 존재하는 이메일입니다.");
             }
 
             // 비밀번호 암호화
@@ -72,7 +72,7 @@ public class AuthServiceImpl implements AuthService {
         } catch (Exception e) {
             log.error("회원가입 처리 중 오류 발생", e);
             throw new CustomException(
-                    ResponseCode.INTERNAL_SERVER_ERROR,
+                    ErrorCode.INTERNAL_SERVER_ERROR,
                     "회원가입 처리 중 알 수 없는 오류가 발생했습니다.",
                     e
             );
