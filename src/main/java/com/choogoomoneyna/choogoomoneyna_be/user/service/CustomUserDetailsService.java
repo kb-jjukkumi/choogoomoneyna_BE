@@ -1,6 +1,8 @@
 package com.choogoomoneyna.choogoomoneyna_be.user.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.CustomUserDetails;
+import com.choogoomoneyna.choogoomoneyna_be.exception.CustomException;
+import com.choogoomoneyna.choogoomoneyna_be.exception.ResponseCode;
 import com.choogoomoneyna.choogoomoneyna_be.user.mapper.UserMapper;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +34,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         // DB 에서 사용자 정보 조회
         UserVO user = userMapper.findById(Long.parseLong(userId));
         if (user == null) {
-            throw new UsernameNotFoundException("User not found");
+            throw new CustomException(ResponseCode.USER_NOT_FOUND);
         }
 
         return new CustomUserDetails(user);
