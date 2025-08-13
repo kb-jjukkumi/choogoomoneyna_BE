@@ -13,6 +13,7 @@ import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserLoginRequestDTO
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserService;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -93,14 +94,14 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request) {
-        String refreshToken = request.getHeader("refreshToken");
-        if (refreshToken != null) {
-            refreshTokenService.deleteTokenByRefreshToken(refreshToken);
+    public ResponseEntity<?> logout(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 정보가 없습니다.");
         }
 
+        Long userId = userDetails.getId();
+        refreshTokenService.deleteAllTokensByUserId(userId);
         SecurityContextHolder.clearContext();
-        request.getSession().invalidate();
 
         return ResponseEntity.ok("로그아웃 성공");
     }
