@@ -17,6 +17,9 @@ public enum ResponseCode {
     BIND_ERROR(HttpStatus.BAD_REQUEST, "입력 값 바인딩 오류가 발생했습니다."),
     EMAIL_SEND_FAILURE(HttpStatus.BAD_REQUEST, "이메일 전송 중 오류가 발생했습니다."),
     EMAIL_CODE_EXPIRED(HttpStatus.BAD_REQUEST, "인증 코드가 만료되었습니다."),
+    INVALID_INPUT(HttpStatus.BAD_REQUEST, "잘못된 입력입니다."),
+    MATCHING_USER_EMPTY(HttpStatus.BAD_REQUEST, "매칭할 유저를 조회하지 못하였습니다."),
+    SCORE_EMPTY(HttpStatus.BAD_REQUEST, "점수를 조회하지 못하였습니다."),
 
     // 401 Unauthorized
     AUTH_TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "유효하지 않거나 만료된 토큰입니다."),
@@ -28,8 +31,10 @@ public enum ResponseCode {
     // 404 Not Found
     NOT_FOUND(HttpStatus.NOT_FOUND, "요청하신 리소스를 찾을 수 없습니다."),
     MATCHING_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 매칭입니다."),
+    ROUND_INFO_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 라운드 정보입니다."),
 
     // 500 Internal Server Error
+    DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "DB 에러가 발생했습니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류가 발생했습니다.");
 
     private final HttpStatus httpStatus;
