@@ -1,6 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util;
 
-import com.choogoomoneyna.choogoomoneyna_be.exception.InvalidTokenException;
+import com.choogoomoneyna.choogoomoneyna_be.exception.CustomException;
+import com.choogoomoneyna.choogoomoneyna_be.exception.ErrorCode;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // Authorization 헤더가 없거나 "Bearer "로 시작하지 않으면 예외 발생
             if (bearerToken == null || !bearerToken.startsWith(BEARER_PREFIX)) {
                 SecurityContextHolder.clearContext();
-                throw new InvalidTokenException("Invalid bearer token");
+                throw new CustomException(ErrorCode.AUTH_TOKEN_INVALID, "Invalid bearer token");
             }
 
             // "Bearer " 접두어 제거하여 실제 토큰 부분만 추출
@@ -68,7 +69,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // 토큰이 유효하지 않거나 만료되었으면 예외 발생
             if (!jwtTokenProvider.validateToken(token)) {
-                throw new InvalidTokenException("Invalid or expired token");
+                throw new CustomException(ErrorCode.AUTH_TOKEN_INVALID, "Invalid or expired token");
             }
 
             // 토큰으로부터 인증 정보를 생성하여 SecurityContext에 저장 (인증 처리 완료)
@@ -76,7 +77,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             filterChain.doFilter(request, response);
-        } catch (InvalidTokenException ex) {
+        } catch (CustomException ex) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json;charset=UTF-8");
             String json = String.format("{\"message\":\"%s\"}", ex.getMessage());

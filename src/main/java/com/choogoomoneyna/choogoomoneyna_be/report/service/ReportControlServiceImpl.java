@@ -1,5 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.report.service;
 
+import com.choogoomoneyna.choogoomoneyna_be.exception.CustomException;
+import com.choogoomoneyna.choogoomoneyna_be.exception.ErrorCode;
 import com.choogoomoneyna.choogoomoneyna_be.report.dto.response.ReportResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.report.vo.ReportVO;
 import lombok.RequiredArgsConstructor;
@@ -29,10 +31,8 @@ public class ReportControlServiceImpl implements ReportControlService {
 
             return ReportConverter.toResponseDTO(latestReport);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException(e);
+            throw new CustomException(ErrorCode.REPORT_GENERATOR_FAIL);
         }
-
     }
 
     private boolean isExpired(Date regDate, long periodMillis) {
