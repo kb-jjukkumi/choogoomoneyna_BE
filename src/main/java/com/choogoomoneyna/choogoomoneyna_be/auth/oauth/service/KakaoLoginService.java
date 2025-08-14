@@ -4,6 +4,13 @@ import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service.RefreshTokenService
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.JwtTokenProvider;
 import com.choogoomoneyna.choogoomoneyna_be.auth.oauth.dto.response.OAuthUserInfoResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.config.KakaoOAuthConfig;
+import com.choogoomoneyna.choogoomoneyna_be.exception.CustomException;
+import com.choogoomoneyna.choogoomoneyna_be.exception.ErrorCode;
+import com.choogoomoneyna.choogoomoneyna_be.matching.service.RoundInfoService;
+import com.choogoomoneyna.choogoomoneyna_be.ranking.service.RankingService;
+import com.choogoomoneyna.choogoomoneyna_be.ranking.vo.RankingVO;
+import com.choogoomoneyna.choogoomoneyna_be.score.service.ScoreService;
+import com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.JwtTokenResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.LoginType;
@@ -34,6 +41,9 @@ public class KakaoLoginService implements OAuthLoginService {
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RoundInfoService roundInfoService;
+    private final RankingService rankingService;
+    private final ScoreService scoreService;
 
     @Override
     public JwtTokenResponseDTO login(String code) {
@@ -112,22 +122,52 @@ public class KakaoLoginService implements OAuthLoginService {
         System.out.println("UserVO: " + user);
 
         if (user == null) {
-            String rawPassword = UUID.randomUUID().toString();
-            String encryptedPassword = passwordEncoder.encode(rawPassword);
+            try {
+                String rawPassword = UUID.randomUUID().toString();
+                String encryptedPassword = passwordEncoder.encode(rawPassword);
 
-            Date now = new Date();
-            user = UserVO.builder()
-                    .email(dto.getOAuthEmail())
-                    .password(encryptedPassword)
-                    .nickname(dto.getNickname())
-                    .loginType(LoginType.KAKAO.name())
-                    .regDate(now)
-                    .updateDate(now)
-                    .choogooMi(ChoogooMi.O.name())
-                    .build();
+                int roundNumber = roundInfoService.getRoundNumber();
 
-            System.out.println("UserVO: " + user);
-            userService.insertUser(user);
+                Date now = new Date();
+                user = UserVO.builder()
+                        .email(dto.getOAuthEmail())
+                        .password(encryptedPassword)
+                        .nickname(dto.getNickname())
+                        .loginType(LoginType.KAKAO.name())
+                        .regDate(now)
+                        .updateDate(now)
+                        .choogooMi(ChoogooMi.O.name())
+                        .build();
+
+                System.out.println("UserVO: " + user);
+                userService.insertUser(user);
+
+                Long userId = userService.findByEmailAndLoginType(dto.getOAuthEmail(), LoginType.KAKAO).getId();
+                // 랭킹 초기화
+                rankingService.createRanking(RankingVO.builder()
+                        .roundNumber(roundNumber)
+                        .userId(userId)
+                        .build());
+
+                // 점수 초기화
+                scoreService.createScore(UserScoreVO.builder()
+                        .roundNumber(roundNumber)
+                        .userId(userId)
+                        .scoreValue(0)
+                        .isLevelUp(false)
+                        .build());
+
+            } catch (CustomException e) {
+                throw e;
+            } catch (Exception e) {
+                log.error("카카오 로그인 처리 중 오류 발생", e);
+                throw new CustomException(
+                        ErrorCode.INTERNAL_SERVER_ERROR,
+                        "카카오 로그인 처리 중 알 수 없는 오류가 발생했습니다.",
+                        e
+                );
+            }
+
         }
 
         return user;
