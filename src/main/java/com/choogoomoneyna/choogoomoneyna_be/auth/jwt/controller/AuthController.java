@@ -42,7 +42,7 @@ public class AuthController {
         return ResponseEntity.ok("회원가입 성공!");
     }
 
-    @GetMapping("/check-nickname")
+    @GetMapping("/signup/check-nickname")
     public ResponseEntity<?> checkNickname(@RequestParam String nickname) {
         try {
             boolean isNicknameDuplicated = userService.isUserLoginIdDuplicated(nickname);

@@ -17,10 +17,18 @@ public class EmailAuthController {
     private final EmailAuthService emailAuthService;
     private final UserService userService;
 
-    @PostMapping("/send")
+    @PostMapping("/signup/send")
     public ResponseEntity<?> sendAuthCode(@RequestBody EmailAuthRequestDTO dto) {
         emailAuthService.sendAuthCode(dto.getEmail());
         return ResponseEntity.ok("인증 코드가 이메일로 전송되었습니다");
+    }
+
+    @PostMapping("/signup/verify")
+    public ResponseEntity<?> verifySignupAuthCode(@RequestBody EmailVerifyRequestDTO dto) {
+        boolean verified = emailAuthService.verifyAuthCode(dto.getEmail(), dto.getCode());
+        return verified ?
+                ResponseEntity.ok("이메일 인증 성공") :
+                ResponseEntity.badRequest().body("이메일 인증 실패");
     }
 
     @PostMapping("/verify")
