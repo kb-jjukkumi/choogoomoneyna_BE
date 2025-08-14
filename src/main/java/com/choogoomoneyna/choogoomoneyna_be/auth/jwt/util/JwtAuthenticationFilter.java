@@ -49,7 +49,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     throws ServletException, IOException {
         String path = request.getRequestURI();
         System.out.println(">>> JwtAuthenticationFilter path: " + path);
-        if (path.contains("/login") || path.contains("/signup")) {
+        if (path.contains("/login") || path.contains("/signup") || path.contains("api/test/matching")) {
             filterChain.doFilter(request, response);
             return;
         }
