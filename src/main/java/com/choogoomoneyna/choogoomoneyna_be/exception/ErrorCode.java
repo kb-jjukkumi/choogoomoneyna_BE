@@ -21,6 +21,7 @@ public enum ErrorCode {
     MATCHING_USER_EMPTY(HttpStatus.BAD_REQUEST, "매칭할 유저를 조회하지 못하였습니다."),
     SCORE_EMPTY(HttpStatus.BAD_REQUEST, "점수를 조회하지 못하였습니다."),
     BAD_PASSWORD_FORMAT(HttpStatus.BAD_REQUEST, "잘못된 비밀번호 유형입니다."),
+    NOT_EQUAL_PASSWORD_CONFIRM(HttpStatus.BAD_REQUEST, "비밀번호 확인이 일치하지 않습니다"),
 
     // 401 Unauthorized
     AUTH_TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "유효하지 않거나 만료된 토큰입니다."),
@@ -34,6 +35,7 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 유저입니다."),
     MATCHING_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 매칭입니다."),
     ROUND_INFO_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 라운드 정보입니다."),
+    EMAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않은 이메일입니다."),
 
     // 500 Internal Server Error
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "DB 에러가 발생했습니다."),
