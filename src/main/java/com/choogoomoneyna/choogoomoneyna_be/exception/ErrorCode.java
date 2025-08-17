@@ -20,7 +20,7 @@ public enum ErrorCode {
     INVALID_CONNECTED_ID(HttpStatus.BAD_REQUEST, "응답에 connectedId가 없습니다"),
     MATCHING_USER_EMPTY(HttpStatus.BAD_REQUEST, "매칭할 유저를 조회하지 못하였습니다."),
     SCORE_EMPTY(HttpStatus.BAD_REQUEST, "점수를 조회하지 못하였습니다."),
-    HTTP_REQUEST_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "외부 API 요청 실패"),
+    BAD_PASSWORD_FORMAT(HttpStatus.BAD_REQUEST, "잘못된 비밀번호 유형입니다."),
 
     // 401 Unauthorized
     AUTH_TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "유효하지 않거나 만료된 토큰입니다."),
@@ -42,6 +42,7 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류가 발생했습니다."),
 
     // 502 Bad Gateway
+    HTTP_REQUEST_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "외부 API 요청 실패"),
     EXTERNAL_API_ERROR(HttpStatus.BAD_GATEWAY, "외부 API 호출 실패");
 
     private final HttpStatus httpStatus;
