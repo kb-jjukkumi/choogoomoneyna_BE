@@ -46,14 +46,9 @@ public class AuthController {
 
     @GetMapping("/signup/check-nickname")
     public ResponseEntity<?> checkNickname(@RequestParam String nickname) {
-        try {
-            boolean isNicknameDuplicated = userService.isUserLoginIdDuplicated(nickname);
-            System.out.println(isNicknameDuplicated ? "yes" : "no");
-            return ResponseEntity.ok(isNicknameDuplicated);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("서버 오류: " + e.getMessage());
-        }
+        boolean isNicknameDuplicated = userService.isUserLoginIdDuplicated(nickname);
+        System.out.println(isNicknameDuplicated ? "yes" : "no");
+        return ResponseEntity.ok(isNicknameDuplicated);
     }
 
     @GetMapping("/check-nickname-for-update")
