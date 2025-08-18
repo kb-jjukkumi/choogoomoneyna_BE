@@ -21,6 +21,7 @@ public enum ErrorCode {
     MATCHING_USER_EMPTY(HttpStatus.BAD_REQUEST, "매칭할 유저를 조회하지 못하였습니다."),
     SCORE_EMPTY(HttpStatus.BAD_REQUEST, "점수를 조회하지 못하였습니다."),
     BAD_PASSWORD_FORMAT(HttpStatus.BAD_REQUEST, "잘못된 비밀번호 유형입니다."),
+    BAD_NICKNAME_FORMAT(HttpStatus.BAD_REQUEST, "닉네임에는 _ 가 들어갈 수 없습니다"),
     NOT_EQUAL_PASSWORD_CONFIRM(HttpStatus.BAD_REQUEST, "비밀번호 확인이 일치하지 않습니다"),
 
     // 401 Unauthorized
