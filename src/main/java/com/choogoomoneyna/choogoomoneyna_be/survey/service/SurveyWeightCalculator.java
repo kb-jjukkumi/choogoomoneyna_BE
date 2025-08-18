@@ -18,54 +18,61 @@ public class SurveyWeightCalculator {
     }
 
     private static void initializeWeights() {
+        // 1번 문항
         addQuestionWeights(1, Map.of(
-                1, createWeights(7, 5, 3, 0, 9),
-                2, createWeights(9, 7, 5, 0, 1),
-                3, createWeights(0, 3, 1, 9, 5),
-                4, createWeights(1, 3, 0, 9, 5),
-                5, createWeights(3, 3, 3, 3, 3)
+                1, createWeights(29, 21, 13, 0, 37),
+                2, createWeights(45, 35, 25, 0, 0),
+                3, createWeights(0, 19, 6, 56, 19),
+                4, createWeights(6, 19, 0, 56, 19),
+                5, createWeights(20, 20, 20, 20, 20)
         ));
 
+        // 2번 문항
         addQuestionWeights(2, Map.of(
-                1, createWeights(9, 5, 3, 0, 1),
-                2, createWeights(9, 5, 3, 0, 1),
-                3, createWeights(5, 9, 3, 1, 0),
-                4, createWeights(0, 3, 5, 9, 1),
-                5, createWeights(0, 3, 5, 9, 1)
+                1, createWeights(45, 25, 15, 0, 15),
+                2, createWeights(45, 25, 15, 0, 15),
+                3, createWeights(18, 56, 19, 6, 1),
+                4, createWeights(0, 19, 31, 46, 4),
+                5, createWeights(0, 19, 31, 50, 0)
         ));
 
+        // 3번 문항
         addQuestionWeights(3, Map.of(
-                1, createWeights(1, 5, 0, 7, 3),
-                2, createWeights(0, 5, 1, 7, 3),
-                3, createWeights(1, 5, 3, 2, 7),
-                4, createWeights(0, 3, 5, 1, 7),
-                5, createWeights(0, 1, 9, 3, 5)
+                1, createWeights(8, 42, 0, 48, 2),
+                2, createWeights(0, 42, 8, 48, 2),
+                3, createWeights(6, 31, 19, 13, 31),
+                4, createWeights(0, 19, 31, 6, 44),
+                5, createWeights(0, 6, 56, 19, 19)
         ));
 
+        // 4번 문항
         addQuestionWeights(4, Map.of(
-                1, createWeights(9, 1, 3, 0, 1),
-                2, createWeights(3, 9, 3, 3, 1),
-                3, createWeights(1, 9, 1, 2, 2),
-                4, createWeights(0, 0, 0, 1, 9),
-                5, createWeights(0, 0, 1, 1, 9)
+                1, createWeights(56, 6, 19, 0, 19),
+                2, createWeights(25, 75, 0, 0, 0),
+                3, createWeights(6, 56, 6, 13, 19),
+                4, createWeights(0, 0, 0, 10, 90),
+                5, createWeights(0, 0, 10, 10, 80)
         ));
 
+        // 5~9번 문항
         for (int i = 5; i <= 9; i++) {
             addQuestionWeights(i, Map.of(
-                    1, createWeights(9, 7, 5, 1, 1),
-                    2, createWeights(7, 9, 3, 1, 1),
-                    3, createWeights(5, 9, 0, 1, 1),
-                    4, createWeights(0, 1, 0, 0, 3)
+                    1, createWeights(45, 35, 15, 5, 0),
+                    2, createWeights(35, 45, 15, 5, 0),
+                    3, createWeights(25, 45, 0, 5, 25),
+                    4, createWeights(0, 25, 0, 0, 75)
             ));
         }
 
+        // 10~14번 문항
         for (int i = 10; i <= 14; i++) {
             addQuestionWeights(i, Map.of(
-                    1, createWeights(9, 7, 5, 1, 1),
-                    2, createWeights(0, 1, 1, 3, 3)
+                    1, createWeights(45, 35, 15, 5, 0),
+                    2, createWeights(0, 6, 6, 19, 69)
             ));
         }
     }
+
 
     private static void addQuestionWeights(int questionId, Map<Integer, Map<ChoogooMi, Integer>> options) {
         weightMap.put(questionId, options);
