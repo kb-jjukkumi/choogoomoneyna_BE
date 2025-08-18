@@ -1,13 +1,12 @@
 package com.choogoomoneyna.choogoomoneyna_be.auth.oauth.controller;
 
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.CustomUserDetails;
-import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.util.JwtTokenProvider;
 import com.choogoomoneyna.choogoomoneyna_be.auth.jwt.service.RefreshTokenService;
-import com.choogoomoneyna.choogoomoneyna_be.auth.oauth.dto.OAuthUserInfoDTO;
+import com.choogoomoneyna.choogoomoneyna_be.auth.oauth.dto.request.OAuthRequestDTO;
 import com.choogoomoneyna.choogoomoneyna_be.auth.oauth.service.KakaoLoginService;
-import com.choogoomoneyna.choogoomoneyna_be.exception.InvalidTokenException;
+import com.choogoomoneyna.choogoomoneyna_be.exception.CustomException;
+import com.choogoomoneyna.choogoomoneyna_be.exception.ErrorCode;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.JwtTokenResponseDTO;
-import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,38 +21,19 @@ import org.springframework.web.bind.annotation.*;
 public class OAuthController {
 
     private final KakaoLoginService kakaoLoginService;
-    private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenService refreshTokenService;
 
-    @GetMapping("/kakao/login")
-    public ResponseEntity<?> kakaoLogin(@RequestParam String code) {
-        try {
-            String kakaoAccessToken = kakaoLoginService.getAccessToken(code);
-            OAuthUserInfoDTO userInfo = kakaoLoginService.getUserInfo(kakaoAccessToken);
-            
-            // db 에 없으면 저장
-            UserVO user = kakaoLoginService.findOrCreateUserByOAuth(userInfo);
-
-            // 기존 토큰 삭제
-            refreshTokenService.deleteAllTokensByUserId(user.getId());
-            
-            String accessToken = jwtTokenProvider.generateAccessToken(user.getId());
-            String refreshToken = refreshTokenService.generateRefreshTokenAndSave(user.getId());
-            log.info("accessToken = {}", accessToken);
-            log.info("refreshToken = {}", refreshToken);
-
-            JwtTokenResponseDTO responseDTO = new JwtTokenResponseDTO(accessToken, refreshToken);
-            return ResponseEntity.ok(responseDTO);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
+    @PostMapping("/kakao/login")
+    public ResponseEntity<?> kakaoLogin(@RequestBody OAuthRequestDTO request) {
+        String code = request.getCode();
+        JwtTokenResponseDTO response = kakaoLoginService.login(code);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/kakao/logout")
     public ResponseEntity<?> kakaoLogout(@RequestHeader(value = "refreshToken") String refreshToken) {
         if (refreshToken == null || refreshToken.isBlank()) {
-            throw new InvalidTokenException("refreshToken 헤더가 없습니다.");
+            throw new CustomException(ErrorCode.AUTH_TOKEN_INVALID, "refreshToken 헤더가 없습니다.");
         }
 
         refreshTokenService.deleteTokenByRefreshToken(refreshToken);

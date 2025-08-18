@@ -14,5 +14,8 @@ public class UserPasswordResetDTO {
     
     @NotBlank(message = "패스워드는 필수입니다")
     private String newPassword;
+
+    @NotBlank(message = "패스워드 확인은 필수입니다")
+    private String newPasswordConfirm;
 }
 

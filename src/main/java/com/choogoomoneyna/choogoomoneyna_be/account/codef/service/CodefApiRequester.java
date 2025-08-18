@@ -2,6 +2,8 @@ package com.choogoomoneyna.choogoomoneyna_be.account.codef.service;
 
 import com.choogoomoneyna.choogoomoneyna_be.account.codef.dto.*;
 import com.choogoomoneyna.choogoomoneyna_be.account.db.mapper.AccountMapper;
+import com.choogoomoneyna.choogoomoneyna_be.exception.CustomException;
+import com.choogoomoneyna.choogoomoneyna_be.exception.ErrorCode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -34,53 +36,84 @@ public class CodefApiRequester {
     private final AccountMapper accountMapper;
 
     //커넥티드 아이디 계정 등록
-    public String registerConnectedId(AccountRequestDto accountRequestDto) throws Exception {
-        //access_token
-        String accessToken = codefTokenManager.getAccessToken();
+    public String registerConnectedId(AccountRequestDto accountRequestDto) {
+        try {
+            //access_token
+            String accessToken = codefTokenManager.getAccessToken();
 
-        //요청 api 경로
-        String requestUrl = "https://development.codef.io/v1/account/create";
+            //요청 api 경로
+            String requestUrl = "https://development.codef.io/v1/account/create";
 
-        //커넥티드 아이디 등록 요청 바디 생성
-        String requestBody = buildRequestBody(accountRequestDto);
+            //커넥티드 아이디 등록 요청 바디 생성
+            String requestBody = buildRequestBody(accountRequestDto);
 
-        //api 요청 보내기
-        String response = sendPostRequest(requestUrl, accessToken, requestBody);
-        log.info(response);
+            //api 요청 보내기
+            String response = sendPostRequest(requestUrl, accessToken, requestBody);
+            log.info(response);
 
-        String errorMessage = extractErrorMessage(response);
-        if(errorMessage != null) {
-            throw new Exception(errorMessage);
+            String errorMessage = extractErrorMessage(response);
+            if (errorMessage != null) {
+                throw new CustomException(ErrorCode.EXTERNAL_API_ERROR, "CODEF 계좌 등록 실패: " + errorMessage);
+            }
+
+            return extractConnectedIdFromResponse(response);
+        } catch (CustomException e) {
+            throw e;
+        } catch (IOException | InterruptedException e) {
+            throw new CustomException(
+                    ErrorCode.EXTERNAL_API_ERROR,
+                    "CODEF API 네트워크 오류",
+                    e
+            );
+        } catch (Exception e) {
+            throw new CustomException(
+                    ErrorCode.EXTERNAL_API_ERROR,
+                    "CODEF API 처리 중 예기치 못한 오류",
+                    e
+            );
         }
-
-        return extractConnectedIdFromResponse(response);
     }
 
     //커넥티드 아이디 계정 추가(이미 커넥티드 아이디가 있는 유저가 새로운 기관의 계정 정보를 추가하는 경우)
     public String addConnectedId(String connectedId, AccountRequestDto accountRequestDto) throws Exception {
-
-        String accessToken = codefTokenManager.getAccessToken();
-        String requestUrl = "https://development.codef.io/v1/account/add";
-
-        String requestBody = buildRequestBody(accountRequestDto, connectedId);
-        String response = sendPostRequest(requestUrl, accessToken, requestBody);
-        log.info(response);
-
-        // 에러 메시지 추출
-        String errorMessage = extractErrorMessage(response);
-//        if (errorMessage != null) {
-//
-//            //throw new Exception(errorMessage);  // 에러가 있으면 예외 발생
-//        }
-        if (errorMessage != null) {
-            if (errorMessage.contains("이미 계정이 등록된 기관")) {
-                log.warn("이미 등록된 기관이므로 addConnectedId는 생략합니다.");
-                return connectedId;
+        try {
+            if (connectedId == null) {
+                throw new CustomException(ErrorCode.INVALID_REQUEST, "connectedId 값이 비어 있습니다.");
             }
-            //throw new Exception(errorMessage);
-        }
 
-        return connectedId;
+            String accessToken = codefTokenManager.getAccessToken();
+            String requestUrl = "https://development.codef.io/v1/account/add";
+
+            String requestBody = buildRequestBody(accountRequestDto, connectedId);
+            String response = sendPostRequest(requestUrl, accessToken, requestBody);
+            log.info(response);
+
+            // 에러 메시지 추출
+            String errorMessage = extractErrorMessage(response);
+
+            if (errorMessage != null) {
+                if (errorMessage.contains("이미 계정이 등록된 기관")) {
+                    log.warn("이미 등록된 기관이므로 addConnectedId는 생략합니다.");
+                    return connectedId;
+                }
+            }
+
+            return connectedId;
+        } catch (CustomException e) {
+            throw e;
+        } catch (IOException | InterruptedException e) {
+            throw new CustomException(
+                    ErrorCode.EXTERNAL_API_ERROR,
+                    "CODEF API 네트워크 오류",
+                    e
+            );
+        } catch (Exception e) {
+            throw new CustomException(
+                    ErrorCode.EXTERNAL_API_ERROR,
+                    "CODEF API 처리 중 예기치 못한 오류",
+                    e
+            );
+        }
     }
 
 
@@ -116,7 +149,7 @@ public class CodefApiRequester {
         if (rootNode.has("data") && rootNode.get("data").has("connectedId")) {
             return rootNode.get("data").get("connectedId").asText();
         } else {
-            throw new IOException("connectedId not found in response");
+            throw new CustomException(ErrorCode.INVALID_CONNECTED_ID, "connectedId not found in response");
         }
     }
 
@@ -186,7 +219,10 @@ public class CodefApiRequester {
             String decodedResponse = URLDecoder.decode(response.body(), "UTF-8");
             return decodedResponse;
         } else {
-            throw new IOException("HTTP error code: " + response.statusCode());
+            throw new CustomException(
+                    ErrorCode.HTTP_REQUEST_FAILED,
+                    "HTTP error code: " + response.statusCode()
+            );
         }
     }
 
@@ -280,10 +316,10 @@ public class CodefApiRequester {
             JsonNode jsonNode = objectMapper.readTree(response);
 
             // 결과 코드 체크
-            String resultCode = jsonNode.path("result").path("code").asText();
-            if (!"CF-00000".equals(resultCode)) {
-                throw new Exception("Codef API error: " + jsonNode.path("result").path("message").asText());
-            }
+//            String resultCode = jsonNode.path("result").path("code").asText();
+//            if (!"CF-00000".equals(resultCode)) {
+//                throw new Exception("Codef API error: " + jsonNode.path("result").path("message").asText());
+//            }
 
             // TransactionResponseDto 생성
             //TransactionResponseDto transactionResponseDto = new TransactionResponseDto();
