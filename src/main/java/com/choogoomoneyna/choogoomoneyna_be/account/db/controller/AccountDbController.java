@@ -25,30 +25,18 @@ public class AccountDbController {
 
     @GetMapping("/account/db")
     public ResponseEntity<?> getAccountDb(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        try {
-            Long userId = userDetails.getId();
+        Long userId = userDetails.getId();
 
-            List<AccountResponseDto> accountList = accountDbService.getAllAccounts(userId);
+        List<AccountResponseDto> accountList = accountDbService.getAllAccounts(userId);
 
-            return ResponseEntity.ok(accountList);
-
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        return ResponseEntity.ok(accountList);
     }
 
     @GetMapping("/transaction/db")
     public ResponseEntity<?> getTransactionDb(@AuthenticationPrincipal CustomUserDetails userDetails,
                                               @RequestParam String account) {
-        try {
-            Long userId = userDetails.getId();
-            List<TransactionItemDto> transactions = accountDbService.getAllTransactions(account);
-            return ResponseEntity.ok(transactions);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-
+        Long userId = userDetails.getId();
+        List<TransactionItemDto> transactions = accountDbService.getAllTransactions(account);
+        return ResponseEntity.ok(transactions);
     }
 }
