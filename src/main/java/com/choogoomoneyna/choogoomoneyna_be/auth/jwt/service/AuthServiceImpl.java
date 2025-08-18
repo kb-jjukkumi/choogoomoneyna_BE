@@ -45,6 +45,10 @@ public class AuthServiceImpl implements AuthService {
                 throw new CustomException(ErrorCode.BAD_PASSWORD_FORMAT);
             }
 
+            if (dto.getNickname().contains("_")) {
+                throw new CustomException(ErrorCode.BAD_NICKNAME_FORMAT);
+            }
+
             // 비밀번호 암호화
             String encryptedPassword = passwordEncoder.encode(dto.getPassword());
 
