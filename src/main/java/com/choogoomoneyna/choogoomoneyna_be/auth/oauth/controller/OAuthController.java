@@ -26,15 +26,8 @@ public class OAuthController {
     @PostMapping("/kakao/login")
     public ResponseEntity<?> kakaoLogin(@RequestBody OAuthRequestDTO request) {
         String code = request.getCode();
-
-        System.out.println(code);
-        try {
-            JwtTokenResponseDTO response = kakaoLoginService.login(code);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(405).body(e);
-        }
+        JwtTokenResponseDTO response = kakaoLoginService.login(code);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/kakao/logout")

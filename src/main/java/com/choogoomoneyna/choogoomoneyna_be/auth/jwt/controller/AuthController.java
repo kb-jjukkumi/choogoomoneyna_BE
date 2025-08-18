@@ -10,6 +10,7 @@ import com.choogoomoneyna.choogoomoneyna_be.user.enums.LoginType;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.JwtTokenResponseDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserJoinRequestDTO;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserLoginRequestDTO;
+import com.choogoomoneyna.choogoomoneyna_be.user.service.UserPasswordService;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserService;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
     private final EmailAuthService emailAuthService;
+    private final UserPasswordService userPasswordService;
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@Valid @ModelAttribute UserJoinRequestDTO dto) {
@@ -44,14 +46,9 @@ public class AuthController {
 
     @GetMapping("/signup/check-nickname")
     public ResponseEntity<?> checkNickname(@RequestParam String nickname) {
-        try {
-            boolean isNicknameDuplicated = userService.isUserLoginIdDuplicated(nickname);
-            System.out.println(isNicknameDuplicated ? "yes" : "no");
-            return ResponseEntity.ok(isNicknameDuplicated);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("서버 오류: " + e.getMessage());
-        }
+        boolean isNicknameDuplicated = userService.isUserLoginIdDuplicated(nickname);
+        System.out.println(isNicknameDuplicated ? "yes" : "no");
+        return ResponseEntity.ok(isNicknameDuplicated);
     }
 
     @GetMapping("/check-nickname-for-update")
@@ -110,14 +107,7 @@ public class AuthController {
         // TODO: 인증 코드 저장한 경우 추가 인증하기
         // String verificationCode = dto.getVerificationCode();
 
-        UserVO user = userService.findByEmailAndLoginType(dto.getEmail(), LoginType.LOCAL);
-        if (user == null) {
-            throw new UsernameNotFoundException("존재하지 않은 이메일입니다.");
-        }
-
-        String encryptedPassword = passwordEncoder.encode(dto.getNewPassword());
-
-        userService.updatePasswordByUserEmail(dto.getEmail(), encryptedPassword);
+        userPasswordService.resetPassword(dto.getEmail(), dto.getNewPassword(), dto.getNewPasswordConfirm());
         return ResponseEntity.ok("비밀번호 재설정 성공");
     }
 }

@@ -10,6 +10,7 @@ import com.choogoomoneyna.choogoomoneyna_be.score.vo.UserScoreVO;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.LoginType;
 import com.choogoomoneyna.choogoomoneyna_be.user.dto.request.UserJoinRequestDTO;
+import com.choogoomoneyna.choogoomoneyna_be.user.service.PasswordValidator;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserConverter;
 import com.choogoomoneyna.choogoomoneyna_be.user.service.UserService;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
@@ -38,6 +39,14 @@ public class AuthServiceImpl implements AuthService {
             // email 중복 체크
             if (userService.existsByEmailAndLoginType(dto.getEmail(), LoginType.LOCAL)) {
                 throw new CustomException(ErrorCode.AUTH_EMAIL_EXISTS, "이미 존재하는 이메일입니다.");
+            }
+
+            if (!PasswordValidator.isValidFormat(dto.getPassword())) {
+                throw new CustomException(ErrorCode.BAD_PASSWORD_FORMAT);
+            }
+
+            if (dto.getNickname().contains("_")) {
+                throw new CustomException(ErrorCode.BAD_NICKNAME_FORMAT);
             }
 
             // 비밀번호 암호화

@@ -1,5 +1,7 @@
 package com.choogoomoneyna.choogoomoneyna_be.user.service;
 
+import com.choogoomoneyna.choogoomoneyna_be.exception.CustomException;
+import com.choogoomoneyna.choogoomoneyna_be.exception.ErrorCode;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.ChoogooMi;
 import com.choogoomoneyna.choogoomoneyna_be.user.enums.LoginType;
 import com.choogoomoneyna.choogoomoneyna_be.user.mapper.UserMapper;
@@ -24,6 +26,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isUserLoginIdDuplicated(String nickname) {
+        if (nickname.contains("_")) {
+            throw new CustomException(ErrorCode.BAD_NICKNAME_FORMAT);
+        }
+
         return userMapper.existsByNickname(nickname.trim());
     }
 
