@@ -141,9 +141,10 @@ public class CodefServiceImpl implements CodefService {
         }
 
         //2. 거래내역 조회
-         CodefTransactionResponseDto codefTransactionResponseDto = codefApiRequester.getTransactionList(transactionRequestDto);
+        CodefTransactionResponseDto codefTransactionResponseDto = codefApiRequester.getTransactionList(transactionRequestDto);
         if (codefTransactionResponseDto == null) {
             log.info("None transaction list added.");
+            return;
         }
 
         List<CodefTransactionResponseDto.HistoryItem> trItemList = codefTransactionResponseDto.getResTrHistoryList();
