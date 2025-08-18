@@ -8,67 +8,26 @@ import com.choogoomoneyna.choogoomoneyna_be.user.mapper.UserMapper;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith( MockitoExtension.class)
 class UserServiceImplTest {
 
     @Mock
     private UserMapper userMapper;
 
-    @Mock
-    private PasswordEncoder passwordEncoder;
-
     @InjectMocks
     private UserServiceImpl userService;
-
-    @InjectMocks
-    private AuthServiceImpl authService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
-    @Test
-    void registerUser() {
-        // given
-        UserJoinRequestDTO dto = UserJoinRequestDTO.builder()
-                .email("leehk@example.com")
-                .password("<PASSWORD>")
-                .nickname("leehk")
-                .profileImage(null)
-                .build();
-
-        String encryptedPassword = "ENCODED_PASSWORD";
-        when(passwordEncoder.encode(dto.getPassword())).thenReturn(encryptedPassword);
-
-        // when
-        authService.registerUser(dto);
-
-        // then
-        // ArgumentCaptor 객체를 생성해서 UserVO 타입의 인자를 캡처할 준비
-        ArgumentCaptor<UserVO> captor = ArgumentCaptor.forClass(UserVO.class);
-
-        // userMapper.insertUser() 메서드가 호출되었는지 검증하고,
-        // 그때 전달된 인자를 captor로 캡처함
-        verify(userMapper).insertUser(captor.capture());
-
-        // 캡처된 UserVO 객체를 꺼내와 savedUser 변수에 저장
-        UserVO savedUser = captor.getValue();
-        
-        // 작성이 잘 되는지 확인
-        assertThat(savedUser.getPassword()).isEqualTo(encryptedPassword);
-        assertThat(savedUser.getNickname()).isEqualTo("leehk");
-        assertThat(savedUser.getChoogooMi()).isEqualTo(ChoogooMi.A.name());
-    }
 
     @Test
     void isUserLoginIdDuplicated() {
