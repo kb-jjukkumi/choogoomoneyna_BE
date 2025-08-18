@@ -6,6 +6,8 @@ import com.choogoomoneyna.choogoomoneyna_be.account.codef.vo.TransactionVO;
 import com.choogoomoneyna.choogoomoneyna_be.account.db.dto.TransactionItemDto;
 import com.choogoomoneyna.choogoomoneyna_be.account.db.mapper.AccountMapper;
 import com.choogoomoneyna.choogoomoneyna_be.account.db.service.TransactionConverter;
+import com.choogoomoneyna.choogoomoneyna_be.exception.CustomException;
+import com.choogoomoneyna.choogoomoneyna_be.exception.ErrorCode;
 import com.choogoomoneyna.choogoomoneyna_be.user.mapper.UserMapper;
 import com.choogoomoneyna.choogoomoneyna_be.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
@@ -34,141 +36,169 @@ public class CodefServiceImpl implements CodefService {
     private final AccountMapper accountMapper;
 
     @Override
-    public List<AccountResponseDto> addAccount(Long userId, AccountRequestDto accountRequestDto) throws Exception {
-
-        //1. 유저 정보 추출
-        UserVO userVO = userMapper.findById(userId);
-        String connectedId = userVO.getConnectedId();
-
-        // 2. connectedId 처리 (없을 경우 등록 api로 연결)
-        if (connectedId == null) {
-            connectedId = codefApiRequester.registerConnectedId(accountRequestDto);
-            userMapper.updateConnectedId(userId, connectedId);
-        } else {
-            connectedId = codefApiRequester.addConnectedId(connectedId, accountRequestDto);
-        }
-
-        // 3. codef api로 계좌 리스트 가져오기
-        List<AccountResponseDto> accountList = codefApiRequester.getAccountList(accountRequestDto, connectedId);
-        System.out.println(accountList);
-
-        if (accountList == null || accountList.isEmpty()) {
-            log.info("None account to added.");
-            return List.of();
-        }
-
-        // 5. 계좌 정보를 AccountVo 리스트로 매핑
-        List<AccountVO> accountVOList = accountList.stream()
-                .map(accountInfo -> mapToAccountVO(userId, accountInfo))
-                .toList();
-
-        // 6. accounts db 저장
-        accountMapper.insertAccount(accountVOList);
-        log.info("{} accounts added.", accountVOList.size());
-
-        return accountList;
-    }
-
-
-
-
-
-    @Override
-    public AccountResponseDto updateAccountOne(Long userId, AccountUpdateRequestDto accountUpdateRequestDto) throws Exception {
-        //1. 유저 정보 추출
-        UserVO userVO = userMapper.findById(userId);
-        String connectedId = userVO.getConnectedId();
-        log.debug("connectedId: {}", connectedId);
-        String bankId = accountUpdateRequestDto.getBankId();
-        String accountNum = accountUpdateRequestDto.getAccountNum();
-        log.info("조회하려는 계좌번호 {}", accountNum);
-
-        // 2. codef api로 계좌 리스트 가져오기
-        List<AccountResponseDto> accountList = codefApiRequester.getAccountOne(bankId, connectedId);
-
-        if (accountList == null || accountList.isEmpty()) {
-            System.out.println("accountList is empty."+ accountList);
-            log.info("None account added.");
-            throw new Exception("check id/password.");
-        }
-
-        //3. 동일 계좌 찾기
-        for(AccountResponseDto accountResponseDto : accountList) {
-            log.info("accountResponseDto: {}", accountResponseDto);
-            if (accountResponseDto.getAccountNum().equals(accountNum)) {
-                AccountVO accountVO = accountMapper.findByAccountNum(accountNum);
-                if (accountVO == null) {
-                    throw new Exception("Account not found in DB.");
-                }
-
-                //5. 잔액 비교 후 다르면 업데이트
-                if(!accountVO.getAccountBalance().equals(accountResponseDto.getAccountBalance())) {
-                    accountVO.setAccountBalance(accountResponseDto.getAccountBalance());
-
-                    log.info("Account balance updated for accountNum: {}", accountNum);
-                } else {
-                    log.info("No balance change for accountNum: {}", accountNum);
-                }
-                accountVO.setFetchedDate(LocalDateTime.now());
-                accountMapper.updateAccount(accountVO);
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd' 'HH:mm:ss");
-                accountResponseDto.setFetchedDate(LocalDateTime.now().format(formatter));
-                return accountResponseDto;
+    public List<AccountResponseDto> addAccount(Long userId, AccountRequestDto accountRequestDto) {
+        try {
+            //1. 유저 정보 추출
+            UserVO userVO = userMapper.findById(userId);
+            if (userVO == null) {
+                throw new CustomException(ErrorCode.USER_NOT_FOUND);
             }
+
+            String connectedId = userVO.getConnectedId();
+            // 2. connectedId 처리 (없을 경우 등록 api로 연결)
+            if (connectedId == null) {
+                connectedId = codefApiRequester.registerConnectedId(accountRequestDto);
+                userMapper.updateConnectedId(userId, connectedId);
+            } else {
+                connectedId = codefApiRequester.addConnectedId(connectedId, accountRequestDto);
+            }
+
+            // 3. codef api로 계좌 리스트 가져오기
+            List<AccountResponseDto> accountList = codefApiRequester.getAccountList(accountRequestDto, connectedId);
+            System.out.println(accountList);
+
+            if (accountList == null || accountList.isEmpty()) {
+                log.info("None account to added.");
+                return List.of();
+            }
+
+            // 5. 계좌 정보를 AccountVo 리스트로 매핑
+            List<AccountVO> accountVOList = accountList.stream()
+                    .map(accountInfo -> mapToAccountVO(userId, accountInfo))
+                    .toList();
+
+            // 6. accounts db 저장
+            accountMapper.insertAccount(accountVOList);
+            log.info("{} accounts added.", accountVOList.size());
+
+            return accountList;
+        } catch (Exception e) {
+            log.error("Exception occurred while adding account.", e);
+            throw new CustomException(ErrorCode.CODEF_API_ERROR);
         }
-        throw new Exception("Account not found.");
+    }
+
+
+
+
+
+    @Override
+    public AccountResponseDto updateAccountOne(Long userId, AccountUpdateRequestDto accountUpdateRequestDto) {
+        try {
+            //1. 유저 정보 추출
+            UserVO userVO = userMapper.findById(userId);
+            if (userVO == null) {
+                throw new CustomException(ErrorCode.USER_NOT_FOUND);
+            }
+
+            String connectedId = userVO.getConnectedId();
+            if (connectedId == null) {
+                throw new CustomException(ErrorCode.CONNECTED_ID_MISSING);
+            }
+            log.debug("connectedId: {}", connectedId);
+            String bankId = accountUpdateRequestDto.getBankId();
+            String accountNum = accountUpdateRequestDto.getAccountNum();
+            log.info("조회하려는 계좌번호 {}", accountNum);
+
+            // 2. codef api로 계좌 리스트 가져오기
+            List<AccountResponseDto> accountList = codefApiRequester.getAccountOne(bankId, connectedId);
+
+            if (accountList == null || accountList.isEmpty()) {
+                log.info("None account added.");
+                throw new CustomException(ErrorCode.CODEF_API_ERROR);
+            }
+
+            //3. 동일 계좌 찾기
+            for (AccountResponseDto accountResponseDto : accountList) {
+                log.info("accountResponseDto: {}", accountResponseDto);
+                if (accountResponseDto.getAccountNum().equals(accountNum)) {
+                    AccountVO accountVO = accountMapper.findByAccountNum(accountNum);
+                    if (accountVO == null) {
+                        throw new CustomException(ErrorCode.ACCOUNT_NOT_FOUND);
+                    }
+
+                    //5. 잔액 비교 후 다르면 업데이트
+                    if (!accountVO.getAccountBalance().equals(accountResponseDto.getAccountBalance())) {
+                        accountVO.setAccountBalance(accountResponseDto.getAccountBalance());
+
+                        log.info("Account balance updated for accountNum: {}", accountNum);
+                    } else {
+                        log.info("No balance change for accountNum: {}", accountNum);
+                    }
+                    accountVO.setFetchedDate(LocalDateTime.now());
+                    accountMapper.updateAccount(accountVO);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd' 'HH:mm:ss");
+                    accountResponseDto.setFetchedDate(LocalDateTime.now().format(formatter));
+                    return accountResponseDto;
+                }
+            }
+            throw new CustomException(ErrorCode.ACCOUNT_NOT_FOUND);
+        } catch (Exception e) {
+            log.error("Exception occurred while updating account.", e);
+            throw new CustomException(ErrorCode.CODEF_API_ERROR);
+        }
     }
 
     @Override
-    public void addTransaction(Long userId, TransactionRequestDto transactionRequestDto) throws Exception {
+    public void addTransaction(Long userId, TransactionRequestDto transactionRequestDto) {
+        try {
+            //1. 요청 dto에 connectedId 추가
+            UserVO userVO = userMapper.findById(userId);
+            if (userVO == null) {
+                throw new CustomException(ErrorCode.USER_NOT_FOUND);
+            }
 
-        //1. 요청 dto에 connectedId 추가
-        UserVO userVO = userMapper.findById(userId);
-        String connectedId = userVO.getConnectedId();
-        log.info("user info {}" , connectedId);
+            String connectedId = userVO.getConnectedId();
+            if (connectedId == null) {
+                throw new CustomException(ErrorCode.CONNECTED_ID_MISSING);
+            }
+            log.info("user info {}", connectedId);
 
-        String accountNum = transactionRequestDto.getAccount();
-        transactionRequestDto.setConnectedId(connectedId);
-        transactionRequestDto.setOrderBy("0");
-        log.info(transactionRequestDto.toString());
+            String accountNum = transactionRequestDto.getAccount();
+            transactionRequestDto.setConnectedId(connectedId);
+            transactionRequestDto.setOrderBy("0");
+            log.info(transactionRequestDto.toString());
 
-        //1-1. 가장 최근 거래 시간 가져와서 startDate 설정
-        LocalDateTime latestTrTime = accountMapper.findLatestTransactionDateByAccount(accountNum);
-        if(latestTrTime != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-            String startDate = latestTrTime.toLocalDate().format(formatter);
-            transactionRequestDto.setStartDate(startDate);
+            //1-1. 가장 최근 거래 시간 가져와서 startDate 설정
+            LocalDateTime latestTrTime = accountMapper.findLatestTransactionDateByAccount(accountNum);
+            if (latestTrTime != null) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+                String startDate = latestTrTime.toLocalDate().format(formatter);
+                transactionRequestDto.setStartDate(startDate);
+            }
+
+            //2. 거래내역 조회
+            CodefTransactionResponseDto codefTransactionResponseDto = codefApiRequester.getTransactionList(transactionRequestDto);
+            if (codefTransactionResponseDto == null) {
+                log.info("None transaction list added.");
+                return;
+            }
+
+            List<CodefTransactionResponseDto.HistoryItem> trItemList = codefTransactionResponseDto.getResTrHistoryList();
+            List<TransactionVO> transactionVOList = mapToTransactionList(accountNum, trItemList);
+
+            //3. 기존거래와 중복 저장 방지
+            List<TransactionVO> existingTransactions = accountMapper.findAllTransactionsVo(accountNum);
+
+            Set<String> existingTransactionKeys = existingTransactions.stream()
+                    .map(tx -> tx.getTrTime() + "_" + tx.getTrAccountIn() + "_" + tx.getTrAccountOut())
+                    .collect(Collectors.toSet());
+
+            List<TransactionVO> transactionsToSave = transactionVOList.stream()
+                    .filter(tx -> !existingTransactionKeys.contains(tx.getTrTime() + "_" + tx.getTrAccountIn() + "_" + tx.getTrAccountOut()))
+                    .toList();
+
+            // 4. 저장
+            if (!transactionsToSave.isEmpty()) {
+                accountMapper.insertTransaction(transactionsToSave);
+                log.info("new transaction added: {}건", transactionsToSave.size());
+            } else {
+                log.info("no new transaction to add");
+            }
+        } catch (Exception e) {
+            log.error("Exception occurred while adding transaction.", e);
+            throw new CustomException(ErrorCode.CODEF_API_ERROR);
         }
-
-        //2. 거래내역 조회
-        CodefTransactionResponseDto codefTransactionResponseDto = codefApiRequester.getTransactionList(transactionRequestDto);
-        if (codefTransactionResponseDto == null) {
-            log.info("None transaction list added.");
-            return;
-        }
-
-        List<CodefTransactionResponseDto.HistoryItem> trItemList = codefTransactionResponseDto.getResTrHistoryList();
-        List<TransactionVO> transactionVOList = mapToTransactionList(accountNum, trItemList);
-
-        //3. 기존거래와 중복 저장 방지
-        List<TransactionVO> existingTransactions = accountMapper.findAllTransactionsVo(accountNum);
-
-        Set<String> existingTransactionKeys = existingTransactions.stream()
-                .map(tx -> tx.getTrTime() + "_" + tx.getTrAccountIn() + "_" + tx.getTrAccountOut())
-                .collect(Collectors.toSet());
-
-        List<TransactionVO> transactionsToSave = transactionVOList.stream()
-                .filter(tx -> !existingTransactionKeys.contains(tx.getTrTime() + "_" + tx.getTrAccountIn() + "_" + tx.getTrAccountOut()))
-                .toList();
-
-        // 4. 저장
-        if (!transactionsToSave.isEmpty()) {
-            accountMapper.insertTransaction(transactionsToSave);
-            log.info("new transaction added: {}건", transactionsToSave.size());
-        } else {
-            log.info("no new transaction to add");
-        }
-
     }
 
     private AccountVO mapToAccountVO(Long userId, AccountResponseDto accountResponseDto) {
