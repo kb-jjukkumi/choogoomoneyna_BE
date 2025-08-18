@@ -27,6 +27,19 @@ public class AiClient {
     @Value("${openai.api.url}")
     private String OPENAI_URL;
 
+    /**
+     * OpenAI API에 프롬프트를 전송하고 응답을 처리하여 GptResponseDTO 객체를 생성합니다.
+     *
+     * 이 메서드는 적절한 헤더와 페이로드로 요청을 구성하여 OpenAI API에 전송하고, 
+     * 응답에서 필요한 정보를 추출하여 처리합니다. 응답의 JSON 콘텐츠를 파싱하여 
+     * GptResponseDTO 객체로 매핑합니다.
+     *
+     * @param prompt OpenAI API에서 처리할 사용자의 쿼리 또는 정보를 나타내는 입력 문자열
+     * @return 처리된 결과를 포함하는 GptResponseDTO 객체 (요약, 조언, 추천사항, 
+     *         실행항목, 총 지출 및 카테고리별 지출 통계 포함)
+     * @throws RuntimeException 응답 실패, 응답 본문이 비어있음, JSON 콘텐츠 파싱 실패 
+     *                         또는 choices가 비어있는 경우 발생
+     */
     public GptResponseDTO requestGpt(String prompt) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setBearerAuth(gptConfig.getApiKey());

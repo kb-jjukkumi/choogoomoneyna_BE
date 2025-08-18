@@ -81,6 +81,13 @@ public class SurveyWeightCalculator {
         );
     }
 
+    /**
+     * 제공된 설문 응답을 기반으로 각 추구미 유형별 점수를 계산하고 반환합니다.
+     * 각 설문 문항과 응답 옵션별로 가중치 맵에 정의된 점수를 집계하여 계산합니다.
+     *
+     * @param responses 설문 문항 ID와 응답 옵션 ID가 포함된 설문 응답 목록
+     * @return 추구미 유형을 키로 하고 해당 유형의 계산된 점수를 값으로 하는 맵
+     */
     public static Map<ChoogooMi, Integer> calculateScore(List<SurveyResponseVO> responses) {
         Map<ChoogooMi, Integer> scores = new EnumMap<>(ChoogooMi.class);
         for (ChoogooMi type : ChoogooMi.values()) {
