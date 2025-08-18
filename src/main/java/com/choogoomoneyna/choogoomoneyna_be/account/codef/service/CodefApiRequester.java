@@ -316,10 +316,10 @@ public class CodefApiRequester {
             JsonNode jsonNode = objectMapper.readTree(response);
 
             // 결과 코드 체크
-            String resultCode = jsonNode.path("result").path("code").asText();
-            if (!"CF-00000".equals(resultCode)) {
-                throw new Exception("Codef API error: " + jsonNode.path("result").path("message").asText());
-            }
+//            String resultCode = jsonNode.path("result").path("code").asText();
+//            if (!"CF-00000".equals(resultCode)) {
+//                throw new Exception("Codef API error: " + jsonNode.path("result").path("message").asText());
+//            }
 
             // TransactionResponseDto 생성
             //TransactionResponseDto transactionResponseDto = new TransactionResponseDto();
