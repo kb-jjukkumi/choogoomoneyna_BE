@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface CodefService {
 
-    List<AccountResponseDto> addAccount(Long userId, AccountRequestDto accountRequestDto) throws Exception;
+    List<AccountResponseDto> addAccount(Long userId, AccountRequestDto accountRequestDto);
 
-    AccountResponseDto updateAccountOne(Long userId, AccountUpdateRequestDto accountUpdateRequestDto) throws Exception;
+    AccountResponseDto updateAccountOne(Long userId, AccountUpdateRequestDto accountUpdateRequestDto);
 
-    void addTransaction(Long userId, TransactionRequestDto transactionRequestDto) throws Exception;
+    void addTransaction(Long userId, TransactionRequestDto transactionRequestDto);
 }

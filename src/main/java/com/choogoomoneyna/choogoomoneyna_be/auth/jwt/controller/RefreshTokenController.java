@@ -33,15 +33,11 @@ public class RefreshTokenController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 리프레시 토큰입니다.");
         }
 
-        try {
-            String newAccessToken = refreshTokenService.reissueAccessToken(refreshToken);
-            Map<String, String> response = new HashMap<>();
-            response.put("accessToken", newAccessToken);
+        String newAccessToken = refreshTokenService.reissueAccessToken(refreshToken);
+        Map<String, String> response = new HashMap<>();
+        response.put("accessToken", newAccessToken);
 
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("토큰 재발급 실패");
-        }
+        return ResponseEntity.ok(response);
     }
 
 }

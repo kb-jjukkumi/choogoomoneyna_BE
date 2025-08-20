@@ -23,13 +23,8 @@ public class MatchingTestController {
     @PostMapping("/start-all")
     public ResponseEntity<String> startAllMatching() {
         System.out.println("start all matching");
-        try {
-            matchingService.startAllMatching();
-            return ResponseEntity.ok("Matching started for all users (test)");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("Matching failed (test)");
-        }
+        matchingService.startAllMatching();
+        return ResponseEntity.ok("Matching started for all users (test)");
     }
 
     /**
@@ -38,13 +33,8 @@ public class MatchingTestController {
     @PostMapping("/finish-all")
     public ResponseEntity<String> finishAllMatching() {
         System.out.println("finish all matching");
-        try {
-            matchingService.finishAllMatching();
-            return ResponseEntity.ok("Matching finished for all users (test)");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("Matching failed (test)");
-        }
+        matchingService.finishAllMatching();
+        return ResponseEntity.ok("Matching finished for all users (test)");
     }
 
     /**

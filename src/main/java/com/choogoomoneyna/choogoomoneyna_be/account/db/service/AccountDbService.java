@@ -23,6 +23,15 @@ public interface AccountDbService {
      */
     List<TransactionItemDto> getAllTransactions(String account);
 
+    /**
+     * 특정 계좌의 월간 거래 내역을 조회합니다.
+     *
+     * @param account   조회할 계좌번호
+     * @param startDate 조회 시작 날짜(포함), "yyyy-MM-dd" 형식
+     * @param endDate   조회 종료 날짜(포함), "yyyy-MM-dd" 형식
+     * @return 거래 내역 정보가 담긴 TransactionItemDto 리스트;
+     * 해당 계좌와 기간에 거래내역이 없을 경우 빈 리스트 반환
+     */
     List<TransactionItemDto> getMonthlyTransactions(String account, String startDate, String endDate);
 
     /**
