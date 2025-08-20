@@ -36,6 +36,14 @@ public class MockService {
 
     private final Faker faker = new Faker( new Locale("ko"));
 
+    /**
+     * 랜덤화된 점수와 랭킹을 가진 모의 사용자 데이터를 생성하고 각 테이블에 저장합니다.
+     * 이 메서드는 8001부터 지정된 수까지의 ID로 사용자를 생성하고,
+     * 고유한 모의 인증 정보를 할당하며, 점수와 랭킹을 부여합니다.
+     *
+     * @param count 생성할 모의 사용자의 총 수. 사용자는 8001부터 주어진 수까지
+     *             순차적으로 번호가 매겨집니다.
+     */
     public void createMockUser(int count) {
         log.info("service layer ok");
 
